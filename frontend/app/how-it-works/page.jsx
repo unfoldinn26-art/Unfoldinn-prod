@@ -7,7 +7,7 @@ import SectionHead from '../../components/ui/SectionHead';
 import { Reveal, RevealGroup, RevealItem } from '../../components/ui/Reveal';
 
 export const metadata = {
-  title: 'How It Works | The 5-Step Conversation Approach — Second Innings',
+  title: 'How It Works | The 5-Step Conversation Approach — Unfoldinn',
   description:
     'Our 5-stage human-led approach: Talk, Understand, Explore, Choose Your Next Step, and Follow Through. No tests, scores, or sales pitches. Just thoughtful conversation.',
   keywords: [
@@ -18,13 +18,13 @@ export const metadata = {
     'youth guidance methodology India',
   ],
   alternates: {
-    canonical: 'https://second-innings.in/how-it-works',
+    canonical: 'https://unfoldinn.com/how-it-works',
   },
   openGraph: {
-    title: 'How It Works — Second Innings',
+    title: 'How It Works — Unfoldinn',
     description:
       'A structured yet open five-step approach to exploring possibilities and taking ownership of your next steps.',
-    url: 'https://second-innings.in/how-it-works',
+    url: 'https://unfoldinn.com/how-it-works',
   },
 };
 
@@ -89,8 +89,8 @@ const FAQS = [
     a: 'Yes, your first conversation is complimentary. There is no fee, pressure, or commitment.'
   },
   {
-    q: 'Is Second Innings a career coaching service or therapy?',
-    a: 'Neither. Second Innings is not psychological therapy, clinical counselling, or commercial coaching. It is a quiet, thoughtful space for perspective, reflection, and life readiness.'
+    q: 'Is Unfoldinn a career coaching service or therapy?',
+    a: 'Neither. Unfoldinn is not psychological therapy, clinical counselling, or commercial coaching. It is a quiet, thoughtful space for perspective, reflection, and life readiness.'
   },
   {
     q: 'What if the participant is below 18 years old?',
@@ -123,7 +123,7 @@ export default function HowItWorks() {
         breadcrumbs={[{ name: 'How It Works', href: '/how-it-works' }]}
         meta={['The Approach', 'Methodology', '5 Stages']}
         title="One conversation can be a beginning."
-        lede="Second Innings does not begin with a presentation, a questionnaire full of scores or a predetermined solution. It begins with you."
+        lede="Unfoldinn does not begin with a presentation, a questionnaire full of scores or a predetermined solution. It begins with you."
       >
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6">
           <Button href="/book">Start a Conversation</Button>
@@ -189,14 +189,14 @@ export default function HowItWorks() {
         <div className="page-x py-16 sm:py-24 md:py-36">
           <SectionHead
             meta="Expectations and boundaries"
-            title="What Second Innings is, and isn't"
+            title="What Unfoldinn is, and isn't"
             lede="Clear boundaries create trusted spaces."
           />
 
           <div className="mt-10 sm:mt-16 border-t border-ink">
             <div className="grid grid-cols-2 border-b border-line py-3 sm:py-4">
-              <p className="meta text-ink text-[0.625rem] sm:text-[0.6875rem]">Second Innings is</p>
-              <p className="meta pl-3 sm:pl-4 md:pl-8 text-[0.625rem] sm:text-[0.6875rem]">Second Innings is not</p>
+              <p className="meta text-ink text-[0.625rem] sm:text-[0.6875rem]">Unfoldinn is</p>
+              <p className="meta pl-3 sm:pl-4 md:pl-8 text-[0.625rem] sm:text-[0.6875rem]">Unfoldinn is not</p>
             </div>
             <RevealGroup>
               {COMPARISON_ITEMS.map((row) => (
@@ -229,7 +229,7 @@ export default function HowItWorks() {
           <SectionHead
             meta="Frequently Asked Questions"
             title="Common Questions About Our Conversations"
-            lede="Clear answers to help you understand how Second Innings works before reaching out."
+            lede="Clear answers to help you understand how Unfoldinn works before reaching out."
           />
 
           <div className="mt-10 sm:mt-16 max-w-4xl mx-auto space-y-4 sm:space-y-6">

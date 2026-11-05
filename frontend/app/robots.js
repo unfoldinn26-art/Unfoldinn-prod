@@ -35,7 +35,7 @@ export default function robots() {
         ],
       },
     ],
-    sitemap: 'https://second-innings.in/sitemap.xml',
-    host: 'https://second-innings.in',
+    sitemap: 'https://unfoldinn.com/sitemap.xml',
+    host: 'https://unfoldinn.com',
   };
 }

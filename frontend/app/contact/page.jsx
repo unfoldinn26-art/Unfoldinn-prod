@@ -95,8 +95,8 @@ export default function Contact() {
           <div className="p-6 sm:p-8 flex flex-col justify-between min-h-[12rem] sm:min-h-[14rem]">
             <span className="meta">Email</span>
             <div>
-              <a href="mailto:secondinnings136@gmail.com" className="font-serif text-[1.125rem] sm:text-[1.25rem] text-ink hover:text-signal transition-colors block leading-snug break-all py-1">
-                secondinnings136@gmail.com
+              <a href="mailto:unfoldinn26@gmail.com" className="font-serif text-[1.125rem] sm:text-[1.25rem] text-ink hover:text-signal transition-colors block leading-snug break-all py-1">
+                unfoldinn26@gmail.com
               </a>
               <Link href="/support" className="text-xs text-coral mt-2 block hover:underline font-mono py-0.5">
                 Website Issues &amp; Support →

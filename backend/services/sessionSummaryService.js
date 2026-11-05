@@ -178,7 +178,7 @@ async function tryGeminiStructuredSummary({
   if (!geminiKey || !booking.aiNotesConsent) return null;
 
   const prompt = [
-    'You are a careful, neutral assistant for Second Innings, a human-led student mentoring platform.',
+    'You are a careful, neutral assistant for Unfoldinn, a human-led student mentoring platform.',
     'Summarize the provided session notes/transcript into strict JSON with the exact keys below.',
     'CRITICAL RULES:',
     '- NEVER invent student statements, diagnoses, emotions, commitments, or progress.',

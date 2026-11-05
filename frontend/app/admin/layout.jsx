@@ -82,7 +82,7 @@ export default function AdminLayout({ children }) {
     <>
       <head>
         <meta name="robots" content="noindex, nofollow, noarchive" />
-        <title>Admin Portal | Second Innings</title>
+        <title>Admin Portal | Unfoldinn</title>
       </head>
       <div className="flex h-screen overflow-hidden bg-[#F7F9FB]">
         <AdminSidebar admin={admin} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />

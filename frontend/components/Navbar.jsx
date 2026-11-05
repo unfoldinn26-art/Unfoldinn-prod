@@ -53,7 +53,7 @@ export default function Navbar() {
               : 'border-transparent bg-transparent'
           }`}
         >
-          <Link href="/" className="shrink-0" aria-label="Second Innings home">
+          <Link href="/" className="shrink-0" aria-label="Unfoldinn home">
             <Logo size="sm" showTagline={false} />
           </Link>
 

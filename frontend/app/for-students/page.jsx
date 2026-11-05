@@ -8,7 +8,7 @@ import { Reveal, RevealGroup, RevealItem } from '../../components/ui/Reveal';
 import StudentOutcomesGrid from '../../components/home/StudentOutcomesGrid';
 
 export const metadata = {
-  title: 'For Students (Ages 16–25) | Perspective, Clarity & Next Steps — Second Innings',
+  title: 'For Students (Ages 16–25) | Perspective, Clarity & Next Steps — Unfoldinn',
   description:
     'Confused about career choices, college transitions, or what comes next? Private one-to-one conversations for ages 16–25 to think clearly and choose your path.',
   keywords: [
@@ -26,13 +26,13 @@ export const metadata = {
     'one on one student conversation',
   ],
   alternates: {
-    canonical: 'https://second-innings.in/for-students',
+    canonical: 'https://unfoldinn.com/for-students',
   },
   openGraph: {
-    title: 'For Students (16–25) — Second Innings',
+    title: 'For Students (16–25) — Unfoldinn',
     description:
       'You have the information. What you need is perspective. A space to talk openly, think clearly, and explore possibilities.',
-    url: 'https://second-innings.in/for-students',
+    url: 'https://unfoldinn.com/for-students',
   },
 };
 
@@ -61,7 +61,7 @@ const topics = [
 
 const STUDENT_FAQS = [
   {
-    q: 'What can I talk about in a Second Innings conversation?',
+    q: 'What can I talk about in a Unfoldinn conversation?',
     a: 'You can talk about anything on your mind: career uncertainty, feeling behind your peers, confidence hesitations, handling parental expectations, seeking exposure beyond college, or figuring out your next step after graduation.'
   },
   {

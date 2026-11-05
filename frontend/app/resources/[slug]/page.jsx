@@ -20,11 +20,11 @@ export async function generateMetadata({ params }) {
   }
 
   if (!resource) {
-    return { title: 'Resource Not Found | Second Innings' };
+    return { title: 'Resource Not Found | Unfoldinn' };
   }
-  const url = `https://second-innings.in/resources/${params.slug}`;
+  const url = `https://unfoldinn.com/resources/${params.slug}`;
   return {
-    title: `${resource.title} | Second Innings Guidance`,
+    title: `${resource.title} | Unfoldinn Guidance`,
     description: resource.excerpt || 'Thoughtful perspective and mentoring insights by Deepak Sogani.',
     alternates: {
       canonical: url,

@@ -61,7 +61,7 @@ function getGoogleOAuthConfig() {
 /**
  * Resolve the exact OAuth Redirect URI matching Google Cloud Console registration.
  * - Local dev: http://localhost:5000/api/admin/google/callback
- * - Production: https://www.second-innings.in/api/admin/google/callback (or GOOGLE_REDIRECT_URI if set)
+ * - Production: https://www.unfoldinn.com/api/admin/google/callback (or GOOGLE_REDIRECT_URI if set)
  */
 function resolveRedirectUri(req, customRedirectUri) {
   const config = getGoogleOAuthConfig();
@@ -85,7 +85,7 @@ function resolveRedirectUri(req, customRedirectUri) {
     return `http://localhost:${port}/api/admin/google/callback`;
   }
 
-  return 'https://www.second-innings.in/api/admin/google/callback';
+  return 'https://www.unfoldinn.com/api/admin/google/callback';
 }
 
 /**
@@ -579,19 +579,19 @@ function buildCalendarEventPayload(booking, windowInfo, connectedEmail) {
   const adminEmail = (
     connectedEmail ||
     process.env.ADMIN_NOTIFICATION_EMAIL ||
-    'secondinnings136@gmail.com'
+    'unfoldinn26@gmail.com'
   )
     .trim()
     .toLowerCase();
   if (adminEmail && !attendees.some((a) => a.email === adminEmail)) {
     attendees.push({
       email: adminEmail,
-      displayName: 'Mr. Deepak Sogani (Second Innings)'
+      displayName: 'Mr. Deepak Sogani (Unfoldinn)'
     });
   }
 
   const descriptionLines = [
-    `Second Innings 1-on-1 Mentoring Session (${shortRef})`,
+    `Unfoldinn 1-on-1 Mentoring Session (${shortRef})`,
     `Mentor: Mr. Deepak Sogani`,
     `Participant: ${studentName} (Session #${sessionNum})`,
     booking.phone ? `Phone / WhatsApp: ${booking.phone}` : '',
@@ -601,7 +601,7 @@ function buildCalendarEventPayload(booking, windowInfo, connectedEmail) {
   ].filter(Boolean);
 
   return {
-    summary: `Second Innings 1-on-1: ${studentName} (Session #${sessionNum} • ${shortRef})`,
+    summary: `Unfoldinn 1-on-1: ${studentName} (Session #${sessionNum} • ${shortRef})`,
     description: descriptionLines.join('\n'),
     start: {
       dateTime: windowInfo.startIso,
@@ -819,7 +819,7 @@ async function updateBookingCalendarEvent(bookingDocOrId) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          summary: `Second Innings 1-on-1: ${booking.name} (Session #${booking.sessionNumber || 1} • ${shortRef})`,
+          summary: `Unfoldinn 1-on-1: ${booking.name} (Session #${booking.sessionNumber || 1} • ${shortRef})`,
           start: {
             dateTime: windowInfo.startIso,
             timeZone: windowInfo.timezone

@@ -262,7 +262,7 @@ export default function AdminSupportPage() {
             {/* Quick Action Email Reply */}
             <div className="pt-2 flex justify-end">
               <a
-                href={`mailto:${selectedTicket.email}?subject=${encodeURIComponent(`[Second Innings Support #${selectedTicket._id?.slice(-6)}] ${selectedTicket.subject}`)}`}
+                href={`mailto:${selectedTicket.email}?subject=${encodeURIComponent(`[Unfoldinn Support #${selectedTicket._id?.slice(-6)}] ${selectedTicket.subject}`)}`}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-[#5B4632] text-white text-xs font-mono uppercase tracking-wider rounded-lg hover:bg-gray-800 transition-colors"
               >
                 <Mail size={14} /> Reply via Direct Email

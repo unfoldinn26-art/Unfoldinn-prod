@@ -28,8 +28,8 @@ app.use(
 
 // CORS configuration - allow production domain, Vercel preview URLs, and localhost
 const allowedOrigins = [
-  'https://second-innings.in',
-  'https://www.second-innings.in',
+  'https://unfoldinn.com', 'https://www.unfoldinn.com', 'https://second-innings.in',
+  'https://www.unfoldinn.com',
   'https://second-innings-indol.vercel.app',
   'http://localhost:3000',
   'http://localhost:3001',
@@ -111,7 +111,7 @@ app.use('/api/payment', require('./routes/payment'));
 
 // Health Check Route
 app.get('/', (req, res) => {
-  res.status(200).json({ status: 'ok', service: 'Second Innings API', version: '2.0.0' });
+  res.status(200).json({ status: 'ok', service: 'Unfoldinn API', version: '2.0.0' });
 });
 
 // Global Error Handler

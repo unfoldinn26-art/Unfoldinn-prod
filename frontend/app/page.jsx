@@ -12,17 +12,17 @@ import StudentHero from '../components/home/StudentHero';
 import StudentCrossroads from '../components/home/StudentCrossroads';
 
 export const metadata = {
-  title: 'Second Innings | Young Minds. New Perspectives. Wider Possibilities. — Deepak Sogani',
+  title: 'Unfoldinn | Young Minds. New Perspectives. Wider Possibilities. — Deepak Sogani',
   description:
     'A human-led space for young people (ages 16–25) navigating career choices, life transitions, and self-belief through thoughtful private conversations. Founded by Deepak Sogani in Jaipur & Pan-India.',
   alternates: {
-    canonical: 'https://second-innings.in',
+    canonical: 'https://unfoldinn.com',
   },
   openGraph: {
-    title: 'Second Innings | Young Minds. New Perspectives. Wider Possibilities. — Deepak Sogani',
+    title: 'Unfoldinn | Young Minds. New Perspectives. Wider Possibilities. — Deepak Sogani',
     description:
       'Young Minds. New Perspectives. Wider Possibilities. Thoughtful private conversations for education, career, and life decisions.',
-    url: 'https://second-innings.in',
+    url: 'https://unfoldinn.com',
   },
 };
 
@@ -124,7 +124,7 @@ export default function Home() {
             </Reveal>
             <Reveal className="md:col-span-4" delay={0.1}>
               <p className="font-serif text-[1.5rem] leading-[1.2] text-ink">
-                That&apos;s where Second Innings begins. A conversation can bring a new perspective. A new perspective can open wider possibilities.
+                That&apos;s where Unfoldinn begins. A conversation can bring a new perspective. A new perspective can open wider possibilities.
               </p>
             </Reveal>
           </div>
@@ -132,20 +132,20 @@ export default function Home() {
       </section>
 
       {/* 3. ABOUT: editorial split with sticky title */}
-      <section id="about-second-innings" className="scroll-mt-24 border-t border-line bg-paper-2">
+      <section id="about-unfoldinn" className="scroll-mt-24 border-t border-line bg-paper-2">
         <div className="page-x grid grid-cols-1 gap-12 py-28 md:grid-cols-12 md:py-40">
           <div className="md:col-span-5">
             <div className="md:sticky md:top-32">
-              <SectionHead meta="About Second Innings" title="A space for perspective, possibilities and action" />
+              <SectionHead meta="About Unfoldinn" title="A space for perspective, possibilities and action" />
             </div>
           </div>
 
           <div className="md:col-span-6 md:col-start-7">
             <RevealGroup className="space-y-6">
               {[
-                'Second Innings is an initiative created to support young people as they navigate the choices, transitions and possibilities that shape their lives beyond the classroom.',
+                'Unfoldinn is an initiative created to support young people as they navigate the choices, transitions and possibilities that shape their lives beyond the classroom.',
                 'It is built on the belief that preparing for life requires more than academic achievement or access to information. Young people also benefit from opportunities to understand themselves, broaden their exposure, consider different perspectives and develop the confidence to make choices they can own.',
-                'Second Innings brings these elements together through individual conversations, meaningful exposure, exploration of opportunities and thoughtful follow-through.',
+                'Unfoldinn brings these elements together through individual conversations, meaningful exposure, exploration of opportunities and thoughtful follow-through.',
                 'It is deliberately different from a conventional counselling, coaching or motivational model. There are no ready-made prescriptions and no attempt to define success for the young person.',
                 'Instead, the approach is to listen before responding, understand before suggesting, explore before narrowing choices, and encourage action rather than dependence.',
               ].map((p) => (
@@ -164,7 +164,7 @@ export default function Home() {
 
             <RevealGroup className="mt-16 space-y-5">
               <RevealItem as="h3" className="font-serif text-[2rem] leading-none">
-                Why &ldquo;Second Innings&rdquo;?
+                Why &ldquo;Unfoldinn&rdquo;?
               </RevealItem>
               <RevealItem as="p" className="lede">
                 After more than three decades across the corporate world, entrepreneurship and higher education, Deepak Sogani chose to dedicate the next phase of his professional life to working with young people.
@@ -173,7 +173,7 @@ export default function Home() {
                 His experience of working closely with university students reinforced something he had come to value deeply: some of the most meaningful contributions happen through conversations that help a young person gain perspective, discover an opportunity, reconsider a choice or take a meaningful next step.
               </RevealItem>
               <RevealItem as="blockquote" className="border-l-2 border-signal pl-6 font-serif italic text-[1.375rem] leading-[1.3] text-ink">
-                The first innings was about building his own journey. The Second Innings is about using that experience to contribute to the journeys of young people.
+                The first innings was about building his own journey. The Unfoldinn is about using that experience to contribute to the journeys of young people.
               </RevealItem>
             </RevealGroup>
           </div>
@@ -187,7 +187,7 @@ export default function Home() {
             <SectionHead className="md:col-span-7" meta="Who it is for" title="You don't need to have everything figured out." />
             <Reveal className="md:col-span-4 md:col-start-9">
               <p className="lede">
-                Second Innings is primarily for young people navigating important questions, choices and transitions in their lives.
+                Unfoldinn is primarily for young people navigating important questions, choices and transitions in their lives.
               </p>
             </Reveal>
           </div>
@@ -243,7 +243,7 @@ export default function Home() {
             <SectionHead className="md:col-span-7" meta="How it works" title="One conversation can be a beginning" />
             <Reveal className="md:col-span-4 md:col-start-9">
               <p className="lede">
-                Second Innings does not begin with a presentation, a questionnaire full of scores or a predetermined solution. It begins with you.
+                Unfoldinn does not begin with a presentation, a questionnaire full of scores or a predetermined solution. It begins with you.
               </p>
             </Reveal>
           </div>
@@ -283,12 +283,12 @@ export default function Home() {
           <div className="md:col-span-5">
             <ScalePortrait
               src="/deepaksogani.jpeg"
-              alt="Deepak Sogani, Founder of Second Innings"
+              alt="Deepak Sogani, Founder of Unfoldinn"
               className="aspect-[4/5] w-full"
             />
             <div className="mt-4 flex items-center justify-between">
               <span className="meta">Deepak Sogani</span>
-              <span className="meta">Founder, Second Innings</span>
+              <span className="meta">Founder, Unfoldinn</span>
             </div>
           </div>
 
@@ -325,7 +325,7 @@ export default function Home() {
             <SectionHead className="md:col-span-6" meta="In their words" title="Student voices" />
             <Reveal className="md:col-span-5 md:col-start-8">
               <p className="lede">
-                Long before Second Innings took shape, young people were already describing the value they found in their interactions with Deepak. These reflections, shared voluntarily by students and alumni on LinkedIn, offer a glimpse of the approach that now informs Second Innings.
+                Long before Unfoldinn took shape, young people were already describing the value they found in their interactions with Deepak. These reflections, shared voluntarily by students and alumni on LinkedIn, offer a glimpse of the approach that now informs Unfoldinn.
               </p>
             </Reveal>
           </div>
@@ -372,12 +372,12 @@ export default function Home() {
       {/* 8. IS / ISN'T: Swiss table */}
       <section className="border-t border-line">
         <div className="page-x py-16 sm:py-24 md:py-40">
-          <SectionHead meta="Clarity and expectations" title="What Second Innings is, and isn't" />
+          <SectionHead meta="Clarity and expectations" title="What Unfoldinn is, and isn't" />
 
           <div className="mt-16 border-t border-ink">
             <div className="grid grid-cols-2 border-b border-line py-4">
-              <p className="meta text-ink">Second Innings is</p>
-              <p className="meta pl-4 md:pl-8">Second Innings is not</p>
+              <p className="meta text-ink">Unfoldinn is</p>
+              <p className="meta pl-4 md:pl-8">Unfoldinn is not</p>
             </div>
             <RevealGroup>
               {WHAT_IT_IS_AND_ISNT.map((row) => (
@@ -411,7 +411,7 @@ export default function Home() {
                 But as young people grow, they also need opportunities to question, explore and gradually take ownership of their decisions.
               </RevealItem>
               <RevealItem as="p" className="lede">
-                Second Innings seeks to complement, not replace, the role of parents, teachers, educational institutions or qualified professionals.
+                Unfoldinn seeks to complement, not replace, the role of parents, teachers, educational institutions or qualified professionals.
               </RevealItem>
               <RevealItem as="p" className="lede">
                 The objective is not to decide a young person&apos;s future for them. It is to provide an additional space for thoughtful conversation, broader perspective and exploration: helping young people become more confident in making choices they understand and own.

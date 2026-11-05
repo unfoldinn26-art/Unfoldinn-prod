@@ -85,7 +85,7 @@ export default function AboutPage() {
     <div className="w-full">
       <PageHero
         breadcrumbs={[{ name: 'About Deepak', href: '/about' }]}
-        meta={['About Deepak', 'Founder, Second Innings', '35+ Years of Experience']}
+        meta={['About Deepak', 'Founder, Unfoldinn', '35+ Years of Experience']}
         title="35+ Years Across Corporate Life, Entrepreneurship & Higher Education."
         lede="More than three decades of experience, now dedicated to helping young people explore possibilities, gain perspective, and choose their own next step with confidence."
       >
@@ -101,12 +101,12 @@ export default function AboutPage() {
           <div className="md:col-span-5">
             <ScalePortrait
               src="/deepaksogani.jpeg"
-              alt="Deepak Sogani - Founder, Second Innings"
+              alt="Deepak Sogani - Founder, Unfoldinn"
               className="aspect-[4/5] w-full"
             />
             <div className="mt-4 flex items-center justify-between">
               <span className="meta">Deepak Sogani</span>
-              <span className="meta">Founder, Second Innings</span>
+              <span className="meta">Founder, Unfoldinn</span>
             </div>
           </div>
           <div className="md:col-span-7 md:col-start-6 flex flex-col justify-center">
@@ -134,7 +134,7 @@ export default function AboutPage() {
             <div className="md:sticky md:top-32">
               <SectionHead
                 meta="The background"
-                title="The journey to Second Innings"
+                title="The journey to Unfoldinn"
               />
             </div>
           </div>
@@ -150,24 +150,24 @@ export default function AboutPage() {
                 Over time, he discovered that what he valued most was not telling young people what to do, but helping them think, bringing a different perspective to the conversation and opening their minds to possibilities they may not have considered.
               </RevealItem>
               <RevealItem as="p" className="lede">
-                This understanding, combined with the perspective gained from his own professional and life journey, became the foundation for Second Innings.
+                This understanding, combined with the perspective gained from his own professional and life journey, became the foundation for Unfoldinn.
               </RevealItem>
               <RevealItem as="p" className="lede">
                 Today, he is dedicating this next phase of his journey to creating a space where young people can speak openly, explore widely, think independently and move forward with greater clarity and ownership.
               </RevealItem>
             </RevealGroup>
 
-            {/* Why "Second Innings"? Callout */}
+            {/* Why "Unfoldinn"? Callout */}
             <Reveal className="mt-12 sm:mt-16 rounded-[1.5rem] sm:rounded-[1.75rem] border border-ink bg-paper p-6 sm:p-8 md:p-12">
               <span className="meta text-signal mb-3 sm:mb-4 block">The origin</span>
               <h3 className="font-serif text-[clamp(1.5rem,2.5vw,2.25rem)] text-ink mb-3 sm:mb-4">
-                Why &ldquo;Second Innings&rdquo;?
+                Why &ldquo;Unfoldinn&rdquo;?
               </h3>
               <p className="text-[1rem] sm:text-[1.0625rem] text-ink-2 leading-relaxed mb-6">
                 After more than three decades across the corporate world, entrepreneurship and higher education, Deepak chose to dedicate the next phase of his professional life to working with young people.
               </p>
               <blockquote className="border-l-2 border-signal pl-4 sm:pl-6 font-serif italic text-[1.125rem] sm:text-[1.25rem] text-ink leading-snug">
-                &ldquo;The first innings was about building his own journey. The Second Innings is about using that experience to contribute to the journeys of young people.&rdquo;
+                &ldquo;The first innings was about building his own journey. The Unfoldinn is about using that experience to contribute to the journeys of young people.&rdquo;
               </blockquote>
             </Reveal>
           </div>
@@ -210,7 +210,7 @@ export default function AboutPage() {
           <SectionHead
             meta="The philosophy"
             title="What informs every conversation"
-            lede="The core commitments guiding every interaction at Second Innings."
+            lede="The core commitments guiding every interaction at Unfoldinn."
           />
 
           <RevealGroup className="hairline-grid mt-10 sm:mt-16 grid-cols-1 md:grid-cols-3">

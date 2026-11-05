@@ -53,15 +53,15 @@ export default function Footer() {
             <p className="meta mb-3 sm:mb-4">Contact &amp; Details</p>
             <div className="mb-5 text-[0.9375rem] text-ink">
               <p className="font-semibold text-ink">Deepak Sogani</p>
-              <p className="text-muted text-xs">Founder, Second Innings</p>
+              <p className="text-muted text-xs">Founder, Unfoldinn</p>
               <p className="text-muted text-xs">Jaipur, Rajasthan, India</p>
             </div>
             <ul className="space-y-3.5 text-[0.9375rem]">
               <li>
-                <a href="mailto:secondinnings136@gmail.com" className="group flex flex-col">
+                <a href="mailto:unfoldinn26@gmail.com" className="group flex flex-col">
                   <span className="text-muted text-[0.8125rem]">Email</span>
                   <span className="text-ink break-all underline decoration-ink/20 underline-offset-4 group-hover:decoration-signal">
-                    secondinnings136@gmail.com
+                    unfoldinn26@gmail.com
                   </span>
                 </a>
               </li>
@@ -96,12 +96,12 @@ export default function Footer() {
         {/* Wordmark */}
         <div aria-hidden="true" className="select-none overflow-hidden pt-12 sm:pt-16 md:pt-20">
           <p className="whitespace-nowrap font-serif text-[clamp(3.25rem,14.5vw,15rem)] leading-[0.82] tracking-[-0.04em] text-ink">
-            Second Innings<span className="text-signal">.</span>
+            Unfoldinn<span className="text-signal">.</span>
           </p>
         </div>
 
         <div className="flex flex-col gap-4 border-t border-line py-6 text-[0.8125rem] text-muted md:flex-row md:items-center md:justify-between">
-          <p>© 2026 Second Innings. Young Minds. New Perspectives. Wider Possibilities.</p>
+          <p>© 2026 Unfoldinn. Young Minds. New Perspectives. Wider Possibilities.</p>
           <button
             type="button"
             onClick={replayIntro}

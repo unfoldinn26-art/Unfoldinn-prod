@@ -1,9 +1,9 @@
 export const metadata = {
-  title: 'Website Support & Help Desk — Second Innings',
+  title: 'Website Support & Help Desk — Unfoldinn',
   description:
-    'Need technical help with bookings, website issues, or platform accessibility? Submit a ticket directly to the Second Innings technical support team.',
+    'Need technical help with bookings, website issues, or platform accessibility? Submit a ticket directly to the Unfoldinn technical support team.',
   alternates: {
-    canonical: 'https://second-innings.in/support',
+    canonical: 'https://unfoldinn.com/support',
   },
   robots: {
     index: true,

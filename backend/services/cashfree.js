@@ -64,10 +64,10 @@ async function createPaymentOrder({
 
   const cleanEmail = (customerEmail && customerEmail.includes('@')) 
     ? customerEmail.trim() 
-    : 'care@second-innings.in';
+    : 'care@unfoldinn.com';
 
   const orderMeta = {
-    return_url: returnUrl || `${process.env.FRONTEND_URL || 'https://www.second-innings.in'}/book/status?order_id={order_id}`,
+    return_url: returnUrl || `${process.env.FRONTEND_URL || 'https://www.unfoldinn.com'}/book/status?order_id={order_id}`,
     payment_methods: 'cc,dc,upi,nb,app'
   };
 
@@ -90,12 +90,12 @@ async function createPaymentOrder({
     order_currency: 'INR',
     customer_details: {
       customer_id: String(customerId || `CUST_${Date.now()}`),
-      customer_name: (customerName || 'Second Innings Guest').trim(),
+      customer_name: (customerName || 'Unfoldinn Guest').trim(),
       customer_email: cleanEmail,
       customer_phone: cleanPhone
     },
     order_meta: orderMeta,
-    order_note: orderNote || 'Second Innings Mentoring Session'
+    order_note: orderNote || 'Unfoldinn Mentoring Session'
   };
 
   try {

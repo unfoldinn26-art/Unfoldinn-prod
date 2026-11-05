@@ -14,7 +14,7 @@ export default function Breadcrumbs({ items = [], className = '' }) {
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: item.href ? `https://second-innings.in${item.href}` : 'https://second-innings.in',
+      item: item.href ? `https://unfoldinn.com${item.href}` : 'https://unfoldinn.com',
     })),
   };
 

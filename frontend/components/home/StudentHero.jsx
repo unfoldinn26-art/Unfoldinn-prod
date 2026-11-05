@@ -55,7 +55,7 @@ export default function StudentHero() {
             transition={{ duration: 0.8, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
             className="text-[0.9375rem] sm:text-[1.0625rem] lg:text-[1.125rem] text-[#443324] leading-[1.6] max-w-[43ch] mb-5 sm:mb-7 lg:mb-8 font-sans"
           >
-            Second Innings is a space for young people to talk openly, understand themselves better, explore possibilities and find their own way forward.
+            Unfoldinn is a space for young people to talk openly, understand themselves better, explore possibilities and find their own way forward.
           </motion.p>
 
           {/* Call to Actions (Full Width Tap Targets on Mobile) */}
@@ -99,7 +99,7 @@ export default function StudentHero() {
             >
               <Image
                 src="/assets/hero-composition-transparent@2x.png"
-                alt="Second Innings — Somewhere between 'I don't know' and 'What comes next?' there is a conversation."
+                alt="Unfoldinn — Somewhere between 'I don't know' and 'What comes next?' there is a conversation."
                 width={856}
                 height={813}
                 priority

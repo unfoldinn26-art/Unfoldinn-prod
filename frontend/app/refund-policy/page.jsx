@@ -3,22 +3,22 @@ import Button from '../../components/ui/Button';
 import Breadcrumbs from '../../components/ui/Breadcrumbs';
 
 export const metadata = {
-  title: 'Refund & Engagement Policy | Second Innings',
+  title: 'Refund & Engagement Policy | Unfoldinn',
   description:
-    'Engagement and refund policy for Second Innings. Introductory conversations are currently complimentary with full fee transparency.',
+    'Engagement and refund policy for Unfoldinn. Introductory conversations are currently complimentary with full fee transparency.',
   keywords: [
-    'Second Innings refund policy',
+    'Unfoldinn refund policy',
     'mentoring fee terms',
     'cancellation policy',
     'complimentary conversation terms',
   ],
   alternates: {
-    canonical: 'https://second-innings.in/refund-policy',
+    canonical: 'https://unfoldinn.com/refund-policy',
   },
   openGraph: {
-    title: 'Refund & Engagement Policy — Second Innings',
-    description: 'Engagement policy for Second Innings. Introductory conversations are currently complimentary.',
-    url: 'https://second-innings.in/refund-policy',
+    title: 'Refund & Engagement Policy — Unfoldinn',
+    description: 'Engagement policy for Unfoldinn. Introductory conversations are currently complimentary.',
+    url: 'https://unfoldinn.com/refund-policy',
   },
 };
 
@@ -53,7 +53,7 @@ export default function RefundPolicyPage() {
             <div className="pt-4 border-t border-line flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
               <Button href="/book">Start a Conversation</Button>
               <Link href="/contact" className="meta text-ink underline decoration-ink/20 hover:decoration-signal py-1 inline-block">
-                Have a question? Write to secondinnings136@gmail.com →
+                Have a question? Write to unfoldinn26@gmail.com →
               </Link>
             </div>
           </div>

@@ -3,17 +3,17 @@ import Button from '../../components/ui/Button';
 import PageHero from '../../components/ui/PageHero';
 
 export const metadata = {
-  title: 'Privacy, Safety & Professional Boundaries | Second Innings',
+  title: 'Privacy, Safety & Professional Boundaries | Unfoldinn',
   description:
     'Our commitment to privacy, discretion, and safeguarding. Understand how private conversations work and our ethical boundaries for participants under and over 18.',
   alternates: {
-    canonical: 'https://second-innings.in/privacy-boundaries',
+    canonical: 'https://unfoldinn.com/privacy-boundaries',
   },
   openGraph: {
-    title: 'Privacy, Safety & Professional Boundaries — Second Innings',
+    title: 'Privacy, Safety & Professional Boundaries — Unfoldinn',
     description:
       'A respectful, responsible, and non-judgmental environment for young people aged 16 to 25.',
-    url: 'https://second-innings.in/privacy-boundaries',
+    url: 'https://unfoldinn.com/privacy-boundaries',
   },
 };
 
@@ -36,7 +36,7 @@ export default function PrivacyBoundariesPage() {
               Our Core Commitment
             </h2>
             <p className="text-muted leading-relaxed">
-              Second Innings is committed to providing a respectful, responsible and non-judgmental environment for young people. Information shared during conversations is treated with discretion and respect for privacy.
+              Unfoldinn is committed to providing a respectful, responsible and non-judgmental environment for young people. Information shared during conversations is treated with discretion and respect for privacy.
             </p>
           </section>
 
@@ -59,13 +59,13 @@ export default function PrivacyBoundariesPage() {
               Professional Scope
             </h2>
             <p>
-              Second Innings is not a medical, psychological, psychiatric, legal or emergency service.
+              Unfoldinn is not a medical, psychological, psychiatric, legal or emergency service.
             </p>
             <p className="text-muted leading-relaxed">
-              Conversations through Second Innings should not be considered a substitute for qualified mental-health counselling, therapy, medical care or other specialist professional services.
+              Conversations through Unfoldinn should not be considered a substitute for qualified mental-health counselling, therapy, medical care or other specialist professional services.
             </p>
             <p className="text-muted leading-relaxed">
-              Where a matter falls outside the scope of Second Innings, the young person will always be encouraged and supported to seek appropriate professional support.
+              Where a matter falls outside the scope of Unfoldinn, the young person will always be encouraged and supported to seek appropriate professional support.
             </p>
           </section>
 
@@ -86,7 +86,7 @@ export default function PrivacyBoundariesPage() {
               Why These Boundaries Exist
             </h2>
             <p className="text-muted leading-relaxed">
-              The purpose of these boundaries is not to restrict conversation, but to ensure that Second Innings remains a safe, responsible and professionally appropriate space.
+              The purpose of these boundaries is not to restrict conversation, but to ensure that Unfoldinn remains a safe, responsible and professionally appropriate space.
             </p>
           </section>
 

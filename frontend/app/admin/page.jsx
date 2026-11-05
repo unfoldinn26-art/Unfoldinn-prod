@@ -111,7 +111,7 @@ export default function AdminDashboard() {
         if (host === 'localhost' || host === '127.0.0.1') {
           preferredRedirectUri = 'http://localhost:5000/api/admin/google/callback';
         } else {
-          preferredRedirectUri = 'https://www.second-innings.in/api/admin/google/callback';
+          preferredRedirectUri = 'https://www.unfoldinn.com/api/admin/google/callback';
         }
       }
       const res = await getGoogleConnectUrl(preferredRedirectUri);

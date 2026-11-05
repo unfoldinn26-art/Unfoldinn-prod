@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Button from '../components/ui/Button';
 
 export const metadata = {
-  title: '404 — Page Not Found | Second Innings',
+  title: '404 — Page Not Found | Unfoldinn',
   description: 'The page you requested could not be found.',
   robots: {
     index: false,

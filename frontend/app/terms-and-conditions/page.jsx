@@ -3,16 +3,16 @@ import Button from '../../components/ui/Button';
 import Breadcrumbs from '../../components/ui/Breadcrumbs';
 
 export const metadata = {
-  title: 'Terms & Conditions | Second Innings',
+  title: 'Terms & Conditions | Unfoldinn',
   description:
-    'Terms of service and mentoring agreements for Second Innings youth mentoring platform. Transparent principles governing private conversations.',
+    'Terms of service and mentoring agreements for Unfoldinn youth mentoring platform. Transparent principles governing private conversations.',
   alternates: {
-    canonical: 'https://second-innings.in/terms-and-conditions',
+    canonical: 'https://unfoldinn.com/terms-and-conditions',
   },
   openGraph: {
-    title: 'Terms & Conditions — Second Innings',
-    description: 'Terms of service and mentoring agreements for Second Innings youth mentoring platform.',
-    url: 'https://second-innings.in/terms-and-conditions',
+    title: 'Terms & Conditions — Unfoldinn',
+    description: 'Terms of service and mentoring agreements for Unfoldinn youth mentoring platform.',
+    url: 'https://unfoldinn.com/terms-and-conditions',
   },
 };
 
@@ -41,10 +41,10 @@ export default function TermsAndConditionsPage() {
             Terms &amp; Conditions
           </h1>
           <p className="meta text-muted mb-6">
-            Effective Date: October 2026 • Governing Second Innings Mentoring Platform
+            Effective Date: October 2026 • Governing Unfoldinn Mentoring Platform
           </p>
           <p className="lede text-[1.125rem]">
-            Please review these Terms &amp; Conditions carefully before engaging with Second Innings (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;the Platform&rdquo;), founded by Mr. Deepak Sogani and based in Jaipur, Rajasthan. By accessing our website, booking a conversation, or participating in any mentoring engagement, you agree to be bound by these Terms.
+            Please review these Terms &amp; Conditions carefully before engaging with Unfoldinn (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;the Platform&rdquo;), founded by Mr. Deepak Sogani and based in Jaipur, Rajasthan. By accessing our website, booking a conversation, or participating in any mentoring engagement, you agree to be bound by these Terms.
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export default function TermsAndConditionsPage() {
                 1. Acceptance of Terms
               </h2>
               <p>
-                By visiting <strong className="text-ink">second-innings.in</strong>, submitting a conversation request, interacting with our curated opportunity banks, or entering into a mentoring agreement, you acknowledge that you have read, understood, and agreed to comply with these Terms and Conditions along with our{' '}
+                By visiting <strong className="text-ink">unfoldinn.com</strong>, submitting a conversation request, interacting with our curated opportunity banks, or entering into a mentoring agreement, you acknowledge that you have read, understood, and agreed to comply with these Terms and Conditions along with our{' '}
                 <Link href="/privacy-policy" className="text-ink underline decoration-ink/20 hover:decoration-signal">
                   Privacy Policy
                 </Link>
@@ -91,7 +91,7 @@ export default function TermsAndConditionsPage() {
                 2. Mentoring Scope &amp; Philosophy
               </h2>
               <p>
-                Second Innings is a human-led mentoring and perspective platform founded to support young people (predominantly aged 16–25) through the critical transitions of education, career exploration, and adulthood.
+                Unfoldinn is a human-led mentoring and perspective platform founded to support young people (predominantly aged 16–25) through the critical transitions of education, career exploration, and adulthood.
               </p>
               <p>
                 Our core methodology centers on <strong>listening, perspective, and structured reflection</strong>. The mentor acts as a trusted sounding board to help students understand context, evaluate alternatives, and identify one practical next step.
@@ -105,7 +105,7 @@ export default function TermsAndConditionsPage() {
                 3. Distinction from Counselling, Therapy, and Coaching
               </h2>
               <p className="text-[0.9375rem] text-ink-2 leading-relaxed">
-                Second Innings is explicitly <strong>not</strong> a mental health clinic, psychological therapy provider, psychiatric care service, or coaching institute.
+                Unfoldinn is explicitly <strong>not</strong> a mental health clinic, psychological therapy provider, psychiatric care service, or coaching institute.
               </p>
               <ul className="list-disc pl-6 space-y-2 text-[0.875rem] text-muted">
                 <li>
@@ -126,7 +126,7 @@ export default function TermsAndConditionsPage() {
                 4. Eligibility &amp; Minor Safeguards (Ages 16–25)
               </h2>
               <p>
-                Second Innings is intended for students and young adults aged 16 to 25. For any participant under the age of 18 (minors), <strong>verifiable affirmative consent from a parent or legal guardian is mandatory</strong> prior to any mentoring session.
+                Unfoldinn is intended for students and young adults aged 16 to 25. For any participant under the age of 18 (minors), <strong>verifiable affirmative consent from a parent or legal guardian is mandatory</strong> prior to any mentoring session.
               </p>
               <p>
                 Parents have the right to attend an initial orientation conversation or request details regarding the framework used during discussions with their child.
@@ -139,7 +139,7 @@ export default function TermsAndConditionsPage() {
                 5. Student Responsibility &amp; Autonomy
               </h2>
               <p>
-                A core pillar of Second Innings is <strong>student ownership</strong>. We never tell a young person which career they must choose or make pivotal life decisions on their behalf.
+                A core pillar of Unfoldinn is <strong>student ownership</strong>. We never tell a young person which career they must choose or make pivotal life decisions on their behalf.
               </p>
               <p>
                 All final academic, vocational, and personal decisions rest entirely with the student and their family. The student is solely responsible for acting on agreed next steps and conducting their own due diligence before committing to any college, course, or employer.
@@ -152,7 +152,7 @@ export default function TermsAndConditionsPage() {
                 6. Institutional Engagements &amp; 90-Day Pilots
               </h2>
               <p>
-                When schools, universities, or corporate foundations partner with Second Innings for campus cohort pilots or student leadership programs, the specific deliverables, timelines, fee structures, and reporting criteria are governed by dedicated Institutional Memoranda of Understanding (MoUs) or Service Level Agreements.
+                When schools, universities, or corporate foundations partner with Unfoldinn for campus cohort pilots or student leadership programs, the specific deliverables, timelines, fee structures, and reporting criteria are governed by dedicated Institutional Memoranda of Understanding (MoUs) or Service Level Agreements.
               </p>
             </section>
 
@@ -162,10 +162,10 @@ export default function TermsAndConditionsPage() {
                 7. Intellectual Property &amp; Content
               </h2>
               <p>
-                All brand marks, logos (including the Second Innings Zen Ensō and dawn symbols), written essays, frameworks (such as the 7-Stage Methodology and 7-Day Next Step format), graphics, and software code on this website are the proprietary intellectual property of Mr. Deepak Sogani and Second Innings.
+                All brand marks, logos (including the Unfoldinn Zen Ensō and dawn symbols), written essays, frameworks (such as the 7-Stage Methodology and 7-Day Next Step format), graphics, and software code on this website are the proprietary intellectual property of Mr. Deepak Sogani and Unfoldinn.
               </p>
               <p className="text-sm text-muted">
-                You may read, download, or share our published resources for personal, non-commercial educational use, provided appropriate credit is visibly attributed to Second Innings.
+                You may read, download, or share our published resources for personal, non-commercial educational use, provided appropriate credit is visibly attributed to Unfoldinn.
               </p>
             </section>
 
@@ -175,10 +175,10 @@ export default function TermsAndConditionsPage() {
                 8. Limitation of Liability &amp; Disclaimers
               </h2>
               <p>
-                Mentoring is a developmental process based on subjective human interaction. While Mr. Deepak Sogani brings over 35 years of corporate leadership and higher-education student affairs governance, Second Innings makes no warranties, express or implied, regarding specific university admissions, employment outcomes, or salary packages.
+                Mentoring is a developmental process based on subjective human interaction. While Mr. Deepak Sogani brings over 35 years of corporate leadership and higher-education student affairs governance, Unfoldinn makes no warranties, express or implied, regarding specific university admissions, employment outcomes, or salary packages.
               </p>
               <p className="text-sm text-muted">
-                To the fullest extent permitted by Indian law, Second Innings, its mentors, and associates shall not be liable for any indirect, incidental, or consequential damages resulting from choices made following a mentoring conversation.
+                To the fullest extent permitted by Indian law, Unfoldinn, its mentors, and associates shall not be liable for any indirect, incidental, or consequential damages resulting from choices made following a mentoring conversation.
               </p>
             </section>
 
@@ -202,9 +202,9 @@ export default function TermsAndConditionsPage() {
                 For questions regarding these Terms, legal notices, or institutional inquiries, please contact:
               </p>
               <div className="text-xs sm:text-sm text-ink-2 font-mono space-y-1.5 pt-2">
-                <p><strong>Entity:</strong> Second Innings</p>
+                <p><strong>Entity:</strong> Unfoldinn</p>
                 <p><strong>Founder:</strong> Mr. Deepak Sogani</p>
-                <p><strong>Primary Email:</strong> <a href="mailto:secondinnings136@gmail.com" className="underline hover:text-signal">secondinnings136@gmail.com</a></p>
+                <p><strong>Primary Email:</strong> <a href="mailto:unfoldinn26@gmail.com" className="underline hover:text-signal">unfoldinn26@gmail.com</a></p>
                 <p><strong>Helpline / WhatsApp:</strong> +91 77372 20724</p>
                 <p><strong>Headquarters:</strong> Jaipur, Rajasthan, India</p>
               </div>

@@ -1,19 +1,19 @@
 import { NextResponse } from 'next/server';
 
 const INDEXNOW_KEY = 'secondinnings99281a94bc72418e9d';
-const HOST = 'second-innings.in';
+const HOST = 'unfoldinn.com';
 
 const DEFAULT_URLS = [
-  'https://second-innings.in/',
-  'https://second-innings.in/for-students',
-  'https://second-innings.in/for-parents',
-  'https://second-innings.in/for-institutions',
-  'https://second-innings.in/how-it-works',
-  'https://second-innings.in/about',
-  'https://second-innings.in/book',
-  'https://second-innings.in/opportunities',
-  'https://second-innings.in/resources',
-  'https://second-innings.in/contact',
+  'https://unfoldinn.com/',
+  'https://unfoldinn.com/for-students',
+  'https://unfoldinn.com/for-parents',
+  'https://unfoldinn.com/for-institutions',
+  'https://unfoldinn.com/how-it-works',
+  'https://unfoldinn.com/about',
+  'https://unfoldinn.com/book',
+  'https://unfoldinn.com/opportunities',
+  'https://unfoldinn.com/resources',
+  'https://unfoldinn.com/contact',
 ];
 
 export async function POST(request) {

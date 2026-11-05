@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Curated Opportunities | Fellowships, Internships & Scholarships — Second Innings',
+  title: 'Curated Opportunities | Fellowships, Internships & Scholarships — Unfoldinn',
   description:
     'Hand-curated internships, fellowships, scholarships, and leadership programs across India and globally. Not random links — curated for student growth and real-world exposure.',
   keywords: [
@@ -13,13 +13,13 @@ export const metadata = {
     'gap year opportunities Indian students',
   ],
   alternates: {
-    canonical: 'https://second-innings.in/opportunities',
+    canonical: 'https://unfoldinn.com/opportunities',
   },
   openGraph: {
-    title: 'Curated Opportunities Knowledge Bank — Second Innings',
+    title: 'Curated Opportunities Knowledge Bank — Unfoldinn',
     description:
       'Curated internships, fellowships, and scholarships selected for relevance to your mentoring journey.',
-    url: 'https://second-innings.in/opportunities',
+    url: 'https://unfoldinn.com/opportunities',
   },
 };
 

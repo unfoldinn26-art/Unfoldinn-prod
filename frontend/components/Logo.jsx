@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Hand-crafted Artisanal Logo for Second Innings — Draft 4: The Zen Ensō & Morning Sun.
+ * Hand-crafted Artisanal Logo for Unfoldinn — Draft 4: The Zen Ensō & Morning Sun.
  * Features an organic, hand-drawn calligraphic Ensō brush circle embracing a warm watercolor
  * saffron sunrise in the center, with a discreet terracotta seal stamp.
  * Symbolizes clarity, deep listening, wisdom, and life-giving new beginnings.
@@ -92,7 +92,7 @@ export default function Logo({
       {showText && (
         <div className="flex flex-col">
           <span className={`font-serif tracking-[-0.015em] text-ink leading-none ${textSizes[size] || textSizes.md}`}>
-            Second Innings
+            Unfoldinn
           </span>
           {showTagline && (
             <span className="font-mono text-[0.625rem] tracking-[0.12em] uppercase text-muted mt-1">

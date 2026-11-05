@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Start a Conversation | Second Innings — Deepak Sogani',
+  title: 'Start a Conversation | Unfoldinn — Deepak Sogani',
   description:
     'Start a conversation with Deepak Sogani. No preparation needed. Tell us what is on your mind. Your first introductory conversation is complimentary.',
   keywords: [
@@ -11,13 +11,13 @@ export const metadata = {
     'Deepak Sogani conversation',
   ],
   alternates: {
-    canonical: 'https://second-innings.in/book',
+    canonical: 'https://unfoldinn.com/book',
   },
   openGraph: {
-    title: 'Start a Conversation — Second Innings',
+    title: 'Start a Conversation — Unfoldinn',
     description:
       'No ready-made answers. No predetermined path. Just a quiet, private conversation to explore what comes next.',
-    url: 'https://second-innings.in/book',
+    url: 'https://unfoldinn.com/book',
   },
 };
 
@@ -30,13 +30,13 @@ export default function BookLayout({ children }) {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://second-innings.in',
+        item: 'https://unfoldinn.com',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Start a Conversation',
-        item: 'https://second-innings.in/book',
+        item: 'https://unfoldinn.com/book',
       },
     ],
   };

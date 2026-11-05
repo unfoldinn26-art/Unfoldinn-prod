@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const WORDS = ['Clarity.', 'Perspective.', 'SECOND INNINGS'];
+const WORDS = ['Clarity.', 'Perspective.', 'UNFOLDINN'];
 
 // Monochromatic floating glass bubbles
 const FLOATING_BUBBLES = [

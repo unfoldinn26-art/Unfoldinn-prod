@@ -7,7 +7,7 @@ import { Lock, Mail, Eye, EyeOff, ShieldCheck, ArrowRight, ArrowLeft } from 'luc
 import { loginAdmin, setToken } from '../../../lib/adminApi';
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('deepak@second-innings.in');
+  const [email, setEmail] = useState('deepak@unfoldinn.com');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,7 +74,7 @@ export default function AdminLogin() {
             </div>
 
             <h1 className="text-2xl font-serif font-bold text-white tracking-tight">
-              Second Innings
+              Unfoldinn
             </h1>
             <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-mono">
               Founder&apos;s Administrative Portal
@@ -105,7 +105,7 @@ export default function AdminLogin() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-[#111720]/80 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
-                    placeholder="deepak@second-innings.in"
+                    placeholder="deepak@unfoldinn.com"
                   />
                 </div>
               </div>
@@ -171,7 +171,7 @@ export default function AdminLogin() {
 
         {/* Footer Credit */}
         <p className="text-center text-xs text-gray-400 mt-6 font-mono">
-          Second Innings Mentoring © 2026 · Jaipur, Rajasthan, India
+          Unfoldinn Mentoring © 2026 · Jaipur, Rajasthan, India
         </p>
 
       </div>

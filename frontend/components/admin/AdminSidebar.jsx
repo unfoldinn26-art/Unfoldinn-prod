@@ -95,7 +95,7 @@ export default function AdminSidebar({ admin, isOpen, setIsOpen }) {
             </div>
             <div>
               <div className="font-serif font-bold text-white text-base leading-tight">
-                Second Innings
+                Unfoldinn
               </div>
               <div className="text-[10px] font-mono text-amber font-semibold uppercase tracking-wider mt-0.5">
                 Founder&apos;s Portal

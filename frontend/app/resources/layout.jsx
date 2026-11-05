@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Mentoring Resources & Frameworks | Perspectives for Students & Parents — Second Innings',
+  title: 'Mentoring Resources & Frameworks | Perspectives for Students & Parents — Unfoldinn',
   description:
     'Thoughtful frameworks, insights, and practical guides by Deepak Sogani to help young people and parents navigate decision-making, transitions, and self-understanding.',
   keywords: [
@@ -11,13 +11,13 @@ export const metadata = {
     'Deepak Sogani perspectives',
   ],
   alternates: {
-    canonical: 'https://second-innings.in/resources',
+    canonical: 'https://unfoldinn.com/resources',
   },
   openGraph: {
-    title: 'Perspectives & Mentoring Resources — Second Innings',
+    title: 'Perspectives & Mentoring Resources — Unfoldinn',
     description:
       'Ideas, frameworks, and insights to help you think clearly, decide with ownership, and grow.',
-    url: 'https://second-innings.in/resources',
+    url: 'https://unfoldinn.com/resources',
   },
 };
 

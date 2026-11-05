@@ -7,7 +7,7 @@ import SectionHead from '../../components/ui/SectionHead';
 import { Reveal, RevealGroup, RevealItem } from '../../components/ui/Reveal';
 
 export const metadata = {
-  title: 'For Institutions | Schools, Colleges & Universities — Second Innings',
+  title: 'For Institutions | Schools, Colleges & Universities — Unfoldinn',
   description:
     'Complementing academic systems with thoughtful student conversations on choices, transitions, confidence, and real-world exposure for schools and colleges.',
   keywords: [
@@ -18,13 +18,13 @@ export const metadata = {
     'higher education student support',
   ],
   alternates: {
-    canonical: 'https://second-innings.in/for-institutions',
+    canonical: 'https://unfoldinn.com/for-institutions',
   },
   openGraph: {
-    title: 'For Institutions — Second Innings',
+    title: 'For Institutions — Unfoldinn',
     description:
       'Working alongside existing student-support systems to create an additional space for perspective and life readiness.',
-    url: 'https://second-innings.in/for-institutions',
+    url: 'https://unfoldinn.com/for-institutions',
   },
 };
 
@@ -54,7 +54,7 @@ export default function ForInstitutionsPage() {
         breadcrumbs={[{ name: 'For Institutions', href: '/for-institutions' }]}
         meta={['For Schools, Colleges & Universities', 'Campus Collaboration', 'Student Support']}
         title="An additional space for perspective alongside existing academic systems."
-        lede="Second Innings can work alongside existing student-support systems to create an additional space for conversations around choices, transitions, exposure, confidence and life beyond the classroom."
+        lede="Unfoldinn can work alongside existing student-support systems to create an additional space for conversations around choices, transitions, exposure, confidence and life beyond the classroom."
       >
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6">
           <Button href="/contact">Talk to Us About Your Institution</Button>
@@ -79,7 +79,7 @@ export default function ForInstitutionsPage() {
                 Educational institutions carry the essential responsibility of academic learning, administration, and formal placement systems.
               </RevealItem>
               <RevealItem as="p" className="lede">
-                Second Innings does not seek to replace or replicate these functions. Instead, it provides a quiet, trusted sounding board where students can pause, reflect on their individual strengths and hesitations, and make sense of their options without fear of judgment.
+                Unfoldinn does not seek to replace or replicate these functions. Instead, it provides a quiet, trusted sounding board where students can pause, reflect on their individual strengths and hesitations, and make sense of their options without fear of judgment.
               </RevealItem>
               <RevealItem as="blockquote" className="mt-6 sm:mt-8 border-l-2 border-signal pl-4 sm:pl-6 font-serif italic text-[1.125rem] sm:text-[1.25rem] text-ink leading-relaxed">
                 &ldquo;Institutional engagements can begin small, allowing both sides to understand the need and evaluate value before considering a longer association.&rdquo;
@@ -128,12 +128,12 @@ export default function ForInstitutionsPage() {
               Start small. Understand first.
             </RevealItem>
             <RevealItem as="p" className="lede mt-5 sm:mt-6 text-[1rem] sm:text-[1.125rem]">
-              We believe every campus environment is unique. A brief initial conversation helps us understand your students&apos; context and explore whether Second Innings can add genuine value.
+              We believe every campus environment is unique. A brief initial conversation helps us understand your students&apos; context and explore whether Unfoldinn can add genuine value.
             </RevealItem>
             <RevealItem className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6">
               <Button href="/contact">Talk to Us About Your Institution</Button>
-              <Link href="mailto:secondinnings136@gmail.com" className="meta text-ink underline decoration-ink/20 hover:decoration-signal py-1 inline-block">
-                Write directly to secondinnings136@gmail.com →
+              <Link href="mailto:unfoldinn26@gmail.com" className="meta text-ink underline decoration-ink/20 hover:decoration-signal py-1 inline-block">
+                Write directly to unfoldinn26@gmail.com →
               </Link>
             </RevealItem>
           </RevealGroup>

@@ -165,7 +165,7 @@ function OnboardingContent() {
           {/* Role Selector */}
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-charcoal mb-2.5">
-              I am joining Second Innings as a: <span className="text-terracotta">*</span>
+              I am joining Unfoldinn as a: <span className="text-terracotta">*</span>
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
@@ -298,7 +298,7 @@ function OnboardingContent() {
                   className="mt-1 rounded border-stone text-terracotta focus:ring-terracotta"
                 />
                 <span className="text-xs text-ink font-medium leading-relaxed">
-                  My parent or guardian is aware that I am creating a Second Innings mentoring account and consents to these conversations. <span className="text-terracotta">*</span>
+                  My parent or guardian is aware that I am creating a Unfoldinn mentoring account and consents to these conversations. <span className="text-terracotta">*</span>
                 </span>
               </label>
             </div>
@@ -378,7 +378,7 @@ function OnboardingContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="block text-xs font-mono uppercase tracking-wider text-charcoal mb-2">
-                7. How did you hear about Second Innings?
+                7. How did you hear about Unfoldinn?
               </label>
               <select
                 name="source"

@@ -55,7 +55,7 @@ async function sendPhoneOtpSms({ phone, otpCode }) {
   // Option 1: 2Factor.in SMS OTP API
   if (process.env.TWO_FACTOR_API_KEY) {
     const apiKey = process.env.TWO_FACTOR_API_KEY.trim();
-    const url = `https://2factor.in/API/V1/${encodeURIComponent(apiKey)}/SMS/+91${cleanPhone}/${encodeURIComponent(otpCode)}/SecondInningsOTP`;
+    const url = `https://2factor.in/API/V1/${encodeURIComponent(apiKey)}/SMS/+91${cleanPhone}/${encodeURIComponent(otpCode)}/UnfoldinnOTP`;
     const resp = await httpsRequest(url, { method: 'GET' });
     if (resp.statusCode >= 200 && resp.statusCode < 300) {
       return { delivered: true, mode: '2factor_sms' };
@@ -68,7 +68,7 @@ async function sendPhoneOtpSms({ phone, otpCode }) {
     const apiKey = process.env.FAST2SMS_API_KEY.trim();
     const payload = {
       route: 'q',
-      message: `Your Second Innings verification OTP is ${otpCode}. Valid for 10 minutes. Do not share this code.`,
+      message: `Your Unfoldinn verification OTP is ${otpCode}. Valid for 10 minutes. Do not share this code.`,
       language: 'english',
       flash: 0,
       numbers: cleanPhone
@@ -102,7 +102,7 @@ async function sendPhoneOtpSms({ phone, otpCode }) {
     const formBody = new URLSearchParams({
       To: `+91${cleanPhone}`,
       From: fromPhone,
-      Body: `Your Second Innings verification code is ${otpCode}. Valid for 10 minutes.`
+      Body: `Your Unfoldinn verification code is ${otpCode}. Valid for 10 minutes.`
     }).toString();
 
     const resp = await httpsRequest(
@@ -124,8 +124,8 @@ async function sendPhoneOtpSms({ phone, otpCode }) {
 
   // Fallback when SMS gateway API key is not configured yet
   console.log('\n======================================================');
-  console.log(`[SECOND INNINGS PHONE OTP] Mobile: +91 ${cleanPhone}`);
-  console.log(`[SECOND INNINGS PHONE OTP] 6-Digit Code: ${otpCode}`);
+  console.log(`[UNFOLDINN PHONE OTP] Mobile: +91 ${cleanPhone}`);
+  console.log(`[UNFOLDINN PHONE OTP] 6-Digit Code: ${otpCode}`);
   console.log('======================================================\n');
   return { delivered: false, mode: 'console_preview' };
 }

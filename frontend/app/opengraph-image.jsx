@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export const alt = 'Second Innings | Young Minds. New Perspectives. Wider Possibilities.';
+export const alt = 'Unfoldinn | Young Minds. New Perspectives. Wider Possibilities.';
 export const size = {
   width: 1200,
   height: 630,
@@ -75,7 +75,7 @@ export default async function Image() {
                 textTransform: 'uppercase',
               }}
             >
-              SECOND INNINGS
+              UNFOLDINN
             </span>
             <span
               style={{
@@ -171,7 +171,7 @@ export default async function Image() {
               fontWeight: 600,
             }}
           >
-            <span>second-innings.in</span>
+            <span>unfoldinn.com</span>
           </div>
         </div>
       </div>

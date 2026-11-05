@@ -30,26 +30,26 @@ export const viewport = {
 };
 
 export const metadata = {
-  metadataBase: new URL('https://second-innings.in'),
+  metadataBase: new URL('https://unfoldinn.com'),
   title: {
-    default: 'Second Innings | Young Minds. New Perspectives. Wider Possibilities.',
-    template: '%s | Second Innings',
+    default: 'Unfoldinn | Young Minds. New Perspectives. Wider Possibilities.',
+    template: '%s | Unfoldinn',
   },
   description:
-    'Second Innings is a space for young people aged 16–25 to talk openly, understand themselves better, explore possibilities and find their own way forward. Founded by Deepak Sogani in Jaipur, India.',
-  applicationName: 'Second Innings',
-  authors: [{ name: 'Deepak Sogani', url: 'https://second-innings.in/about' }],
+    'Unfoldinn is a space for young people aged 16–25 to talk openly, understand themselves better, explore possibilities and find their own way forward. Founded by Deepak Sogani in Jaipur, India.',
+  applicationName: 'Unfoldinn',
+  authors: [{ name: 'Deepak Sogani', url: 'https://unfoldinn.com/about' }],
   generator: 'Next.js',
   keywords: [
     // Brand & Founder
-    'Second Innings',
-    'Second Innings mentoring',
-    'Second Innings youth platform',
+    'Unfoldinn',
+    'Unfoldinn mentoring',
+    'Unfoldinn youth platform',
     'Deepak Sogani',
     'Deepak Sogani mentor',
     'Deepak Sogani JKLU',
-    'Second Innings Jaipur',
-    'second-innings.in',
+    'Unfoldinn Jaipur',
+    'unfoldinn.com',
     // Student Pain Points & Intent
     'career confusion after 12th',
     'what to do after graduation if confused',
@@ -113,24 +113,24 @@ export const metadata = {
   ],
   referrer: 'origin-when-cross-origin',
   creator: 'Deepak Sogani',
-  publisher: 'Second Innings',
+  publisher: 'Unfoldinn',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   alternates: {
-    canonical: 'https://second-innings.in',
+    canonical: 'https://unfoldinn.com',
     languages: {
-      'en-IN': 'https://second-innings.in',
+      'en-IN': 'https://unfoldinn.com',
     },
   },
   openGraph: {
-    title: 'Second Innings | Young Minds. New Perspectives. Wider Possibilities.',
+    title: 'Unfoldinn | Young Minds. New Perspectives. Wider Possibilities.',
     description:
-      'Second Innings is a space for young people aged 16–25 to talk openly, understand themselves better, explore possibilities and find their own way forward.',
-    url: 'https://second-innings.in',
-    siteName: 'Second Innings',
+      'Unfoldinn is a space for young people aged 16–25 to talk openly, understand themselves better, explore possibilities and find their own way forward.',
+    url: 'https://unfoldinn.com',
+    siteName: 'Unfoldinn',
     locale: 'en_IN',
     type: 'website',
     images: [
@@ -138,16 +138,16 @@ export const metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Second Innings — Young Minds. New Perspectives. Wider Possibilities.',
+        alt: 'Unfoldinn — Young Minds. New Perspectives. Wider Possibilities.',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Second Innings | Young Minds. New Perspectives. Wider Possibilities.',
+    title: 'Unfoldinn | Young Minds. New Perspectives. Wider Possibilities.',
     description:
       'Sometimes, you don’t need another answer. You need the right conversation. A space for young people aged 16–25.',
-    creator: '@SecondInningsIN',
+    creator: '@Unfoldinn',
     images: ['/opengraph-image'],
   },
   robots: {
@@ -186,18 +186,18 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'EducationalOrganization',
-      '@id': 'https://second-innings.in/#organization',
-      name: 'Second Innings',
-      url: 'https://second-innings.in',
-      logo: 'https://second-innings.in/logo.jpg',
+      '@id': 'https://unfoldinn.com/#organization',
+      name: 'Unfoldinn',
+      url: 'https://unfoldinn.com',
+      logo: 'https://unfoldinn.com/logo.jpg',
       description:
         'A space for young minds aged 16–25, parents, and educational institutions to explore perspectives, clarity, and wider possibilities.',
       founder: {
         '@type': 'Person',
         name: 'Deepak Sogani',
-        jobTitle: 'Founder, Second Innings',
+        jobTitle: 'Founder, Unfoldinn',
         alumniOf: 'JK Lakshmipat University',
-        url: 'https://second-innings.in/about',
+        url: 'https://unfoldinn.com/about',
         sameAs: ['https://www.linkedin.com/in/deepak-sogani'],
       },
       address: {
@@ -210,22 +210,22 @@ const jsonLd = {
         '@type': 'ContactPoint',
         telephone: '+91 77372 20724',
         contactType: 'customer service',
-        email: 'secondinnings136@gmail.com',
+        email: 'unfoldinn26@gmail.com',
         areaServed: 'IN',
         availableLanguage: ['English', 'Hindi'],
       },
       sameAs: [
-        'https://second-innings.in',
+        'https://unfoldinn.com',
         'https://www.linkedin.com/in/deepak-sogani',
       ],
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://second-innings.in/#website',
-      url: 'https://second-innings.in',
-      name: 'Second Innings',
+      '@id': 'https://unfoldinn.com/#website',
+      url: 'https://unfoldinn.com',
+      name: 'Unfoldinn',
       publisher: {
-        '@id': 'https://second-innings.in/#organization',
+        '@id': 'https://unfoldinn.com/#organization',
       },
     },
   ],

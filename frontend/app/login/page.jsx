@@ -191,7 +191,7 @@ function LoginContent() {
               <span className="italic text-signal">Never re-fill the form again.</span>
             </h1>
             <p className="text-ink-2 leading-relaxed text-base md:text-lg">
-              Your Second Innings account remembers your background, links all your past and upcoming mentoring conversations, tracks your <strong>7-Day Next Steps</strong>, and lets you book future sessions in one click.
+              Your Unfoldinn account remembers your background, links all your past and upcoming mentoring conversations, tracks your <strong>7-Day Next Steps</strong>, and lets you book future sessions in one click.
             </p>
 
             <div className="space-y-4 pt-2">
@@ -233,7 +233,7 @@ function LoginContent() {
               <div className="flex items-center justify-between border-b border-line pb-4 mb-6">
                 <div>
                   <span className="font-mono text-[10px] uppercase tracking-widest text-signal block">
-                    Second Innings Portal
+                    Unfoldinn Portal
                   </span>
                   <h2 className="font-serif text-2xl md:text-3xl text-ink mt-0.5">
                     {otpStep

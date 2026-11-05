@@ -116,7 +116,7 @@ export const CURATED_ARTICLES = [
         The single most important muscle you can build before leaving university is <strong>ownership</strong>. When something goes wrong on a student project or in a team setting, do you blame the circumstances, or do you step forward and ask: <em>"What can I do to fix this right now?"</em>
       </p>
       <p>
-        Mentoring at Second Innings is designed around this exact transition: moving a young person from passive recipient of education to active author of their professional life.
+        Mentoring at Unfoldinn is designed around this exact transition: moving a young person from passive recipient of education to active author of their professional life.
       </p>
     `
   },

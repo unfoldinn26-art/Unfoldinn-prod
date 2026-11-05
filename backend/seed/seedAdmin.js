@@ -10,7 +10,7 @@ const seedAdmin = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('MongoDB Connected');
 
-    const adminEmail = 'deepak@second-innings.in';
+    const adminEmail = 'deepak@unfoldinn.com';
     let admin = await Admin.findOne({ email: adminEmail });
 
     if (admin) {
@@ -18,8 +18,8 @@ const seedAdmin = async () => {
       process.exit(0);
     }
 
-    // Check if secondinnings136@gmail.com or old gmail exists, revert to deepak@second-innings.in
-    const existingAdmin = await Admin.findOne({ email: { $in: ['secondinnings136@gmail.com', 'deepaksogani18@gmail.com'] } });
+    // Check if secondinnings136@gmail.com or old gmail exists, revert to deepak@unfoldinn.com
+    const existingAdmin = await Admin.findOne({ email: { $in: ['unfoldinn26@gmail.com', 'secondinnings136@gmail.com', 'deepaksogani18@gmail.com'] } });
     if (existingAdmin) {
       existingAdmin.email = adminEmail;
       await existingAdmin.save();

@@ -69,7 +69,7 @@ export default function SupportPage() {
       console.error(err);
       setStatus({
         type: 'error',
-        message: 'Failed to submit support ticket. Please email us directly at secondinnings136@gmail.com or message us on WhatsApp.',
+        message: 'Failed to submit support ticket. Please email us directly at unfoldinn26@gmail.com or message us on WhatsApp.',
         ticketId: null,
       });
     } finally {
@@ -83,7 +83,7 @@ export default function SupportPage() {
         breadcrumbs={[{ name: 'Support', href: '/support' }]}
         meta={['Helpdesk & Bug Reporting', 'Website Support', 'Jaipur, India']}
         title="Website Support & Technical Helpdesk"
-        lede="Encountered a bug, broken page, or booking problem? Submit the details below. Our technical team monitors this queue directly to keep Second Innings seamless."
+        lede="Encountered a bug, broken page, or booking problem? Submit the details below. Our technical team monitors this queue directly to keep Unfoldinn seamless."
       />
 
       {/* Disambiguation Banner */}
@@ -221,7 +221,7 @@ export default function SupportPage() {
                       value={formData.pageUrl}
                       onChange={(e) => setFormData({ ...formData, pageUrl: e.target.value })}
                       className="field"
-                      placeholder="e.g. https://second-innings.in/opportunities or /book"
+                      placeholder="e.g. https://unfoldinn.com/opportunities or /book"
                     />
                   </div>
 
@@ -283,8 +283,8 @@ export default function SupportPage() {
               <div className="space-y-3 pt-2 text-sm">
                 <div>
                   <span className="block text-xs text-muted font-mono uppercase">Direct Support Email</span>
-                  <a href="mailto:secondinnings136@gmail.com" className="font-medium text-ink hover:text-coral transition-colors underline break-all py-1 inline-block">
-                    secondinnings136@gmail.com
+                  <a href="mailto:unfoldinn26@gmail.com" className="font-medium text-ink hover:text-coral transition-colors underline break-all py-1 inline-block">
+                    unfoldinn26@gmail.com
                   </a>
                 </div>
                 <div>

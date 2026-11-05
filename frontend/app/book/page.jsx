@@ -1006,11 +1006,11 @@ export default function BookPage() {
                     <span>WhatsApp: +91 77372 20724</span>
                   </a>
                   <a
-                    href="mailto:secondinnings136@gmail.com"
+                    href="mailto:unfoldinn26@gmail.com"
                     className="flex items-center gap-2.5 text-ink-2 hover:text-signal transition-colors"
                   >
                     <Mail className="w-4 h-4 text-signal" />
-                    <span>secondinnings136@gmail.com</span>
+                    <span>unfoldinn26@gmail.com</span>
                   </a>
                 </div>
               </div>
@@ -1462,7 +1462,7 @@ export default function BookPage() {
                               <span className="font-semibold text-ink block">
                                 Consent for Structured Session Notes &amp; Continuity Briefs (Optional)
                               </span>
-                              Allow Second Innings to generate structured post-session notes and a 7-day continuity summary (using Google Meet notes/transcripts when enabled or mentor notes) so Deepak Sir can prepare for your future sessions. If unchecked, only manual mentor-entered notes will be used.
+                              Allow Unfoldinn to generate structured post-session notes and a 7-day continuity summary (using Google Meet notes/transcripts when enabled or mentor notes) so Deepak Sir can prepare for your future sessions. If unchecked, only manual mentor-entered notes will be used.
                             </div>
                           </label>
                         </div>

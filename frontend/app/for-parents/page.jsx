@@ -7,7 +7,7 @@ import SectionHead from '../../components/ui/SectionHead';
 import { Reveal, RevealGroup, RevealItem } from '../../components/ui/Reveal';
 
 export const metadata = {
-  title: 'For Parents | Guidance, Perspective & Support for Your Child — Second Innings',
+  title: 'For Parents | Guidance, Perspective & Support for Your Child — Unfoldinn',
   description:
     'Supporting your child through career uncertainty and life decisions. Thoughtful guidance that complements parenting while respecting young people’s independence.',
   keywords: [
@@ -22,13 +22,13 @@ export const metadata = {
     'Deepak Sogani parent guidance',
   ],
   alternates: {
-    canonical: 'https://second-innings.in/for-parents',
+    canonical: 'https://unfoldinn.com/for-parents',
   },
   openGraph: {
-    title: 'For Parents — Second Innings',
+    title: 'For Parents — Unfoldinn',
     description:
       'Every parent wants their child to make thoughtful choices. We provide an additional space for exploration that complements family guidance.',
-    url: 'https://second-innings.in/for-parents',
+    url: 'https://unfoldinn.com/for-parents',
   },
 };
 
@@ -44,7 +44,7 @@ const concerns = [
 const principles = [
   {
     title: 'Complementing, not replacing',
-    text: 'Second Innings works alongside parents and educators, providing an additional, objective sounding board for young people.',
+    text: 'Unfoldinn works alongside parents and educators, providing an additional, objective sounding board for young people.',
   },
   {
     title: 'Encouraging ownership',
@@ -75,11 +75,11 @@ const PARENT_FAQS = [
   },
   {
     q: 'Will Deepak Sir convince my child to follow a specific career?',
-    a: 'No. Second Innings is not a conduit for imposing choices. We help young people evaluate options objectively, understand trade-offs, and develop rational ownership over their education and life trajectory.'
+    a: 'No. Unfoldinn is not a conduit for imposing choices. We help young people evaluate options objectively, understand trade-offs, and develop rational ownership over their education and life trajectory.'
   },
   {
     q: 'How does this complement what the school or college provides?',
-    a: 'Schools focus on academics and bulk placements. Second Innings provides individualized, unhurried space for personal clarity, character building, and navigating intergenerational conversations.'
+    a: 'Schools focus on academics and bulk placements. Unfoldinn provides individualized, unhurried space for personal clarity, character building, and navigating intergenerational conversations.'
   }
 ];
 
@@ -108,7 +108,7 @@ export default function ForParentsPage() {
         breadcrumbs={[{ name: 'For Parents', href: '/for-parents' }]}
         meta={['For Parents', 'Family & Perspective', 'Intergenerational Dialogue']}
         title="Every parent wants their child to make thoughtful choices and build a meaningful future."
-        lede="Second Innings seeks to complement, not replace, the role of parents, teachers, educational institutions or qualified professionals."
+        lede="Unfoldinn seeks to complement, not replace, the role of parents, teachers, educational institutions or qualified professionals."
       >
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6">
           <Button href="/book">Start a Conversation About Your Child</Button>
@@ -246,7 +246,7 @@ export default function ForParentsPage() {
             <p className="meta text-signal mb-2 sm:mb-3">Safeguarding &amp; ethics</p>
             <h4 className="font-serif text-[1.375rem] sm:text-[1.75rem] text-ink mb-3 sm:mb-4">Safety and Professional Boundaries</h4>
             <p className="text-[0.9375rem] sm:text-[1.0625rem] text-muted leading-relaxed">
-              For participants below the age of 18, appropriate parental/guardian consent and safeguarding requirements always apply. Second Innings is committed to providing a responsible and transparent environment.
+              For participants below the age of 18, appropriate parental/guardian consent and safeguarding requirements always apply. Unfoldinn is committed to providing a responsible and transparent environment.
             </p>
             <div className="mt-5 sm:mt-6">
               <Link href="/privacy-boundaries" className="meta text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-signal py-1 inline-block">

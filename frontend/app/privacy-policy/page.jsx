@@ -3,16 +3,16 @@ import Button from '../../components/ui/Button';
 import Breadcrumbs from '../../components/ui/Breadcrumbs';
 
 export const metadata = {
-  title: 'Privacy Policy | Second Innings',
+  title: 'Privacy Policy | Unfoldinn',
   description:
-    'Privacy Policy for Second Innings outlining how personal data is collected, used, protected, and respected under DPDP Act.',
+    'Privacy Policy for Unfoldinn outlining how personal data is collected, used, protected, and respected under DPDP Act.',
   alternates: {
-    canonical: 'https://second-innings.in/privacy-policy',
+    canonical: 'https://unfoldinn.com/privacy-policy',
   },
   openGraph: {
-    title: 'Privacy Policy — Second Innings',
-    description: 'Privacy Policy for Second Innings outlining how personal data is collected, used, and safeguarded.',
-    url: 'https://second-innings.in/privacy-policy',
+    title: 'Privacy Policy — Unfoldinn',
+    description: 'Privacy Policy for Unfoldinn outlining how personal data is collected, used, and safeguarded.',
+    url: 'https://unfoldinn.com/privacy-policy',
   },
 };
 
@@ -41,7 +41,7 @@ export default function PrivacyPolicyPage() {
             Last Updated: October 2026 • Responsible Collection &amp; Privacy Safeguards
           </p>
           <p className="lede text-[1.125rem]">
-            Second Innings (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;the Platform&rdquo;), founded by Deepak Sogani and based in Jaipur, Rajasthan, operates as a human-led mentoring and perspective platform for young people aged 16–25. This Privacy Policy outlines how we collect, process, store, and protect your personal data, and details your rights.
+            Unfoldinn (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;the Platform&rdquo;), founded by Deepak Sogani and based in Jaipur, Rajasthan, operates as a human-led mentoring and perspective platform for young people aged 16–25. This Privacy Policy outlines how we collect, process, store, and protect your personal data, and details your rights.
           </p>
         </div>
 
@@ -90,7 +90,7 @@ export default function PrivacyPolicyPage() {
                   <strong className="text-ink">Parent / Guardian Information (for Minors under 18):</strong> Parent or guardian&apos;s full name, mobile number, email, and affirmative consent record.
                 </li>
                 <li>
-                  <strong className="text-ink">Referral Source:</strong> Information regarding how you discovered Second Innings (e.g., friend, LinkedIn, educator, alumni).
+                  <strong className="text-ink">Referral Source:</strong> Information regarding how you discovered Unfoldinn (e.g., friend, LinkedIn, educator, alumni).
                 </li>
               </ul>
             </section>
@@ -188,8 +188,8 @@ export default function PrivacyPolicyPage() {
               </div>
               <p className="text-sm text-muted pt-2">
                 To exercise any of these rights, email us at{' '}
-                <a href="mailto:secondinnings136@gmail.com" className="text-ink underline decoration-ink/20 hover:decoration-signal font-medium">
-                  secondinnings136@gmail.com
+                <a href="mailto:unfoldinn26@gmail.com" className="text-ink underline decoration-ink/20 hover:decoration-signal font-medium">
+                  unfoldinn26@gmail.com
                 </a>{' '}
                 with the subject line &ldquo;Data Request&rdquo;. We respond within 7 business days.
               </p>
@@ -206,8 +206,8 @@ export default function PrivacyPolicyPage() {
               </p>
               <div className="text-xs sm:text-sm text-ink-2 font-mono space-y-1.5 pt-2">
                 <p><strong>Contact:</strong> Deepak Sogani</p>
-                <p><strong>Designation:</strong> Founder, Second Innings</p>
-                <p><strong>Email:</strong> <a href="mailto:secondinnings136@gmail.com" className="underline hover:text-signal">secondinnings136@gmail.com</a></p>
+                <p><strong>Designation:</strong> Founder, Unfoldinn</p>
+                <p><strong>Email:</strong> <a href="mailto:unfoldinn26@gmail.com" className="underline hover:text-signal">unfoldinn26@gmail.com</a></p>
                 <p><strong>Location:</strong> Jaipur, Rajasthan, India</p>
               </div>
             </section>

@@ -361,7 +361,7 @@ function PaymentStatusContent() {
                       slotForm.preferredDate
                         ? ` and selected ${slotForm.preferredDate} (${slotForm.preferredTime})`
                         : ''
-                    } for my Second Innings mentoring session.`
+                    } for my Unfoldinn mentoring session.`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

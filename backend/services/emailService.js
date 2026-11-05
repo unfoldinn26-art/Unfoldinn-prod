@@ -7,21 +7,21 @@ const EmailLog = require('../models/EmailLog');
 function getEmailConfig() {
   const apiKey = (process.env.RESEND_API_KEY || '').trim();
   const from = (
-    process.env.EMAIL_FROM || 'Second Innings <notifications@second-innings.in>'
+    process.env.EMAIL_FROM || 'Unfoldinn <notifications@unfoldinn.com>'
   ).trim();
   const fallbackFrom = (
-    process.env.EMAIL_FALLBACK_FROM || 'Second Innings <onboarding@resend.dev>'
+    process.env.EMAIL_FALLBACK_FROM || 'Unfoldinn <onboarding@resend.dev>'
   ).trim();
   const replyTo = (
-    process.env.EMAIL_REPLY_TO || 'secondinnings136@gmail.com'
+    process.env.EMAIL_REPLY_TO || 'unfoldinn26@gmail.com'
   ).trim();
   const adminEmail = (
-    process.env.ADMIN_NOTIFICATION_EMAIL || 'secondinnings136@gmail.com'
+    process.env.ADMIN_NOTIFICATION_EMAIL || 'unfoldinn26@gmail.com'
   )
     .trim()
     .toLowerCase();
   const frontendUrl = (
-    process.env.FRONTEND_URL || 'https://www.second-innings.in'
+    process.env.FRONTEND_URL || 'https://www.unfoldinn.com'
   )
     .trim()
     .replace(/\/+$/, '');
@@ -105,7 +105,7 @@ function canUseResendSandboxFallback(recipientEmail, adminEmail) {
   if (!normalized) return false;
   return (
     normalized === adminEmail ||
-    normalized === 'secondinnings136@gmail.com' ||
+    normalized === 'unfoldinn26@gmail.com' ||
     normalized.endsWith('@resend.dev')
   );
 }
@@ -127,7 +127,7 @@ async function trySmtpFallback({ to, replyTo, subject, html, text }) {
   });
 
   const info = await transporter.sendMail({
-    from: process.env.SMTP_FROM || `"Second Innings" <${user}>`,
+    from: process.env.SMTP_FROM || `"Unfoldinn" <${user}>`,
     to,
     replyTo,
     subject,
@@ -296,10 +296,10 @@ async function sendTransactionalEmail({
 
       lastError = error || { message: 'Unknown Resend API error' };
 
-      // 5. Handle pending DNS verification on custom domain (`second-innings.in`)
+      // 5. Handle pending DNS verification on custom domain (`unfoldinn.com`)
       if (isUnverifiedDomainError(lastError)) {
-        // 5a. If recipient is the business inbox (`secondinnings136@gmail.com`) or `@resend.dev`,
-        // automatically retry using `Second Innings <onboarding@resend.dev>` so admin alerts and
+        // 5a. If recipient is the business inbox (`unfoldinn26@gmail.com`) or `@resend.dev`,
+        // automatically retry using `Unfoldinn <onboarding@resend.dev>` so admin alerts and
         // test emails deliver immediately even before DNS verification is clicked in Resend.
         if (canUseResendSandboxFallback(recipient, config.adminEmail)) {
           const fallbackKey = `${effectiveKey}:sandbox-fallback`;
@@ -333,7 +333,7 @@ async function sendTransactionalEmail({
               errorMessage: null,
               metadata: {
                 ...metadata,
-                note: 'Delivered via onboarding@resend.dev while second-innings.in DNS verification is pending'
+                note: 'Delivered via onboarding@resend.dev while unfoldinn.com DNS verification is pending'
               }
             });
             return {
@@ -386,7 +386,7 @@ async function sendTransactionalEmail({
         // 5c. Record `skipped_unverified_domain` cleanly without retrying in a loop
         const pendingMsg =
           lastError.message ||
-          'Sender domain second-innings.in is pending verification in Resend dashboard';
+          'Sender domain unfoldinn.com is pending verification in Resend dashboard';
         await recordEmailLog({
           idempotencyKey: effectiveKey,
           workflow: workflow || 'unknown',
@@ -469,7 +469,7 @@ function renderBrandEmailLayout({
   ctaLabel = '',
   ctaUrl = '',
   closingHtml = '',
-  footerNote = 'This is an automated transactional message from Second Innings.'
+  footerNote = 'This is an automated transactional message from Unfoldinn.'
 }) {
   const config = getEmailConfig();
   const publicAssetBaseUrl =
@@ -477,7 +477,7 @@ function renderBrandEmailLayout({
     !config.frontendUrl.includes('localhost') &&
     !config.frontendUrl.includes('127.0.0.1')
       ? config.frontendUrl
-      : 'https://www.second-innings.in';
+      : 'https://www.unfoldinn.com';
   const logoUrl = `${publicAssetBaseUrl}/logo.jpg`;
 
   const rowsHtml =
@@ -557,7 +557,7 @@ function renderBrandEmailLayout({
                     )}" style="display: inline-block; text-decoration: none; color: #F8F6F0; font-size: 13px; font-weight: 600;">
                       <img src="${escapeHtml(
                         logoUrl
-                      )}" alt="Second Innings" width="52" height="52" style="display: block; width: 52px; height: 52px; object-fit: cover; border-radius: 10px; background-color: #FAF7F0; border: 1px solid rgba(248, 246, 240, 0.25);" />
+                      )}" alt="Unfoldinn" width="52" height="52" style="display: block; width: 52px; height: 52px; object-fit: cover; border-radius: 10px; background-color: #FAF7F0; border: 1px solid rgba(248, 246, 240, 0.25);" />
                     </a>
                   </td>
                 </tr>
@@ -587,7 +587,7 @@ function renderBrandEmailLayout({
               }
               <p style="margin: 26px 0 0 0; font-size: 14px; line-height: 1.6; color: #1C1B18;">
                 Warm regards,<br />
-                <strong>Deepak &amp; Team Second Innings</strong><br />
+                <strong>Deepak &amp; Team Unfoldinn</strong><br />
                 <span style="font-size: 13px; color: #6E6A63;">Thoughtful 1-on-1 Mentorship for Students &amp; Young Adults</span>
               </p>
             </td>
@@ -606,7 +606,7 @@ function renderBrandEmailLayout({
               <p style="margin: 0;">
                 <a href="${escapeHtml(
                   config.frontendUrl
-                )}" style="color: #6E6A63; text-decoration: underline;">www.second-innings.in</a>
+                )}" style="color: #6E6A63; text-decoration: underline;">www.unfoldinn.com</a>
                 &nbsp;&bull;&nbsp; ${escapeHtml(footerNote)}
               </p>
             </td>
@@ -627,16 +627,16 @@ async function sendEmailOtp({ email, otp, name, purpose = 'email_verify', idempo
   const isLogin2FA = purpose === 'login_2fa';
 
   const subject = isLogin2FA
-    ? 'Your Second Innings 2-Step Sign-In (2FA) Code'
-    : 'Verify your email address — Second Innings';
+    ? 'Your Unfoldinn 2-Step Sign-In (2FA) Code'
+    : 'Verify your email address — Unfoldinn';
 
   const html = renderBrandEmailLayout({
     eyebrow: isLogin2FA ? '2-FACTOR AUTHENTICATION (2FA)' : 'EMAIL VERIFICATION',
     title: isLogin2FA ? '2-Step Sign-In Verification Code' : 'Verify Your Email Address',
     greeting: `Hi ${cleanName},`,
     introHtml: isLogin2FA
-      ? `<p style="margin: 0 0 12px 0;">Your password was verified. Please enter the 6-digit <strong>2-Factor Authentication (2FA)</strong> code below to complete signing in to your Second Innings account. This code expires in <strong>10 minutes</strong>.</p>`
-      : `<p style="margin: 0 0 12px 0;">Please use the single-use 6-digit verification code below to confirm your email address and activate your Second Innings account. This code expires in <strong>10 minutes</strong>.</p>`,
+      ? `<p style="margin: 0 0 12px 0;">Your password was verified. Please enter the 6-digit <strong>2-Factor Authentication (2FA)</strong> code below to complete signing in to your Unfoldinn account. This code expires in <strong>10 minutes</strong>.</p>`
+      : `<p style="margin: 0 0 12px 0;">Please use the single-use 6-digit verification code below to confirm your email address and activate your Unfoldinn account. This code expires in <strong>10 minutes</strong>.</p>`,
     calloutTitle: isLogin2FA ? '2FA Security Code' : 'One-Time Verification Code',
     calloutBodyHtml: `<p style="margin: 4px 0; font-size: 28px; font-weight: 700; letter-spacing: 0.25em; color: #1C1B18; font-family: 'Courier New', Courier, monospace;">${escapeHtml(
       otp
@@ -648,15 +648,15 @@ async function sendEmailOtp({ email, otp, name, purpose = 'email_verify', idempo
     `Hi ${cleanName},`,
     '',
     isLogin2FA
-      ? `Your Second Innings 2-Factor Authentication (2FA) sign-in code is: ${otp}`
-      : `Your Second Innings email verification code is: ${otp}`,
+      ? `Your Unfoldinn 2-Factor Authentication (2FA) sign-in code is: ${otp}`
+      : `Your Unfoldinn email verification code is: ${otp}`,
     '',
     'This single-use code is valid for 10 minutes. For your security, do not share it with anyone.',
     'If you did not request this code, please ignore this email.',
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings',
-    'https://www.second-innings.in'
+    'Deepak & Team Unfoldinn',
+    'https://www.unfoldinn.com'
   ].join('\n');
 
   return sendTransactionalEmail({
@@ -678,13 +678,13 @@ async function sendWelcomeEmail(user) {
   if (!user || !user.email) return { sent: false, status: 'skipped_invalid_recipient' };
   const config = getEmailConfig();
   const cleanName = user.name || 'there';
-  const subject = 'Welcome to Second Innings';
+  const subject = 'Welcome to Unfoldinn';
 
   const html = renderBrandEmailLayout({
     eyebrow: 'WELCOME TO SECOND INNINGS',
     title: 'Your Mentorship Space Is Ready',
     greeting: `Hello ${cleanName},`,
-    introHtml: `<p style="margin: 0 0 12px 0;">Thank you for creating your account with Second Innings. We provide a calm, confidential, and structured 1-on-1 mentorship environment where students and young adults can think clearly about academics, career direction, and personal growth.</p>`,
+    introHtml: `<p style="margin: 0 0 12px 0;">Thank you for creating your account with Unfoldinn. We provide a calm, confidential, and structured 1-on-1 mentorship environment where students and young adults can think clearly about academics, career direction, and personal growth.</p>`,
     detailsRows: [
       { label: 'Account Email', value: user.email },
       { label: 'Role', value: user.role === 'parent' ? 'Parent / Guardian' : 'Student / Mentee' }
@@ -697,13 +697,13 @@ async function sendWelcomeEmail(user) {
   const text = [
     `Hello ${cleanName},`,
     '',
-    'Welcome to Second Innings! Your account has been created.',
+    'Welcome to Unfoldinn! Your account has been created.',
     `Account Email: ${user.email}`,
     '',
     `Visit your dashboard anytime at: ${config.frontendUrl}/dashboard`,
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ].join('\n');
 
   return sendTransactionalEmail({
@@ -726,7 +726,7 @@ async function sendContactEmails(contact) {
   const contactId = String(contact._id || crypto.randomUUID());
   const enquiryCategory = contact.type || contact.userType || 'General';
 
-  const userSubject = 'We have received your message — Second Innings';
+  const userSubject = 'We have received your message — Unfoldinn';
   const userHtml = renderBrandEmailLayout({
     eyebrow: 'ENQUIRY RECEIVED',
     title: 'Thank You for Reaching Out',
@@ -742,29 +742,29 @@ async function sendContactEmails(contact) {
     calloutBodyHtml: `<p style="margin: 0; white-space: pre-line;">${escapeHtml(
       contact.message || ''
     )}</p>`,
-    ctaLabel: 'Visit Second Innings',
+    ctaLabel: 'Visit Unfoldinn',
     ctaUrl: config.frontendUrl
   });
 
   const userText = [
     `Hello ${contact.name || 'there'},`,
     '',
-    'Thank you for reaching out to Second Innings. We have received your message and will respond within 24 hours.',
+    'Thank you for reaching out to Unfoldinn. We have received your message and will respond within 24 hours.',
     '',
     `Subject: ${contact.subject || 'Website Enquiry'}`,
     `Enquiry Type: ${enquiryCategory}`,
     `Your Message: ${contact.message || ''}`,
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ].join('\n');
 
-  const adminSubject = 'New website enquiry received — Second Innings';
+  const adminSubject = 'New website enquiry received — Unfoldinn';
   const adminHtml = renderBrandEmailLayout({
     eyebrow: 'ADMIN NOTIFICATION',
     title: 'New Contact Form Submission',
     greeting: 'Hello Deepak,',
-    introHtml: `<p style="margin: 0 0 12px 0;">A new enquiry has been submitted through the Second Innings contact form. You can reply directly to this email to respond to <strong>${escapeHtml(
+    introHtml: `<p style="margin: 0 0 12px 0;">A new enquiry has been submitted through the Unfoldinn contact form. You can reply directly to this email to respond to <strong>${escapeHtml(
       contact.name
     )}</strong>.</p>`,
     detailsRows: [
@@ -786,7 +786,7 @@ async function sendContactEmails(contact) {
   const adminText = [
     'Hello Deepak,',
     '',
-    'A new contact enquiry was submitted on Second Innings:',
+    'A new contact enquiry was submitted on Unfoldinn:',
     `Name: ${contact.name}`,
     `Email: ${contact.email}`,
     `Phone: ${contact.phone || 'Not provided'}`,
@@ -837,12 +837,12 @@ async function sendInstitutionEnquiryEmails(enquiry) {
   const cohortInfo = enquiry.studentStrength || enquiry.studentAgeGroup || 'Not specified';
   const enquiryMessage = enquiry.enquiryNature || enquiry.message || 'No additional notes provided.';
 
-  const userSubject = 'Institutional partnership enquiry received — Second Innings';
+  const userSubject = 'Institutional partnership enquiry received — Unfoldinn';
   const userHtml = renderBrandEmailLayout({
     eyebrow: 'INSTITUTIONAL PARTNERSHIPS',
     title: 'Thank You for Your Partnership Enquiry',
     greeting: `Dear ${contactPerson},`,
-    introHtml: `<p style="margin: 0 0 12px 0;">Thank you for expressing interest in bringing Second Innings mentorship to <strong>${escapeHtml(
+    introHtml: `<p style="margin: 0 0 12px 0;">Thank you for expressing interest in bringing Unfoldinn mentorship to <strong>${escapeHtml(
       enquiry.institutionName
     )}</strong>. Deepak's office has received your institutional details and will connect with you shortly to discuss a tailored format.</p>`,
     detailsRows: [
@@ -851,7 +851,7 @@ async function sendInstitutionEnquiryEmails(enquiry) {
       { label: 'City', value: enquiry.city || 'Not specified' },
       { label: 'Cohort / Strength', value: cohortInfo }
     ],
-    ctaLabel: 'Explore Second Innings',
+    ctaLabel: 'Explore Unfoldinn',
     ctaUrl: `${config.frontendUrl}/institutions`
   });
 
@@ -862,10 +862,10 @@ async function sendInstitutionEnquiryEmails(enquiry) {
     'Deepak and our partnerships team have received your details and will get in touch with you shortly.',
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ].join('\n');
 
-  const adminSubject = 'New institution partnership enquiry — Second Innings';
+  const adminSubject = 'New institution partnership enquiry — Unfoldinn';
   const adminHtml = renderBrandEmailLayout({
     eyebrow: 'INSTITUTIONAL ENQUIRY ALERT',
     title: 'New School / College Partnership Request',
@@ -892,7 +892,7 @@ async function sendInstitutionEnquiryEmails(enquiry) {
   const adminText = [
     'Hello Deepak,',
     '',
-    'New Institutional Enquiry on Second Innings:',
+    'New Institutional Enquiry on Unfoldinn:',
     `Institution: ${enquiry.institutionName} (${enquiry.institutionType || 'N/A'})`,
     `Contact: ${contactPerson} (${designation || 'N/A'})`,
     `Email: ${enquiry.email}`,
@@ -942,12 +942,12 @@ async function sendSupportTicketEmails(ticket) {
   const shortRef = `#${ticketId.slice(-6).toUpperCase()}`;
   const ticketBody = ticket.description || ticket.message || '';
 
-  const userSubject = `Support request received (${shortRef}) — Second Innings`;
+  const userSubject = `Support request received (${shortRef}) — Unfoldinn`;
   const userHtml = renderBrandEmailLayout({
     eyebrow: 'SUPPORT DESK',
     title: 'We Have Logged Your Support Request',
     greeting: `Hello ${ticket.name || 'there'},`,
-    introHtml: `<p style="margin: 0 0 12px 0;">Your support request has been received by Second Innings. Our team will look into your query and respond to you shortly.</p>`,
+    introHtml: `<p style="margin: 0 0 12px 0;">Your support request has been received by Unfoldinn. Our team will look into your query and respond to you shortly.</p>`,
     detailsRows: [
       { label: 'Ticket Reference', value: shortRef },
       { label: 'Subject', value: ticket.subject || 'General Help' },
@@ -963,21 +963,21 @@ async function sendSupportTicketEmails(ticket) {
   const userText = [
     `Hello ${ticket.name || 'there'},`,
     '',
-    `Your support request (${shortRef}) has been logged with Second Innings.`,
+    `Your support request (${shortRef}) has been logged with Unfoldinn.`,
     `Subject: ${ticket.subject || 'General Help'}`,
     `Message: ${ticketBody}`,
     '',
     'We will get back to you shortly.',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ].join('\n');
 
-  const adminSubject = `New support ticket (${shortRef}) — Second Innings`;
+  const adminSubject = `New support ticket (${shortRef}) — Unfoldinn`;
   const adminHtml = renderBrandEmailLayout({
     eyebrow: 'SUPPORT ESCALATION',
     title: `New Support Ticket ${shortRef}`,
     greeting: 'Hello Deepak,',
-    introHtml: `<p style="margin: 0 0 12px 0;">A user has raised a support ticket on Second Innings. Reply directly to this email to respond to <strong>${escapeHtml(
+    introHtml: `<p style="margin: 0 0 12px 0;">A user has raised a support ticket on Unfoldinn. Reply directly to this email to respond to <strong>${escapeHtml(
       ticket.name
     )}</strong>.</p>`,
     detailsRows: [
@@ -1045,12 +1045,12 @@ async function sendNewsletterWelcomeEmail(subscriber) {
   const config = getEmailConfig();
   const subId = String(subscriber._id || subscriber.email);
 
-  const subject = 'Welcome to notes & reflections from Second Innings';
+  const subject = 'Welcome to notes & reflections from Unfoldinn';
   const html = renderBrandEmailLayout({
     eyebrow: 'SECOND INNINGS DISPATCH',
     title: 'Thank You for Subscribing',
     greeting: 'Hello,',
-    introHtml: `<p style="margin: 0 0 12px 0;">You are now subscribed to occasional essays and thoughtful perspectives from Deepak and Second Innings on clarity, academic transitions, career choices, and parenting young adults.</p>`,
+    introHtml: `<p style="margin: 0 0 12px 0;">You are now subscribed to occasional essays and thoughtful perspectives from Deepak and Unfoldinn on clarity, academic transitions, career choices, and parenting young adults.</p>`,
     closingHtml: `<p style="margin: 0;">We respect your inbox and write only when we have something genuinely worthwhile to share.</p>`,
     ctaLabel: 'Read Our Latest Perspectives',
     ctaUrl: config.frontendUrl
@@ -1059,11 +1059,11 @@ async function sendNewsletterWelcomeEmail(subscriber) {
   const text = [
     'Hello,',
     '',
-    'Thank you for subscribing to updates and reflections from Second Innings.',
+    'Thank you for subscribing to updates and reflections from Unfoldinn.',
     `Explore our website: ${config.frontendUrl}`,
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ].join('\n');
 
   return sendTransactionalEmail({
@@ -1113,8 +1113,8 @@ async function sendBookingConfirmationEmails(booking, options = {}) {
     /^https:\/\/meet\.google\.com\/[a-z0-9-]+/i.test(String(booking.meetingLink).trim());
 
   const userSubject = isConfirmed
-    ? `Your mentorship session is confirmed (${shortRef}) — Second Innings`
-    : `We have received your session booking request (${shortRef}) — Second Innings`;
+    ? `Your mentorship session is confirmed (${shortRef}) — Unfoldinn`
+    : `We have received your session booking request (${shortRef}) — Unfoldinn`;
 
   const detailsRows = [
     { label: 'Booking Reference', value: shortRef },
@@ -1159,8 +1159,8 @@ async function sendBookingConfirmationEmails(booking, options = {}) {
       : 'Your Session Request Has Been Logged',
     greeting: `Hello ${booking.name || booking.studentName || 'there'},`,
     introHtml: isConfirmed
-      ? `<p style="margin: 0 0 12px 0;">Your 1-on-1 mentorship session with Deepak at Second Innings is confirmed. Please find your session details below.</p>`
-      : `<p style="margin: 0 0 12px 0;">We have saved your mentorship session details on Second Innings. Please review your booking summary below.</p>`,
+      ? `<p style="margin: 0 0 12px 0;">Your 1-on-1 mentorship session with Deepak at Unfoldinn is confirmed. Please find your session details below.</p>`
+      : `<p style="margin: 0 0 12px 0;">We have saved your mentorship session details on Unfoldinn. Please review your booking summary below.</p>`,
     detailsRows,
     calloutTitle: hasVerifiedMeetLink && isConfirmed ? 'Join via Google Meet' : 'What Happens Next',
     calloutBodyHtml:
@@ -1172,7 +1172,7 @@ async function sendBookingConfirmationEmails(booking, options = {}) {
           )}</a>. A Google Calendar invitation has also been scheduled for your session.</p>`
         : isConfirmed
         ? `<p style="margin: 0;">Deepak will review your context ahead of the conversation. We will coordinate the session details with you prior to your scheduled slot.</p>`
-        : `<p style="margin: 0;">You can check your session status or update your preferred time slot directly from your Second Innings dashboard.</p>`,
+        : `<p style="margin: 0;">You can check your session status or update your preferred time slot directly from your Unfoldinn dashboard.</p>`,
     ctaLabel: hasVerifiedMeetLink && isConfirmed ? 'Join Google Meet Session' : 'View Your Session Dashboard',
     ctaUrl: hasVerifiedMeetLink && isConfirmed ? booking.meetingLink : `${config.frontendUrl}/dashboard`
   });
@@ -1181,8 +1181,8 @@ async function sendBookingConfirmationEmails(booking, options = {}) {
     `Hello ${booking.name || booking.studentName || 'there'},`,
     '',
     isConfirmed
-      ? `Your 1-on-1 mentorship session (${shortRef}) with Second Innings is confirmed.`
-      : `Your session booking request (${shortRef}) has been logged with Second Innings.`,
+      ? `Your 1-on-1 mentorship session (${shortRef}) with Unfoldinn is confirmed.`
+      : `Your session booking request (${shortRef}) has been logged with Unfoldinn.`,
     `Participant: ${booking.studentName || booking.name}`,
     `Scheduled Date & Time: ${formattedSlot}`,
     `Timezone: ${timezoneLabel}`,
@@ -1192,14 +1192,14 @@ async function sendBookingConfirmationEmails(booking, options = {}) {
     `View your dashboard: ${config.frontendUrl}/dashboard`,
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ]
     .filter(Boolean)
     .join('\n');
 
   const adminSubject = isConfirmed
-    ? `Confirmed mentorship booking (${shortRef}) — Second Innings`
-    : `New mentorship booking request (${shortRef}) — Second Innings`;
+    ? `Confirmed mentorship booking (${shortRef}) — Unfoldinn`
+    : `New mentorship booking request (${shortRef}) — Unfoldinn`;
 
   const bookingTopic =
     booking.topic ||
@@ -1257,7 +1257,7 @@ async function sendBookingConfirmationEmails(booking, options = {}) {
     greeting: 'Hello Deepak,',
     introHtml: `<p style="margin: 0 0 12px 0;">A mentorship session booking has been ${
       isConfirmed ? 'confirmed' : 'created'
-    } on Second Innings. You can reply directly to this email to contact <strong>${escapeHtml(
+    } on Unfoldinn. You can reply directly to this email to contact <strong>${escapeHtml(
       booking.name || booking.studentName
     )}</strong>.</p>`,
     detailsRows: adminRows,
@@ -1357,8 +1357,8 @@ async function sendBookingStatusUpdateEmail(booking, changeSummary = 'updated') 
 
   const subject =
     booking.status === 'cancelled'
-      ? `Update on your mentorship booking (${shortRef}) — Second Innings`
-      : `Session update for your Second Innings booking (${shortRef})`;
+      ? `Update on your mentorship booking (${shortRef}) — Unfoldinn`
+      : `Session update for your Unfoldinn booking (${shortRef})`;
 
   const detailsRows = [
     { label: 'Booking Reference', value: shortRef },
@@ -1388,7 +1388,7 @@ async function sendBookingStatusUpdateEmail(booking, changeSummary = 'updated') 
     introHtml:
       booking.status === 'cancelled'
         ? `<p style="margin: 0 0 12px 0;">Your mentorship booking <strong>${shortRef}</strong> has been marked as cancelled. If you would like to reschedule for another date, please reply to this email or visit your dashboard.</p>`
-        : `<p style="margin: 0 0 12px 0;">There is an update to your Second Innings mentorship booking <strong>${shortRef}</strong>. Please review the latest schedule and session details below.</p>`,
+        : `<p style="margin: 0 0 12px 0;">There is an update to your Unfoldinn mentorship booking <strong>${shortRef}</strong>. Please review the latest schedule and session details below.</p>`,
     detailsRows,
     ctaLabel:
       hasVerifiedMeetLink && booking.status === 'confirmed'
@@ -1403,7 +1403,7 @@ async function sendBookingStatusUpdateEmail(booking, changeSummary = 'updated') 
   const text = [
     `Hello ${booking.name || booking.studentName || 'there'},`,
     '',
-    `There is an update to your Second Innings mentorship booking (${shortRef}):`,
+    `There is an update to your Unfoldinn mentorship booking (${shortRef}):`,
     `Status: ${friendlyStatus}`,
     `Date & Slot: ${formattedSlot}`,
     `Timezone: ${timezoneLabel}`,
@@ -1414,7 +1414,7 @@ async function sendBookingStatusUpdateEmail(booking, changeSummary = 'updated') 
     `View on your dashboard: ${config.frontendUrl}/dashboard`,
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ]
     .filter(Boolean)
     .join('\n');
@@ -1444,8 +1444,8 @@ async function sendBookingStatusUpdateEmail(booking, changeSummary = 'updated') 
   // Also notify mentor (Deepak) on reschedule or cancellation
   const adminSubject =
     booking.status === 'cancelled'
-      ? `Session cancelled (${shortRef}) — Second Innings`
-      : `Session schedule updated (${shortRef}) — Second Innings`;
+      ? `Session cancelled (${shortRef}) — Unfoldinn`
+      : `Session schedule updated (${shortRef}) — Unfoldinn`;
 
   const adminHtml = renderBrandEmailLayout({
     eyebrow: 'MENTOR SCHEDULE UPDATE',
@@ -1509,7 +1509,7 @@ async function sendSevenDayFollowUpEmail(booking) {
   const bookingId = String(booking._id || crypto.randomUUID());
   const shortRef = `#${bookingId.slice(-6).toUpperCase()}`;
 
-  const subject = `Your post-session notes & 7-day action plan (${shortRef}) — Second Innings`;
+  const subject = `Your post-session notes & 7-day action plan (${shortRef}) — Unfoldinn`;
 
   const followUpBlocks = [];
   if (booking.sharedNotes) {
@@ -1547,14 +1547,14 @@ async function sendSevenDayFollowUpEmail(booking) {
   const text = [
     `Hello ${booking.studentName || booking.name || 'there'},`,
     '',
-    `Here are the reflections and 7-day action plan from your Second Innings session (${shortRef}):`,
+    `Here are the reflections and 7-day action plan from your Unfoldinn session (${shortRef}):`,
     '',
     booking.sharedNotes ? `Key Reflections:\n${booking.sharedNotes}\n` : '',
     booking.actionAgreed ? `Agreed 7-Day Action Step:\n${booking.actionAgreed}\n` : '',
     `View your dashboard: ${config.frontendUrl}/dashboard`,
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ]
     .filter(Boolean)
     .join('\n');
@@ -1610,7 +1610,7 @@ async function sendPaymentSuccessEmails({
     ? `${subscription.planName || 'Mentorship Pack'} (${subscription.totalCredits || ''} Sessions)`
     : `1-on-1 Mentorship Session (Session #${(booking && booking.sessionNumber) || 1})`;
 
-  const userSubject = `Payment confirmed (${orderId}) — Second Innings`;
+  const userSubject = `Payment confirmed (${orderId}) — Unfoldinn`;
   const userRows = [
     { label: 'Order Reference', value: orderId },
     { label: 'Payment Status', value: 'Paid & Verified' },
@@ -1644,7 +1644,7 @@ async function sendPaymentSuccessEmails({
     eyebrow: 'PAYMENT RECEIPT',
     title: 'Your Payment Has Been Confirmed',
     greeting: `Hello ${recipientName},`,
-    introHtml: `<p style="margin: 0 0 12px 0;">Thank you for your payment. We have verified your transaction and updated your Second Innings account.</p>`,
+    introHtml: `<p style="margin: 0 0 12px 0;">Thank you for your payment. We have verified your transaction and updated your Unfoldinn account.</p>`,
     detailsRows: userRows,
     calloutTitle: isSubscription ? 'Using Your Mentorship Pack' : 'Your Session Status',
     calloutBodyHtml: isSubscription
@@ -1657,7 +1657,7 @@ async function sendPaymentSuccessEmails({
   const userText = [
     `Hello ${recipientName},`,
     '',
-    'Your payment with Second Innings has been verified.',
+    'Your payment with Unfoldinn has been verified.',
     `Order Reference: ${orderId}`,
     `Amount Paid: INR ${amountVal}`,
     `Item: ${itemDescription}`,
@@ -1665,10 +1665,10 @@ async function sendPaymentSuccessEmails({
     `Access your dashboard: ${config.frontendUrl}/dashboard`,
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ].join('\n');
 
-  const adminSubject = `Payment received: INR ${amountVal} (${orderId}) — Second Innings`;
+  const adminSubject = `Payment received: INR ${amountVal} (${orderId}) — Unfoldinn`;
   const adminRows = [
     { label: 'Order ID', value: orderId },
     { label: 'Amount Paid', value: `INR ${amountVal}` },
@@ -1690,7 +1690,7 @@ async function sendPaymentSuccessEmails({
     eyebrow: 'PAYMENT ALERT',
     title: `Verified Payment of INR ${amountVal}`,
     greeting: 'Hello Deepak,',
-    introHtml: `<p style="margin: 0 0 12px 0;">A Cashfree payment has been verified on Second Innings.</p>`,
+    introHtml: `<p style="margin: 0 0 12px 0;">A Cashfree payment has been verified on Unfoldinn.</p>`,
     detailsRows: adminRows,
     ctaLabel: 'Open Admin Panel',
     ctaUrl: `${config.frontendUrl}/admin`
@@ -1768,33 +1768,33 @@ async function sendPaymentFailedEmail({ orderId, booking, transaction, user }) {
     (booking && (booking.paymentAmount || booking.amount)) ||
     '';
 
-  const subject = `Payment could not be completed (${orderId}) — Second Innings`;
+  const subject = `Payment could not be completed (${orderId}) — Unfoldinn`;
   const html = renderBrandEmailLayout({
     eyebrow: 'PAYMENT UPDATE',
     title: 'Your Payment Could Not Be Completed',
     greeting: `Hello ${recipientName},`,
-    introHtml: `<p style="margin: 0 0 12px 0;">We noticed that your recent payment attempt on Second Innings did not go through. No confirmed charge was applied to your booking.</p>`,
+    introHtml: `<p style="margin: 0 0 12px 0;">We noticed that your recent payment attempt on Unfoldinn did not go through. No confirmed charge was applied to your booking.</p>`,
     detailsRows: [
       { label: 'Order Reference', value: orderId },
       { label: 'Amount', value: amountVal ? `INR ${amountVal}` : 'As selected' },
       { label: 'Status', value: 'Payment Unsuccessful' }
     ],
     calloutTitle: 'How to Complete Your Booking',
-    calloutBodyHtml: `<p style="margin: 0;">You can retry the payment anytime from your Second Innings booking page or reach out to us by replying to this email if you need assistance.</p>`,
-    ctaLabel: 'Retry Booking on Second Innings',
+    calloutBodyHtml: `<p style="margin: 0;">You can retry the payment anytime from your Unfoldinn booking page or reach out to us by replying to this email if you need assistance.</p>`,
+    ctaLabel: 'Retry Booking on Unfoldinn',
     ctaUrl: `${config.frontendUrl}/book`
   });
 
   const text = [
     `Hello ${recipientName},`,
     '',
-    `Your recent payment attempt (${orderId}) on Second Innings could not be completed.`,
+    `Your recent payment attempt (${orderId}) on Unfoldinn could not be completed.`,
     `You can retry anytime at: ${config.frontendUrl}/book`,
     '',
     'If any amount was debited by your bank, it is typically auto-refunded within 5-7 business days.',
     '',
     'Warm regards,',
-    'Deepak & Team Second Innings'
+    'Deepak & Team Unfoldinn'
   ].join('\n');
 
   return sendTransactionalEmail({
