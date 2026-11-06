@@ -164,10 +164,10 @@ export default function AboutPage() {
                 Why &ldquo;Unfoldinn&rdquo;?
               </h3>
               <p className="text-[1rem] sm:text-[1.0625rem] text-ink-2 leading-relaxed mb-6">
-                After more than three decades across corporate leadership, entrepreneurship, and higher education, Deepak chose to dedicate this chapter of his life to young minds. Unfoldinn is built on a simple conviction: life’s best decisions happen when young people have a welcoming space to pause and let their possibilities unfold.
+                After more than three decades across the corporate world, entrepreneurship, and higher education, Deepak chose to dedicate this phase of his life to working with young people.
               </p>
               <blockquote className="border-l-2 border-signal pl-4 sm:pl-6 font-serif italic text-[1.125rem] sm:text-[1.25rem] text-ink leading-snug">
-                &ldquo;The earlier chapter of my career was about building my own path. Unfoldinn is about creating a sanctuary where young people can discover and unfold theirs.&rdquo;
+                &ldquo;The earlier phase of my career was about building my own path. Unfoldinn is about helping young people think clearly, discover what matters to them, and unfold theirs.&rdquo;
               </blockquote>
             </Reveal>
           </div>

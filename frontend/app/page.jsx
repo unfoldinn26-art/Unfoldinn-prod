@@ -170,10 +170,10 @@ export default function Home() {
                 After more than three decades across the corporate world, entrepreneurship and higher education, Deepak Sogani chose to dedicate the next phase of his professional life to working with young people.
               </RevealItem>
               <RevealItem as="p" className="lede">
-                Unfoldinn is designed as both a catalyst and a haven: a space where young minds can <em>unfold</em> their thoughts, unpack dilemmas, and explore wider horizons &mdash; and an <em>inn</em> where they can pause without pressure, have an honest conversation, and step forward with grounded clarity.
+                His experience working closely with university students reinforced something he came to value deeply: real progress rarely comes from more advice. It comes from honest conversations that help a young person gain perspective, reconsider a choice, or take a grounded next step.
               </RevealItem>
               <RevealItem as="blockquote" className="border-l-2 border-signal pl-6 font-serif italic text-[1.375rem] leading-[1.3] text-ink">
-                &ldquo;The earlier chapter was about building my own journey. Unfoldinn is about using that wisdom to help young people unfold theirs.&rdquo;
+                &ldquo;The earlier phase was about building my own journey. Unfoldinn is about using that experience to help young people unfold theirs.&rdquo;
               </RevealItem>
             </RevealGroup>
           </div>
