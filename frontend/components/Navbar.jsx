@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User } from 'lucide-react';
+import { User, X } from 'lucide-react';
 import { EASE } from './ui/motion';
 import Arrow from './ui/Arrow';
 import Logo from './Logo';
@@ -130,7 +130,7 @@ export default function Navbar() {
                 }`}
               />
               <span
-                className={`absolute h-0.5 w-4 bg-ink transition-transform duration-500 ease-editorial ${
+                className={`absolute h-0.5 w-4 bg-ink dark:bg-white transition-transform duration-500 ease-editorial ${
                   isOpen ? '-rotate-45' : 'translate-y-[3.5px]'
                 }`}
               />
@@ -146,11 +146,29 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: EASE }}
-            className="fixed inset-0 z-overlay flex flex-col bg-paper/98 dark:bg-[#0E1318]/98 backdrop-blur-2xl lg:hidden overflow-y-auto"
+            transition={{ duration: 0.35, ease: EASE }}
+            className="fixed inset-0 z-overlay flex flex-col bg-paper dark:bg-[#0E1318] backdrop-blur-2xl lg:hidden overflow-y-auto"
           >
-            <nav className="page-x flex flex-1 flex-col justify-between pt-20 sm:pt-24 pb-[max(2rem,env(safe-area-inset-bottom))]" aria-label="Mobile">
-              <ul className="border-t border-line mt-4">
+            {/* Top Bar with Logo & Explicit Cross (X) Close Icon */}
+            <div className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 pt-[max(0.875rem,env(safe-area-inset-top))] pb-3.5 border-b border-line bg-paper/95 dark:bg-[#0E1318]/95 backdrop-blur-md">
+              <Link href="/" onClick={() => setIsOpen(false)} aria-label="Unfoldinn home">
+                <Logo size="sm" showTagline={false} />
+              </Link>
+              <div className="flex items-center gap-2">
+                <ThemeToggle variant="icon" />
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close menu"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-line dark:border-white/15 bg-paper-2 dark:bg-[#141B24] text-ink dark:text-white transition-all active:scale-95 shadow-sm"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            <nav className="page-x flex flex-1 flex-col justify-between pt-4 pb-[max(2rem,env(safe-area-inset-bottom))]" aria-label="Mobile">
+              <ul className="divide-y divide-line">
                 {[
                   ...navLinks,
                   { name: 'Contact', path: '/contact' },
