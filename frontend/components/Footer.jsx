@@ -90,12 +90,12 @@ export default function Footer() {
 
         {/* Wordmark */}
         <div aria-hidden="true" className="select-none overflow-hidden pt-12 sm:pt-16 md:pt-20">
-          <p className="whitespace-nowrap font-serif text-[clamp(3.25rem,14.5vw,15rem)] leading-[0.82] tracking-[-0.04em] text-ink">
+          <p className="whitespace-nowrap font-serif text-[clamp(2.75rem,14.5vw,15rem)] leading-[0.82] tracking-[-0.04em] text-ink">
             Unfoldinn<span className="text-signal">.</span>
           </p>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-line py-6 text-[0.8125rem] text-muted md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 border-t border-line py-6 text-[0.8125rem] text-muted md:flex-row md:items-center md:justify-between pb-[max(1.5rem,env(safe-area-inset-bottom))]">
           <p>© 2026 Unfoldinn. Young Minds. New Perspectives. Wider Possibilities.</p>
           <ThemeToggle variant="footer" />
         </div>

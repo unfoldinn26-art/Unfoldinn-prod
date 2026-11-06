@@ -46,7 +46,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-nav px-2.5 pt-2.5 sm:px-4 sm:pt-4 md:px-6 md:pt-5">
+      <header className="fixed inset-x-0 top-0 z-nav px-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] sm:px-4 sm:pt-4 md:px-6 md:pt-5">
         <div
           className={`mx-auto flex max-w-page items-center justify-between gap-2 sm:gap-4 rounded-full border pl-3.5 sm:pl-5 pr-1.5 sm:pr-2 py-1.5 sm:py-2 transition-[background-color,border-color,box-shadow] duration-500 ease-editorial ${
             scrolled || isOpen
@@ -105,7 +105,7 @@ export default function Navbar() {
               </Link>
             )}
 
-            <ThemeToggle variant="icon" className="hidden sm:inline-flex" />
+            <ThemeToggle variant="icon" className="inline-flex" />
 
             <Link
               href="/book"
@@ -149,7 +149,7 @@ export default function Navbar() {
             transition={{ duration: 0.4, ease: EASE }}
             className="fixed inset-0 z-overlay flex flex-col bg-paper/98 dark:bg-[#0E1318]/98 backdrop-blur-2xl lg:hidden overflow-y-auto"
           >
-            <nav className="page-x flex flex-1 flex-col justify-between pt-20 sm:pt-24 pb-8" aria-label="Mobile">
+            <nav className="page-x flex flex-1 flex-col justify-between pt-20 sm:pt-24 pb-[max(2rem,env(safe-area-inset-bottom))]" aria-label="Mobile">
               <ul className="border-t border-line mt-4">
                 {[
                   ...navLinks,

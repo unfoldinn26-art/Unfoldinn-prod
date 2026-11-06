@@ -88,7 +88,7 @@ export default function StudentCrossroads() {
         </div>
 
         {/* Dilemma Selector Chips */}
-        <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
+        <div className="flex gap-2 sm:gap-3 mb-6 sm:mb-8 overflow-x-auto no-scrollbar pb-2 sm:pb-0 sm:flex-wrap -mx-4 px-4 sm:mx-0 sm:px-0">
           {DILEMMAS.map((d, i) => {
             const isActive = i === activeIndex;
             return (
@@ -96,7 +96,7 @@ export default function StudentCrossroads() {
                 key={d.id}
                 type="button"
                 onClick={() => setActiveIndex(i)}
-                className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full text-[0.75rem] sm:text-xs font-medium transition-all duration-300 ease-editorial min-h-[38px] sm:min-h-[42px] inline-flex items-center ${
+                className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full text-[0.75rem] sm:text-xs font-medium transition-all duration-300 ease-editorial min-h-[38px] sm:min-h-[42px] inline-flex items-center shrink-0 whitespace-nowrap sm:whitespace-normal ${
                   isActive
                     ? `${d.activePill} scale-[1.02]`
                     : 'border border-line dark:border-white/10 bg-paper dark:bg-[#141B24] text-ink dark:text-slate-200 hover:border-ink/40 dark:hover:border-white/30'
@@ -117,7 +117,7 @@ export default function StudentCrossroads() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className={`rounded-[calc(1.5rem-0.375rem)] sm:rounded-[calc(2rem-0.375rem)] p-5 sm:p-8 md:p-10 border ${activeDilemma.border} ${activeDilemma.bg} dark:bg-[#141B24] dark:border-white/15 dark:shadow-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] relative overflow-hidden`}
+              className={`rounded-[calc(1.5rem-0.375rem)] sm:rounded-[calc(2rem-0.375rem)] p-4 sm:p-8 md:p-10 border ${activeDilemma.border} ${activeDilemma.bg} dark:bg-[#141B24] dark:border-white/15 dark:shadow-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] relative overflow-hidden`}
             >
               <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
                 <span className={`px-3 py-0.5 sm:py-1 rounded-full text-[0.6875rem] sm:text-xs font-mono font-medium border bg-paper dark:bg-white/10 dark:border-white/15 dark:text-amber-300 ${activeDilemma.border} ${activeDilemma.text}`}>

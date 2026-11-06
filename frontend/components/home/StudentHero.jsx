@@ -14,7 +14,7 @@ export default function StudentHero() {
   };
 
   return (
-    <section className="relative w-full min-h-[100dvh] bg-[#F5F1E8] dark:bg-[#0B0F14] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-24 pb-4 sm:pb-5 px-4 sm:px-8 lg:px-10 xl:px-14 overflow-x-clip">
+    <section className="relative w-full min-h-[100svh] bg-[#F5F1E8] dark:bg-[#0B0F14] flex flex-col justify-between pt-20 sm:pt-28 lg:pt-24 pb-4 sm:pb-5 px-4 sm:px-8 lg:px-10 xl:px-14 overflow-x-clip">
       {/* Main 2-Column Hero Grid: Left Typography + Right Artistic Collage */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-12 items-center flex-1 my-auto max-w-[1400px] xl:max-w-[1440px] mx-auto w-full z-10 py-3 sm:py-4 lg:py-2">
         {/* Left Column: Eyebrow, Monumental Serif Headline, Lede & Actions */}
@@ -90,7 +90,7 @@ export default function StudentHero() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-[320px] sm:max-w-[440px] lg:max-w-[580px] xl:max-w-[650px] aspect-[856/813] max-h-[min(620px,calc(100dvh-190px))] flex items-center justify-center lg:justify-end select-none"
+            className="relative w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[440px] lg:max-w-[580px] xl:max-w-[650px] aspect-[856/813] max-h-[min(620px,calc(100dvh-190px))] flex items-center justify-center lg:justify-end select-none"
           >
             <motion.div
               animate={{ y: [-2, 3, -2] }}
