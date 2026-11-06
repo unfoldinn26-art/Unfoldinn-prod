@@ -229,19 +229,31 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'EducationalOrganization',
-      '@id': 'https://unfoldinn.com/#organization',
+      '@id': 'https://www.unfoldinn.com/#organization',
       name: 'Unfoldinn',
+      alternateName: ['Unfoldinn Mentoring', 'Unfoldinn Youth Platform'],
       url: 'https://www.unfoldinn.com',
-      logo: 'https://unfoldinn.com/logo.jpg',
+      logo: 'https://www.unfoldinn.com/logo.jpg',
+      slogan: 'Young Minds. New Perspectives. Wider Possibilities.',
       description:
-        'A space for young minds aged 16–25, parents, and educational institutions to explore perspectives, clarity, and wider possibilities.',
+        'An independent mentoring practice for young people aged 16–25, parents, and educational institutions to explore perspectives, clarity, and life readiness beyond the classroom.',
+      disambiguatingDescription:
+        'Unfoldinn is a human-led youth mentoring practice founded by Deepak Sogani in Jaipur, India. It is distinct from competitive coaching institutes, test-prep centers, or commercial college admissions consultants.',
       founder: {
         '@type': 'Person',
+        '@id': 'https://www.unfoldinn.com/about#deepaksogani',
         name: 'Deepak Sogani',
-        jobTitle: 'Founder, Unfoldinn',
+        jobTitle: 'Founder & Lead Mentor',
         alumniOf: 'JK Lakshmipat University',
-        url: 'https://unfoldinn.com/about',
-        sameAs: ['https://www.linkedin.com/in/deepak-sogani'],
+        url: 'https://www.unfoldinn.com/about',
+        sameAs: ['https://www.linkedin.com/in/deepak-sogani/'],
+        knowsAbout: [
+          'Youth Development',
+          'Student Affairs',
+          'Higher Education Mentoring',
+          'Career Transitions',
+          'Life Beyond the Classroom'
+        ],
       },
       address: {
         '@type': 'PostalAddress',
@@ -252,23 +264,64 @@ const jsonLd = {
       contactPoint: {
         '@type': 'ContactPoint',
         telephone: '+91 77372 20724',
-        contactType: 'customer service',
+        contactType: 'mentoring inquiry',
         email: 'unfoldinn26@gmail.com',
         areaServed: 'IN',
         availableLanguage: ['English', 'Hindi'],
       },
+      knowsAbout: [
+        'Youth Mentoring (Ages 16–25)',
+        'Career Decision Frameworks',
+        'College to Corporate Transitions',
+        'Parent-Child Career Communication',
+        'Holistic Student Development'
+      ],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Unfoldinn Mentoring Programs',
+        itemListElement: [
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Introductory 1-on-1 Mentoring Conversation',
+              description: 'Complimentary private 1-on-1 conversation for young people aged 16–25 with Deepak Sogani.',
+            },
+            price: '0',
+            priceCurrency: 'INR',
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: '1-on-1 Perspective Mentoring Session',
+              description: 'In-depth private mentoring session with continuity notes and decision frameworks.',
+            },
+            price: '500',
+            priceCurrency: 'INR',
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Higher Education & School Student Development Pilots',
+              description: '90-day institutional student development and life-readiness transition workshops.',
+            },
+          },
+        ],
+      },
       sameAs: [
-        'https://unfoldinn.com',
-        'https://www.linkedin.com/in/deepak-sogani',
+        'https://www.unfoldinn.com',
+        'https://www.linkedin.com/in/deepak-sogani/',
       ],
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://unfoldinn.com/#website',
+      '@id': 'https://www.unfoldinn.com/#website',
       url: 'https://www.unfoldinn.com',
       name: 'Unfoldinn',
       publisher: {
-        '@id': 'https://unfoldinn.com/#organization',
+        '@id': 'https://www.unfoldinn.com/#organization',
       },
     },
   ],
