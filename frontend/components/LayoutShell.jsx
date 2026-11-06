@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppButton from './WhatsAppButton';
-import FluidBlurIntro from './FluidBlurIntro';
 import { UserAuthProvider } from '../context/UserAuthContext';
 
 export default function LayoutShell({ children }) {
@@ -18,7 +17,6 @@ export default function LayoutShell({ children }) {
   return (
     <UserAuthProvider>
       <div className="flex min-h-[100dvh] flex-col">
-        <FluidBlurIntro />
         <Navbar />
         <main className="flex-grow">
           {children}

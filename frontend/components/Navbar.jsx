@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Sparkles } from 'lucide-react';
+import { User } from 'lucide-react';
 import { EASE } from './ui/motion';
 import Arrow from './ui/Arrow';
 import Logo from './Logo';
@@ -203,7 +203,7 @@ export default function Navbar() {
                     onClick={() => setIsOpen(false)}
                     className="inline-flex items-center justify-center gap-1.5 rounded-full bg-sprout/15 px-4 py-2.5 text-xs font-mono font-bold text-sprout"
                   >
-                    <Sparkles className="h-3.5 w-3.5" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-sprout inline-block" />
                     <span>{remainingCredits} Credits Active</span>
                   </Link>
                 )}

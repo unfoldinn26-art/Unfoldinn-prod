@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import {
   ArrowRight,
   ShieldCheck,
-  Sparkles,
+  
   UserCheck
 } from 'lucide-react';
 import { useUserAuth } from '../../context/UserAuthContext';
@@ -149,7 +149,7 @@ function OnboardingContent() {
       <div className="container-editorial max-w-3xl">
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sage/15 text-sage text-xs font-semibold mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
+            <span className="w-1.5 h-1.5 rounded-full bg-signal inline-block" />
             <span>One-Time Profile Setup • Asked Only Once</span>
           </div>
           <h1 className="font-serif text-3xl md:text-5xl text-ink leading-tight">

@@ -26,7 +26,7 @@ import {
   AlertCircle,
   ArrowRight,
   Video,
-  Sparkles,
+  
   ExternalLink,
   Copy,
   FileText
@@ -823,7 +823,7 @@ export default function BookingsPage() {
             <div className="bg-indigo-50/50 border border-indigo-200 rounded-xl p-5 space-y-4 shadow-xs">
               <div className="flex items-center justify-between border-b border-indigo-200/70 pb-2.5">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-indigo-600" />
+                  <Calendar className="w-4 h-4 text-indigo-600" />
                   <h3 className="font-semibold text-gray-900 text-sm">
                     Pre-Session Continuity Brief &amp; Student History
                   </h3>
@@ -1084,7 +1084,7 @@ export default function BookingsPage() {
                   onClick={handleGenerateStructuredSummary}
                   className="px-3.5 py-2 rounded-lg bg-[#2E4052] hover:bg-[#1e2c3a] text-white text-xs font-semibold inline-flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
                   <span>
                     {generatingSummary
                       ? 'Generating 9-Part Summary...'

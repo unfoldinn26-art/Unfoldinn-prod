@@ -12,8 +12,7 @@ import {
   RefreshCw,
   Calendar,
   Clock,
-  Sparkles
-} from 'lucide-react';
+  } from 'lucide-react';
 import {
   verifyPaymentOrder,
   createPaymentOrder,
@@ -255,7 +254,7 @@ function PaymentStatusContent() {
               {state.booking && (
                 <div className="text-left p-6 rounded-xl border-2 border-terracotta/30 bg-paper mb-8">
                   <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-terracotta" />
+                    <Calendar className="w-4 h-4 text-terracotta" />
                     <span className="font-mono text-xs uppercase tracking-widest text-terracotta">
                       Schedule Your Session Slot
                     </span>

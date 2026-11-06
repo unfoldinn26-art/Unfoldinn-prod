@@ -26,7 +26,6 @@ import {
   ShieldCheck,
   CreditCard,
   Lock,
-  Sparkles,
   Calendar,
   UserCheck,
   Edit3,
@@ -626,7 +625,7 @@ export default function BookPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start max-w-5xl mx-auto">
               <div className="lg:col-span-6 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-signal/10 text-signal text-xs font-mono uppercase tracking-wider">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-signal inline-block" />
                   <span>Step 1 of 2 • Sign In Required</span>
                 </div>
                 <h2 className="font-serif text-3xl md:text-4xl text-ink leading-tight">
@@ -922,7 +921,7 @@ export default function BookPage() {
             /* STATE 2: LOGGED IN BUT NOT ONBOARDED -> REDIRECTING TO SETUP    */
             /* =============================================================== */
             <div className="card-editorial bg-white p-10 text-center max-w-xl mx-auto space-y-4">
-              <Sparkles className="w-8 h-8 text-signal mx-auto" />
+              <UserCheck className="w-8 h-8 text-signal mx-auto" />
               <h2 className="font-serif text-3xl text-ink">
                 Let&apos;s Complete Your One-Time Profile First
               </h2>
@@ -1481,7 +1480,7 @@ export default function BookPage() {
                       >
                         {selectedBookingFactor === 'CREDIT' && remainingCredits > 0 ? (
                           <>
-                            <Sparkles className="w-4 h-4" />
+                            <CheckCircle2 className="w-4 h-4" />
                             <span>
                               {status.loading
                                 ? 'Confirming Session...'
@@ -1491,7 +1490,7 @@ export default function BookPage() {
                           </>
                         ) : appliedCoupon?.isFreeWithCoupon ? (
                           <>
-                            <Sparkles className="w-4 h-4" />
+                            <CheckCircle2 className="w-4 h-4" />
                             <span>
                               {status.loading
                                 ? 'Confirming with Coupon...'

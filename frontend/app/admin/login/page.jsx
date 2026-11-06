@@ -37,8 +37,8 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen bg-[#111720] flex items-center justify-center p-4 sm:p-6 relative overflow-hidden font-sans">
       {/* Ambient background glows */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-coral/10 rounded-full blur-3xl pointer-events-none" />
+      
+      
 
       <div className="w-full max-w-md relative z-10">
         
@@ -52,7 +52,7 @@ export default function AdminLogin() {
             <span>Back to Public Site</span>
           </Link>
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-800/40 text-[11px] font-mono text-emerald-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             Secure Portal
           </span>
         </div>

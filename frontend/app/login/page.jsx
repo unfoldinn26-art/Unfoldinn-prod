@@ -6,7 +6,6 @@ import Link from 'next/link';
 import {
   ArrowRight,
   ShieldCheck,
-  Sparkles,
   CheckCircle2,
   Mail,
   KeyRound,
@@ -216,7 +215,7 @@ function LoginContent() {
               </div>
 
               <div className="p-4 rounded-xl border border-line bg-paper-2 flex items-start gap-3.5">
-                <Sparkles className="w-5 h-5 text-signal shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-signal shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold text-ink text-sm">Monthly Subscription (4 Sessions / Month) &amp; Multi-Packs</h3>
                   <p className="text-xs text-ink-2 mt-0.5 leading-relaxed">

@@ -60,7 +60,7 @@ export default function AdminHeader({ admin, title, onMenuClick }) {
 
         {/* Live system status badge */}
         <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-800">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500" />
           <span className="text-[11px] font-mono">Live</span>
         </div>
 

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {
   Calendar,
   Clock,
-  Sparkles,
+  
   CheckCircle2,
   ArrowUpRight,
   CreditCard,
@@ -301,7 +301,7 @@ export default function MenteeDashboardPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-terracotta mb-1">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-sprout inline-block" />
                   <span>Active 7-Day Next Step • Session #{latestActionSession.sessionNumber || 1}</span>
                 </div>
                 <h2 className="font-serif text-2xl text-ink">

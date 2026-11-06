@@ -20,12 +20,6 @@ const footerNavLinks = [
 ];
 
 export default function Footer() {
-  const replayIntro = () => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('replay_si_intro'));
-    }
-  };
-
   return (
     <footer className="relative mt-12 sm:mt-16 border-t border-line bg-paper-2 overflow-x-clip">
       <div className="page-x pt-14 sm:pt-20 md:pt-28">
@@ -102,13 +96,6 @@ export default function Footer() {
 
         <div className="flex flex-col gap-4 border-t border-line py-6 text-[0.8125rem] text-muted md:flex-row md:items-center md:justify-between">
           <p>© 2026 Unfoldinn. Young Minds. New Perspectives. Wider Possibilities.</p>
-          <button
-            type="button"
-            onClick={replayIntro}
-            className="self-start md:self-auto meta hover:text-ink transition-colors min-h-[36px] inline-flex items-center"
-          >
-            ↺ Replay intro
-          </button>
         </div>
       </div>
     </footer>

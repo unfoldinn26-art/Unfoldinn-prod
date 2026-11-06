@@ -18,7 +18,7 @@ import {
   ArrowUpRight,
   PlusCircle,
   CheckCircle,
-  Sparkles,
+  
   ShieldCheck,
   Video,
   Link2,
@@ -222,13 +222,13 @@ export default function AdminDashboard() {
       
       {/* Executive Welcome Banner */}
       <div className="bg-gradient-to-r from-[#131C27] via-[#192534] to-[#213044] text-white rounded-3xl p-6 sm:p-8 border border-white/10 shadow-md relative overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#F59E0B]/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 left-1/3 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F59E0B]/15 border border-[#F59E0B]/30 text-[#FBBF24] text-xs font-mono font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
+              <span className="w-1.5 h-1.5 rounded-full bg-signal inline-block" />
               <span>Founder&apos;s Console • Live Overview</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
