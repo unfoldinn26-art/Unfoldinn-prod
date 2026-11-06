@@ -11,6 +11,8 @@ export const metadata = {
   description:
     'Supporting your child through career uncertainty and life decisions. Thoughtful guidance that complements parenting while respecting young people’s independence.',
   keywords: [
+    'unfold child potential',
+    'unfold opportunities for youth',
     'career guidance for children parents',
     'how to help confused teenager career',
     'talking to children about career decisions',
@@ -22,13 +24,13 @@ export const metadata = {
     'Deepak Sogani parent guidance',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/for-parents',
+    canonical: 'https://www.unfoldinn.com/for-parents',
   },
   openGraph: {
     title: 'For Parents — Unfoldinn',
     description:
       'Every parent wants their child to make thoughtful choices. We provide an additional space for exploration that complements family guidance.',
-    url: 'https://unfoldinn.com/for-parents',
+    url: 'https://www.unfoldinn.com/for-parents',
   },
 };
 

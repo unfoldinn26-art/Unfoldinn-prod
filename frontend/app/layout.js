@@ -40,17 +40,33 @@ export const metadata = {
   applicationName: 'Unfoldinn',
   authors: [{ name: 'Deepak Sogani', url: 'https://unfoldinn.com/about' }],
   generator: 'Next.js',
-  keywords: [
-    // Brand & Founder
+    keywords: [
+    // Brand, Unfold Variations & Founder
+    'unfold',
     'Unfoldinn',
+    'unfolding your potential',
+    'unfold possibilities',
+    'unfold your future',
+    'unfold young minds',
+    'unfold new perspectives',
+    'unfold mentoring',
+    'unfold youth guidance',
+    'unfold career clarity',
+    'unfold life decisions',
+    'unfold inner confidence',
+    'unfolding personal growth',
+    'unfoldinn.com',
+    'www.unfoldinn.com',
     'Unfoldinn mentoring',
     'Unfoldinn youth platform',
+    'Unfoldinn Deepak Sogani',
+    'Unfoldinn conversations',
     'Deepak Sogani',
     'Deepak Sogani mentor',
     'Deepak Sogani JKLU',
     'Unfoldinn Jaipur',
-    'unfoldinn.com',
-    // Student Pain Points & Intent
+
+    // Student Pain Points & Decision Making (Ages 16–25)
     'career confusion after 12th',
     'what to do after graduation if confused',
     'career guidance for college students',
@@ -65,7 +81,20 @@ export const metadata = {
     'how to talk to parents about career choice',
     'quarter life crisis India',
     'how to find what I am good at',
-    // Solutions & Services
+    'confused between jobs and higher studies',
+    'what should I do with my life at 20',
+    'career advice for engineering students',
+    'career choices for commerce graduates',
+    'arts and humanities career opportunities India',
+    'study in India vs study abroad dilemma',
+    'gap year guidance for students India',
+    'switching careers in early 20s',
+    'finding purpose and clarity',
+    'how to make big life decisions without regret',
+    'academic pressure and future anxiety',
+    'safe space to talk about career',
+
+    // Solutions & Mentoring Practice
     'youth mentoring platform India',
     'one on one student mentoring',
     'career mentorship for teenagers',
@@ -76,7 +105,10 @@ export const metadata = {
     'human led mentoring',
     'independent career guidance',
     'practical next steps career advice',
-    // Parents
+    'perspective mentoring Deepak Sogani',
+    'life beyond the classroom',
+
+    // Parents & Family Guidance
     'how to support child career choice',
     'how to talk to teenager about future without arguing',
     'guidance for parents of college students',
@@ -85,7 +117,12 @@ export const metadata = {
     'helping child choose career without pressure',
     'new age careers advice for parents',
     'understanding modern career options India',
-    // Institutions
+    'how to guide my child without forcing them',
+    'parent child gap in career expectations',
+    'talking to parents about unconventional careers',
+    'trusted mentor for young people India',
+
+    // Institutions, Schools & Universities
     'student development program for colleges',
     'mentoring programs for higher education institutions',
     'school to university transition workshop',
@@ -95,14 +132,20 @@ export const metadata = {
     'student mental clarity and leadership',
     'institution student retention and engagement',
     '90 day student development pilot',
-    // Opportunities
+    'freshman transition program India',
+    'student wellbeing and life readiness',
+    'preparing students for the real world',
+
+    // Curated Opportunities & Fellowships
     'best fellowships for college graduates India',
     'scholarships for undergraduate students India',
     'how to find genuine internships in college',
     'social impact fellowships India',
     'youth leadership opportunities India',
     'curated student opportunities portal',
-    // Local / Geotargeted
+    'gap year opportunities Indian students',
+
+    // Regional & Local SEO (Jaipur / Rajasthan / Pan-India)
     'student mentor in Jaipur',
     'career mentoring in Jaipur',
     'youth counselor mentor Rajasthan',

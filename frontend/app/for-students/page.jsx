@@ -12,6 +12,11 @@ export const metadata = {
   description:
     'Confused about career choices, college transitions, or what comes next? Private one-to-one conversations for ages 16–25 to think clearly and choose your path.',
   keywords: [
+    'unfold',
+    'unfold potential',
+    'unfold your future',
+    'unfold clarity',
+    'unfold possibilities',
     'career confusion after 12th',
     'what to do after graduation if confused',
     'career guidance for college students',
@@ -26,13 +31,13 @@ export const metadata = {
     'one on one student conversation',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/for-students',
+    canonical: 'https://www.unfoldinn.com/for-students',
   },
   openGraph: {
     title: 'For Students (16–25) — Unfoldinn',
     description:
       'You have the information. What you need is perspective. A space to talk openly, think clearly, and explore possibilities.',
-    url: 'https://unfoldinn.com/for-students',
+    url: 'https://www.unfoldinn.com/for-students',
   },
 };
 
