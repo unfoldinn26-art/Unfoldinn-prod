@@ -23,12 +23,21 @@ export const metadata = {
       '35+ years across corporate life, entrepreneurship and higher education. Dedicated to bringing perspective and possibilities to young people.',
     url: 'https://www.unfoldinn.com/about',
     type: 'profile',
+    images: [
+      {
+        url: 'https://www.unfoldinn.com/deepaksogani.jpeg',
+        width: 800,
+        height: 1000,
+        alt: 'Deepak Sogani — Founder of Unfoldinn',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'About Deepak Sogani | Unfoldinn',
     description:
       '35+ years across corporate life, entrepreneurship and higher education. Dedicated to bringing perspective to the next generation.',
+    images: ['https://www.unfoldinn.com/deepaksogani.jpeg'],
   },
 };
 
