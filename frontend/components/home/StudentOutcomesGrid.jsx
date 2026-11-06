@@ -9,9 +9,9 @@ const OUTCOMES = [
     title: 'Clarity',
     colorKey: 'sun',
     headerBg: 'bg-[#C8792C]',
-    cardBg: 'bg-[#FAF0E1]',
-    borderColor: 'border-[#F4D9A0]',
-    textColor: 'text-[#9B5113]',
+    cardBg: 'bg-[#FAF0E1] dark:bg-[#1B1713]',
+    borderColor: 'border-[#F4D9A0] dark:border-amber-900/40',
+    textColor: 'text-[#9B5113] dark:text-amber-300',
     desc: 'Gaining profound self-awareness and direction. Clearer understanding of the next step and the reasons behind it.',
     quote: '“I finally see my path clearly.”',
     icon: (
@@ -32,9 +32,9 @@ const OUTCOMES = [
     title: 'Confidence',
     colorKey: 'coral',
     headerBg: 'bg-[#C85236]',
-    cardBg: 'bg-[#FBF0EC]',
-    borderColor: 'border-[#F2C2B5]',
-    textColor: 'text-[#9B3921]',
+    cardBg: 'bg-[#FBF0EC] dark:bg-[#1D1412]',
+    borderColor: 'border-[#F2C2B5] dark:border-rose-900/40',
+    textColor: 'text-[#9B3921] dark:text-rose-300',
     desc: 'Building belief in abilities and potential. Greater willingness to participate, ask questions, and approach opportunities.',
     quote: '“I now trust my skills and value.”',
     icon: (
@@ -56,9 +56,9 @@ const OUTCOMES = [
     title: 'Exposure',
     colorKey: 'sprout',
     headerBg: 'bg-[#38784E]',
-    cardBg: 'bg-[#EEF6F0]',
-    borderColor: 'border-[#BFE0C8]',
-    textColor: 'text-[#265636]',
+    cardBg: 'bg-[#EEF6F0] dark:bg-[#111A14]',
+    borderColor: 'border-[#BFE0C8] dark:border-emerald-900/40',
+    textColor: 'text-[#265636] dark:text-emerald-300',
     desc: 'Discovering new pathways and perspectives. Interaction with people, opportunities, and ideas previously unfamiliar.',
     quote: '“Opened my eyes to possibilities I never imagined.”',
     icon: (
@@ -79,9 +79,9 @@ const OUTCOMES = [
     title: 'Action',
     colorKey: 'gold',
     headerBg: 'bg-[#D49826]',
-    cardBg: 'bg-[#FDF9ED]',
-    borderColor: 'border-[#F6E19E]',
-    textColor: 'text-[#A07010]',
+    cardBg: 'bg-[#FDF9ED] dark:bg-[#1B1810]',
+    borderColor: 'border-[#F6E19E] dark:border-yellow-900/40',
+    textColor: 'text-[#A07010] dark:text-amber-300',
     desc: 'Taking tangible steps towards real goals daily. Completion of agreed exploration or self-development action steps.',
     quote: '“Creating consistent, meaningful progress every day.”',
     icon: (
@@ -103,9 +103,9 @@ const OUTCOMES = [
     title: 'Ownership',
     colorKey: 'sky',
     headerBg: 'bg-[#2B6A8F]',
-    cardBg: 'bg-[#EAF3F8]',
-    borderColor: 'border-[#B5D8EB]',
-    textColor: 'text-[#1B4D6B]',
+    cardBg: 'bg-[#EAF3F8] dark:bg-[#111822]',
+    borderColor: 'border-[#B5D8EB] dark:border-sky-900/40',
+    textColor: 'text-[#1B4D6B] dark:text-sky-300',
     desc: 'Embracing responsibility for your unique journey. Increasingly evidence-based, mature decisions made independently.',
     quote: '“This is my path, and I am leading the way.”',
     icon: (
@@ -142,24 +142,24 @@ export default function StudentOutcomesGrid({ className = '' }) {
             {/* Top Step Pill & Graphic Symbol */}
             <div>
               <div className="flex items-center justify-between mb-6">
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-mono font-semibold ${item.textColor} bg-white/80 border ${item.borderColor}`}>
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-mono font-semibold ${item.textColor} bg-white/80 dark:bg-white/10 border ${item.borderColor}`}>
                   Pillar {item.step}
                 </span>
                 <span className={`w-2 h-2 rounded-full ${item.headerBg}`} />
               </div>
 
               {/* Graphic Icon Box with Soft Tint */}
-              <div className={`mb-6 flex items-center justify-center p-4 rounded-2xl bg-white/70 ${item.textColor} transition-transform duration-500 group-hover:scale-105 border ${item.borderColor}`}>
+              <div className={`mb-6 flex items-center justify-center p-4 rounded-2xl bg-white/70 dark:bg-white/5 ${item.textColor} transition-transform duration-500 group-hover:scale-105 border ${item.borderColor}`}>
                 {item.icon}
               </div>
 
               {/* Pillar Title */}
-              <h3 className="font-serif text-[1.75rem] text-ink leading-tight tracking-[-0.01em]">
+              <h3 className="font-serif text-[1.75rem] text-ink dark:text-white leading-tight tracking-[-0.01em]">
                 {item.title}
               </h3>
 
               {/* Narrative Description */}
-              <p className="mt-3 text-[0.9375rem] text-ink/80 leading-relaxed font-sans">
+              <p className="mt-3 text-[0.9375rem] text-ink/80 dark:text-slate-300 leading-relaxed font-sans">
                 {item.desc}
               </p>
             </div>

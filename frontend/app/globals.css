@@ -176,73 +176,82 @@ html.dark body {
   color: #FAF7F0;
 }
 
+/* Default headings inherit or use crisp light text */
 html.dark h1,
 html.dark h2,
 html.dark h3,
 html.dark h4 {
+  color: inherit;
+}
+
+/* Base text tokens (without !important so specific dark: classes can override) */
+html.dark .text-ink {
   color: #FAF7F0;
+}
+
+html.dark .text-ink-2 {
+  color: #CBD5E1;
+}
+
+html.dark .text-muted {
+  color: #94A3B8;
 }
 
 /* Background surfaces */
 html.dark .bg-paper {
-  background-color: #0E1318 !important;
+  background-color: #0E1318;
 }
 
 html.dark .bg-paper-2 {
-  background-color: #141B24 !important;
+  background-color: #141B24;
 }
 
 html.dark .bg-paper-3 {
-  background-color: #1C2432 !important;
+  background-color: #1C2432;
 }
 
-html.dark .bg-white,
+html.dark .bg-white {
+  background-color: #141B24;
+}
+
 html.dark .card-editorial {
-  background-color: #141B24 !important;
-  border-color: rgba(255, 255, 255, 0.09) !important;
-}
-
-/* Text typography */
-html.dark .text-ink {
-  color: #FAF7F0 !important;
-}
-
-html.dark .text-ink-2 {
-  color: #CBD5E1 !important;
-}
-
-html.dark .text-muted {
-  color: #94A3B8 !important;
+  background-color: #141B24;
+  border-color: rgba(255, 255, 255, 0.09);
 }
 
 /* Dividers & borders */
 html.dark .border-line {
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 html.dark .bg-line {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Floating Navbar in Dark Mode */
+html.dark .bg-paper\/90,
+html.dark .bg-paper\/85,
+html.dark .bg-paper\/75 {
+  background-color: rgba(18, 24, 34, 0.95);
 }
 
 /* Editorial Buttons */
 html.dark .btn-editorial {
-  background-color: #FAF7F0 !important;
-  color: #0E1318 !important;
+  background-color: #FAF7F0;
+  color: #0E1318;
 }
-
 html.dark .btn-editorial:hover {
-  background-color: #FFFFFF !important;
+  background-color: #FFFFFF;
 }
 
 html.dark .btn-editorial-outline {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  color: #FAF7F0 !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #FAF7F0;
+  border-color: rgba(255, 255, 255, 0.15);
 }
-
 html.dark .btn-editorial-outline:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Form fields & inputs */
@@ -253,31 +262,31 @@ html.dark input[type='tel'],
 html.dark input[type='password'],
 html.dark textarea,
 html.dark select {
-  background-color: #141B24 !important;
-  color: #FAF7F0 !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
+  background-color: #141B24;
+  color: #FAF7F0;
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 html.dark .field:focus,
 html.dark input:focus,
 html.dark textarea:focus,
 html.dark select:focus {
-  border-color: #D97724 !important;
+  border-color: #D97724;
 }
 
 /* Hairline Grid */
 html.dark .hairline-grid {
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 html.dark .hairline-grid > * {
-  background-color: #0E1318 !important;
+  background-color: #0E1318;
 }
 
 /* Fixed film grain in dark mode */
 html.dark .grain::before {
-  opacity: 0.025 !important;
+  opacity: 0.025;
   filter: invert(1);
 }
 

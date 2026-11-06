@@ -91,11 +91,11 @@ export default function Logo({
       {/* Brand Typography */}
       {showText && (
         <div className="flex flex-col">
-          <span className={`font-serif tracking-[-0.015em] text-ink leading-none ${textSizes[size] || textSizes.md}`}>
+          <span className={`font-serif tracking-[-0.015em] text-ink dark:text-white leading-none ${textSizes[size] || textSizes.md}`}>
             Unfoldinn
           </span>
           {showTagline && (
-            <span className="font-mono text-[0.625rem] tracking-[0.12em] uppercase text-muted mt-1">
+            <span className="font-mono text-[0.625rem] tracking-[0.12em] uppercase text-muted dark:text-slate-400 mt-1">
               Young Minds. New Perspectives. Wider Possibilities.
             </span>
           )}
