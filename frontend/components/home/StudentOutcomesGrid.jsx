@@ -9,8 +9,8 @@ const OUTCOMES = [
     title: 'Clarity',
     colorKey: 'sun',
     headerBg: 'bg-[#C8792C]',
-    cardBg: 'bg-[#FAF0E1] dark:bg-[#1B1713]',
-    borderColor: 'border-[#F4D9A0] dark:border-amber-900/40',
+    cardBg: 'bg-[#FAF0E1] dark:bg-[#15110D]',
+    borderColor: 'border-[#F4D9A0] dark:border-[#C8792C]/30',
     textColor: 'text-[#9B5113] dark:text-amber-300',
     desc: 'Gaining profound self-awareness and direction. Clearer understanding of the next step and the reasons behind it.',
     quote: '“I finally see my path clearly.”',
@@ -32,8 +32,8 @@ const OUTCOMES = [
     title: 'Confidence',
     colorKey: 'coral',
     headerBg: 'bg-[#C85236]',
-    cardBg: 'bg-[#FBF0EC] dark:bg-[#1D1412]',
-    borderColor: 'border-[#F2C2B5] dark:border-rose-900/40',
+    cardBg: 'bg-[#FBF0EC] dark:bg-[#160E0B]',
+    borderColor: 'border-[#F2C2B5] dark:border-[#C85236]/30',
     textColor: 'text-[#9B3921] dark:text-rose-300',
     desc: 'Building belief in abilities and potential. Greater willingness to participate, ask questions, and approach opportunities.',
     quote: '“I now trust my skills and value.”',
@@ -56,8 +56,8 @@ const OUTCOMES = [
     title: 'Exposure',
     colorKey: 'sprout',
     headerBg: 'bg-[#38784E]',
-    cardBg: 'bg-[#EEF6F0] dark:bg-[#111A14]',
-    borderColor: 'border-[#BFE0C8] dark:border-emerald-900/40',
+    cardBg: 'bg-[#EEF6F0] dark:bg-[#0E1410]',
+    borderColor: 'border-[#BFE0C8] dark:border-[#38784E]/30',
     textColor: 'text-[#265636] dark:text-emerald-300',
     desc: 'Discovering new pathways and perspectives. Interaction with people, opportunities, and ideas previously unfamiliar.',
     quote: '“Opened my eyes to possibilities I never imagined.”',
@@ -79,8 +79,8 @@ const OUTCOMES = [
     title: 'Action',
     colorKey: 'gold',
     headerBg: 'bg-[#D49826]',
-    cardBg: 'bg-[#FDF9ED] dark:bg-[#1B1810]',
-    borderColor: 'border-[#F6E19E] dark:border-yellow-900/40',
+    cardBg: 'bg-[#FDF9ED] dark:bg-[#16130A]',
+    borderColor: 'border-[#F6E19E] dark:border-[#D49826]/30',
     textColor: 'text-[#A07010] dark:text-amber-300',
     desc: 'Taking tangible steps towards real goals daily. Completion of agreed exploration or self-development action steps.',
     quote: '“Creating consistent, meaningful progress every day.”',
@@ -103,9 +103,9 @@ const OUTCOMES = [
     title: 'Ownership',
     colorKey: 'sky',
     headerBg: 'bg-[#2B6A8F]',
-    cardBg: 'bg-[#EAF3F8] dark:bg-[#111822]',
-    borderColor: 'border-[#B5D8EB] dark:border-sky-900/40',
-    textColor: 'text-[#1B4D6B] dark:text-sky-300',
+    cardBg: 'bg-[#EAF3F8] dark:bg-[#14110E]',
+    borderColor: 'border-[#B5D8EB] dark:border-[#C8792C]/25',
+    textColor: 'text-[#1B4D6B] dark:text-[#E2D9CC]',
     desc: 'Embracing responsibility for your unique journey. Increasingly evidence-based, mature decisions made independently.',
     quote: '“This is my path, and I am leading the way.”',
     icon: (
@@ -159,7 +159,7 @@ export default function StudentOutcomesGrid({ className = '' }) {
               </h3>
 
               {/* Narrative Description */}
-              <p className="mt-3 text-[0.9375rem] text-ink/80 dark:text-slate-300 leading-relaxed font-sans">
+              <p className="mt-3 text-[0.9375rem] text-ink/80 dark:text-[#D6CEBF] leading-relaxed font-sans">
                 {item.desc}
               </p>
             </div>

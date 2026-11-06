@@ -73,7 +73,7 @@ export default function StudentCrossroads() {
   const activeDilemma = DILEMMAS[activeIndex];
 
   return (
-    <section id="crossroads" className="scroll-mt-24 border-t border-line bg-paper-2/40 dark:bg-[#0B0F14] py-16 sm:py-24 md:py-32">
+    <section id="crossroads" className="scroll-mt-24 border-t border-line bg-paper-2/40 dark:bg-[#0A0908] py-16 sm:py-24 md:py-32">
       <div className="page-x max-w-5xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div>
@@ -99,7 +99,7 @@ export default function StudentCrossroads() {
                 className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full text-[0.75rem] sm:text-xs font-medium transition-all duration-300 ease-editorial min-h-[38px] sm:min-h-[42px] inline-flex items-center shrink-0 whitespace-nowrap sm:whitespace-normal ${
                   isActive
                     ? `${d.activePill} scale-[1.02]`
-                    : 'border border-line dark:border-white/10 bg-paper dark:bg-[#141B24] text-ink dark:text-slate-200 hover:border-ink/40 dark:hover:border-white/30'
+                    : 'border border-line dark:border-[#C8792C]/20 bg-paper dark:bg-[#14110E] text-ink dark:text-[#FAF6EE] hover:border-ink/40 dark:hover:border-[#C8792C]/40'
                 }`}
               >
                 {d.label}
@@ -109,7 +109,7 @@ export default function StudentCrossroads() {
         </div>
 
         {/* Machined Double-Bezel Perspective Container */}
-        <div className="rounded-[1.5rem] sm:rounded-[2rem] p-1.5 sm:p-2 bg-mocha/5 dark:bg-white/[0.03] border border-line dark:border-white/10 ring-1 ring-black/5 dark:ring-white/5">
+        <div className="rounded-[1.5rem] sm:rounded-[2rem] p-1.5 sm:p-2 bg-mocha/5 dark:bg-[#C8792C]/[0.04] border border-line dark:border-[#C8792C]/20 ring-1 ring-black/5 dark:ring-[#C8792C]/10">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeDilemma.id}
@@ -117,10 +117,10 @@ export default function StudentCrossroads() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className={`rounded-[calc(1.5rem-0.375rem)] sm:rounded-[calc(2rem-0.375rem)] p-4 sm:p-8 md:p-10 border ${activeDilemma.border} ${activeDilemma.bg} dark:bg-[#141B24] dark:border-white/15 dark:shadow-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] relative overflow-hidden`}
+              className={`rounded-[calc(1.5rem-0.375rem)] sm:rounded-[calc(2rem-0.375rem)] p-4 sm:p-8 md:p-10 border ${activeDilemma.border} ${activeDilemma.bg} dark:bg-[#14110E] dark:border-[#C8792C]/25 dark:shadow-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] relative overflow-hidden`}
             >
               <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
-                <span className={`px-3 py-0.5 sm:py-1 rounded-full text-[0.6875rem] sm:text-xs font-mono font-medium border bg-paper dark:bg-white/10 dark:border-white/15 dark:text-amber-300 ${activeDilemma.border} ${activeDilemma.text}`}>
+                <span className={`px-3 py-0.5 sm:py-1 rounded-full text-[0.6875rem] sm:text-xs font-mono font-medium border bg-paper dark:bg-[#C8792C]/15 dark:border-[#C8792C]/30 dark:text-amber-300 ${activeDilemma.border} ${activeDilemma.text}`}>
                   {activeDilemma.label.replace(/[“”]/g, '')}
                 </span>
                 <span className="text-[0.6875rem] sm:text-xs font-mono text-muted">• Mentor Perspective</span>
@@ -130,7 +130,7 @@ export default function StudentCrossroads() {
                 {activeDilemma.question}
               </h3>
 
-              <p className="text-[0.9375rem] sm:text-[1.0625rem] text-ink-2 dark:text-slate-300 leading-relaxed max-w-3xl">
+              <p className="text-[0.9375rem] sm:text-[1.0625rem] text-ink-2 dark:text-[#D6CEBF] leading-relaxed max-w-3xl">
                 {activeDilemma.insight}
               </p>
 

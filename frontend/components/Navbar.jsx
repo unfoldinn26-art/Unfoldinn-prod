@@ -50,7 +50,7 @@ export default function Navbar() {
         <div
           className={`mx-auto flex max-w-page items-center justify-between gap-2 sm:gap-4 rounded-full border pl-3.5 sm:pl-5 pr-1.5 sm:pr-2 py-1.5 sm:py-2 transition-[background-color,border-color,box-shadow] duration-500 ease-editorial ${
             scrolled || isOpen
-              ? 'border-line bg-paper/90 dark:bg-[#111822]/95 dark:border-white/10 dark:shadow-black/50 backdrop-blur-xl shadow-sm'
+              ? 'border-line bg-paper/90 dark:bg-[#0D0B0A]/95 dark:border-[#C8792C]/20 dark:shadow-black/60 backdrop-blur-xl shadow-sm'
               : 'border-transparent bg-transparent'
           }`}
         >
@@ -64,7 +64,7 @@ export default function Navbar() {
                 key={link.path}
                 href={link.path}
                 className={`relative rounded-full px-2.5 xl:px-3 py-1.5 text-[0.8125rem] transition-colors duration-300 ${
-                  isActive(link.path) ? 'text-ink dark:text-white font-semibold' : 'text-muted hover:text-ink dark:text-slate-300 dark:hover:text-white font-medium'
+                  isActive(link.path) ? 'text-ink dark:text-white font-semibold' : 'text-muted hover:text-ink dark:text-[#D6CEBF] dark:hover:text-[#FAF6EE] font-medium'
                 }`}
               >
                 {link.name}
@@ -98,7 +98,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="hidden sm:inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.8125rem] font-medium text-muted hover:text-ink dark:text-slate-300 dark:hover:text-white transition-colors min-h-[36px]"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.8125rem] font-medium text-muted hover:text-ink dark:text-[#D6CEBF] dark:hover:text-[#FAF6EE] transition-colors min-h-[36px]"
               >
                 <User className="h-3.5 w-3.5 text-signal" />
                 <span>Sign In</span>
@@ -109,7 +109,7 @@ export default function Navbar() {
 
             <Link
               href="/book"
-              className="group hidden sm:inline-flex items-center gap-2.5 rounded-full bg-ink dark:bg-white pl-4 pr-1 py-1 text-[0.8125rem] font-medium text-paper dark:text-[#0E1318] transition-[transform,background-color] duration-500 ease-editorial hover:bg-ink-2 dark:hover:bg-slate-100 active:scale-[0.98] min-h-[36px]"
+              className="group hidden sm:inline-flex items-center gap-2.5 rounded-full bg-ink dark:bg-white pl-4 pr-1 py-1 text-[0.8125rem] font-medium text-paper dark:text-[#0A0908] transition-[transform,background-color] duration-500 ease-editorial hover:bg-ink-2 dark:hover:bg-slate-100 active:scale-[0.98] min-h-[36px]"
             >
               <span>{isAuthenticated ? 'Book Session' : 'Start a Conversation'}</span>
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper/10 transition-transform duration-500 ease-editorial group-hover:translate-x-0.5">
@@ -122,7 +122,7 @@ export default function Navbar() {
               onClick={() => setIsOpen((v) => !v)}
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
-              className="lg:hidden relative flex h-11 w-11 items-center justify-center rounded-full border border-line dark:border-white/15 bg-paper/90 dark:bg-[#141B24] backdrop-blur-md transition-transform active:scale-[0.95]"
+              className="lg:hidden relative flex h-11 w-11 items-center justify-center rounded-full border border-line dark:border-[#C8792C]/25 bg-paper/90 dark:bg-[#171310] backdrop-blur-md transition-transform active:scale-[0.95]"
             >
               <span
                 className={`absolute h-0.5 w-4 bg-ink dark:bg-white transition-transform duration-500 ease-editorial ${
@@ -147,10 +147,10 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: EASE }}
-            className="fixed inset-0 z-overlay flex flex-col bg-paper dark:bg-[#0E1318] backdrop-blur-2xl lg:hidden overflow-y-auto"
+            className="fixed inset-0 z-overlay flex flex-col bg-paper dark:bg-[#0A0908] backdrop-blur-2xl lg:hidden overflow-y-auto"
           >
             {/* Top Bar with Logo & Explicit Cross (X) Close Icon */}
-            <div className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 pt-[max(0.875rem,env(safe-area-inset-top))] pb-3.5 border-b border-line bg-paper/95 dark:bg-[#0E1318]/95 backdrop-blur-md">
+            <div className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 pt-[max(0.875rem,env(safe-area-inset-top))] pb-3.5 border-b border-line bg-paper/95 dark:bg-[#0A0908]/95 backdrop-blur-md">
               <Link href="/" onClick={() => setIsOpen(false)} aria-label="Unfoldinn home">
                 <Logo size="sm" showTagline={false} />
               </Link>
@@ -160,7 +160,7 @@ export default function Navbar() {
                   type="button"
                   onClick={() => setIsOpen(false)}
                   aria-label="Close menu"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-line dark:border-white/15 bg-paper-2 dark:bg-[#141B24] text-ink dark:text-white transition-all active:scale-95 shadow-sm"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-line dark:border-[#C8792C]/25 bg-paper-2 dark:bg-[#171310] text-ink dark:text-white transition-all active:scale-95 shadow-sm"
                 >
                   <X className="w-5 h-5" />
                 </button>

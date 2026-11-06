@@ -95,7 +95,7 @@ export default function Logo({
             Unfoldinn
           </span>
           {showTagline && (
-            <span className="font-mono text-[0.625rem] tracking-[0.12em] uppercase text-muted dark:text-slate-400 mt-1">
+            <span className="font-mono text-[0.625rem] tracking-[0.12em] uppercase text-muted dark:text-[#9E9080] mt-1">
               Young Minds. New Perspectives. Wider Possibilities.
             </span>
           )}
