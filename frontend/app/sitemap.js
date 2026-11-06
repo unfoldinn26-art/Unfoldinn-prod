@@ -1,5 +1,5 @@
 export default async function sitemap() {
-  const baseUrl = 'https://unfoldinn.com';
+  const baseUrl = 'https://www.unfoldinn.com';
   const currentDate = new Date().toISOString();
 
   // Core Static Routes

@@ -30,7 +30,7 @@ export const viewport = {
 };
 
 export const metadata = {
-  metadataBase: new URL('https://unfoldinn.com'),
+  metadataBase: new URL('https://www.unfoldinn.com'),
   title: {
     default: 'Unfoldinn | Young Minds. New Perspectives. Wider Possibilities.',
     template: '%s | Unfoldinn',
@@ -120,16 +120,16 @@ export const metadata = {
     telephone: false,
   },
   alternates: {
-    canonical: 'https://unfoldinn.com',
+    canonical: 'https://www.unfoldinn.com',
     languages: {
-      'en-IN': 'https://unfoldinn.com',
+      'en-IN': 'https://www.unfoldinn.com',
     },
   },
   openGraph: {
     title: 'Unfoldinn | Young Minds. New Perspectives. Wider Possibilities.',
     description:
       'Unfoldinn is a space for young people aged 16–25 to talk openly, understand themselves better, explore possibilities and find their own way forward.',
-    url: 'https://unfoldinn.com',
+    url: 'https://www.unfoldinn.com',
     siteName: 'Unfoldinn',
     locale: 'en_IN',
     type: 'website',
@@ -188,7 +188,7 @@ const jsonLd = {
       '@type': 'EducationalOrganization',
       '@id': 'https://unfoldinn.com/#organization',
       name: 'Unfoldinn',
-      url: 'https://unfoldinn.com',
+      url: 'https://www.unfoldinn.com',
       logo: 'https://unfoldinn.com/logo.jpg',
       description:
         'A space for young minds aged 16–25, parents, and educational institutions to explore perspectives, clarity, and wider possibilities.',
@@ -222,7 +222,7 @@ const jsonLd = {
     {
       '@type': 'WebSite',
       '@id': 'https://unfoldinn.com/#website',
-      url: 'https://unfoldinn.com',
+      url: 'https://www.unfoldinn.com',
       name: 'Unfoldinn',
       publisher: {
         '@id': 'https://unfoldinn.com/#organization',

@@ -35,7 +35,7 @@ export default function robots() {
         ],
       },
     ],
-    sitemap: 'https://unfoldinn.com/sitemap.xml',
-    host: 'https://unfoldinn.com',
+    sitemap: 'https://www.unfoldinn.com/sitemap.xml',
+    host: 'https://www.unfoldinn.com',
   };
 }
