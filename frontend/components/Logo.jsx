@@ -61,7 +61,7 @@ export default function Logo({
           {/* Main brush body: Thick bottom-left foundation tapering gracefully to top-right */}
           <path
             d="M17.5 40.5C12 36.5 8.5 31.5 8.5 25.5C8.5 15.5 16.5 7.5 26.5 7.5C36 7.5 43.5 14.5 44.5 23.5C45.2 29.5 42 35.5 37 39.5"
-            stroke="#5B4632"
+            className="stroke-[#5B4632] dark:stroke-[#F3EBDD]"
             strokeWidth="3.6"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -69,7 +69,7 @@ export default function Logo({
           {/* Secondary organic bristle stroke reinforcing hand-crafted ink texture */}
           <path
             d="M15 39C10.5 35 7.5 30 7.8 24.5C8.2 16 15.5 8.5 25.5 8.2C34.5 8 42 14.5 43.2 23"
-            stroke="#5B4632"
+            className="stroke-[#5B4632] dark:stroke-[#F3EBDD]"
             strokeWidth="1.4"
             strokeLinecap="round"
             strokeOpacity="0.7"
@@ -77,7 +77,7 @@ export default function Logo({
           {/* Ink press foundation at bottom-left */}
           <path
             d="M13 37.5C14.5 40 18 42.5 22 43.5C26 44.5 29 44 31 43.5"
-            stroke="#5B4632"
+            className="stroke-[#5B4632] dark:stroke-[#F3EBDD]"
             strokeWidth="2.4"
             strokeLinecap="round"
           />

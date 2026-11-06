@@ -18,6 +18,7 @@ const signalSoft = '#FAF0E1';    // Soft amber tint for badge washes
 const signalDeep = '#9B5113';    // Deep burnt amber (AAA contrast for links and badges)
 
 module.exports = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',

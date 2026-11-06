@@ -8,6 +8,7 @@ import { User } from 'lucide-react';
 import { EASE } from './ui/motion';
 import Arrow from './ui/Arrow';
 import Logo from './Logo';
+import ThemeToggle from './ThemeToggle';
 import { useUserAuth } from '../context/UserAuthContext';
 
 const navLinks = [
@@ -103,6 +104,8 @@ export default function Navbar() {
                 <span>Sign In</span>
               </Link>
             )}
+
+            <ThemeToggle variant="icon" className="hidden sm:inline-flex" />
 
             <Link
               href="/book"
@@ -207,6 +210,9 @@ export default function Navbar() {
                     <span>{remainingCredits} Credits Active</span>
                   </Link>
                 )}
+                <div className="pt-2">
+                  <ThemeToggle variant="pill" />
+                </div>
               </motion.div>
             </nav>
           </motion.div>

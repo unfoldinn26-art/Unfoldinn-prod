@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Arrow from './ui/Arrow';
 import Logo from './Logo';
+import ThemeToggle from './ThemeToggle';
 
 const footerNavLinks = [
   { name: 'Home', href: '/' },
@@ -96,6 +97,7 @@ export default function Footer() {
 
         <div className="flex flex-col gap-4 border-t border-line py-6 text-[0.8125rem] text-muted md:flex-row md:items-center md:justify-between">
           <p>© 2026 Unfoldinn. Young Minds. New Perspectives. Wider Possibilities.</p>
+          <ThemeToggle variant="footer" />
         </div>
       </div>
     </footer>
