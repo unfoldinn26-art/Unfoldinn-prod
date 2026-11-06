@@ -70,7 +70,7 @@ const protectUser = async (req, res, next) => {
   const token = extractBearerToken(req);
 
   if (!token) {
-    return res.status(401).json({ success: false, error: 'Please sign in to your Second Innings account to continue' });
+    return res.status(401).json({ success: false, error: 'Please sign in to your Unfoldinn account to continue' });
   }
 
   try {

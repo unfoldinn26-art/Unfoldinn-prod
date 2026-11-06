@@ -459,7 +459,7 @@ async function sendTransactionalEmail({
 // Branded HTML & Plain-Text Layout Builder
 // ---------------------------------------------------------------------------
 function renderBrandEmailLayout({
-  eyebrow = 'SECOND INNINGS',
+  eyebrow = 'UNFOLDINN',
   title,
   greeting,
   introHtml,
@@ -681,7 +681,7 @@ async function sendWelcomeEmail(user) {
   const subject = 'Welcome to Unfoldinn';
 
   const html = renderBrandEmailLayout({
-    eyebrow: 'WELCOME TO SECOND INNINGS',
+    eyebrow: 'WELCOME TO UNFOLDINN',
     title: 'Your Mentorship Space Is Ready',
     greeting: `Hello ${cleanName},`,
     introHtml: `<p style="margin: 0 0 12px 0;">Thank you for creating your account with Unfoldinn. We provide a calm, confidential, and structured 1-on-1 mentorship environment where students and young adults can think clearly about academics, career direction, and personal growth.</p>`,
@@ -1047,7 +1047,7 @@ async function sendNewsletterWelcomeEmail(subscriber) {
 
   const subject = 'Welcome to notes & reflections from Unfoldinn';
   const html = renderBrandEmailLayout({
-    eyebrow: 'SECOND INNINGS DISPATCH',
+    eyebrow: 'UNFOLDINN DISPATCH',
     title: 'Thank You for Subscribing',
     greeting: 'Hello,',
     introHtml: `<p style="margin: 0 0 12px 0;">You are now subscribed to occasional essays and thoughtful perspectives from Deepak and Unfoldinn on clarity, academic transitions, career choices, and parenting young adults.</p>`,

@@ -68,7 +68,7 @@ const bookingSchema = new mongoose.Schema({
   // 9. Your email address
   email: { type: String, trim: true, lowercase: true, index: true },
 
-  // 10. How did you hear about Second Innings?
+  // 10. How did you hear about Unfoldinn?
   source: { type: String, trim: true },
 
   // 11. Did someone suggest you speak with us?

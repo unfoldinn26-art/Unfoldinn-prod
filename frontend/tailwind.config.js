@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-// Second Innings Brand Identity Palette: Mocha Brown, Champagne Gold, Burnt Amber
+// Unfoldinn Brand Identity Palette: Mocha Brown, Champagne Gold, Burnt Amber
 // Derived and calibrated using UI Skills standards (better-colors, colorize, create-design-md).
 const mocha = '#5B4632';         // Official Swatch: MOCHA BROWN
 const champagne = '#F4D9A0';     // Official Swatch: CHAMPAGNE GOLD
