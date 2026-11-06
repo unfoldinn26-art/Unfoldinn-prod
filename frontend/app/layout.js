@@ -178,7 +178,13 @@ export const metadata = {
     type: 'website',
     images: [
       {
-        url: '/opengraph-image',
+        url: 'https://www.unfoldinn.com/assets/hero-composition.png',
+        width: 1200,
+        height: 630,
+        alt: 'Deepak Sogani mentoring young students at Unfoldinn',
+      },
+      {
+        url: 'https://www.unfoldinn.com/opengraph-image',
         width: 1200,
         height: 630,
         alt: 'Unfoldinn — Young Minds. New Perspectives. Wider Possibilities.',
@@ -191,7 +197,7 @@ export const metadata = {
     description:
       'Sometimes, you don’t need another answer. You need the right conversation. A space for young people aged 16–25.',
     creator: '@Unfoldinn',
-    images: ['/opengraph-image'],
+    images: ['https://www.unfoldinn.com/assets/hero-composition.png'],
   },
   robots: {
     index: true,
@@ -234,6 +240,11 @@ const jsonLd = {
       alternateName: ['Unfoldinn Mentoring', 'Unfoldinn Youth Platform'],
       url: 'https://www.unfoldinn.com',
       logo: 'https://www.unfoldinn.com/logo.jpg',
+      image: [
+        'https://www.unfoldinn.com/assets/hero-composition.png',
+        'https://www.unfoldinn.com/deepaksogani.jpeg',
+        'https://www.unfoldinn.com/logo.jpg',
+      ],
       slogan: 'Young Minds. New Perspectives. Wider Possibilities.',
       description:
         'An independent mentoring practice for young people aged 16–25, parents, and educational institutions to explore perspectives, clarity, and life readiness beyond the classroom.',
@@ -244,6 +255,7 @@ const jsonLd = {
         '@id': 'https://www.unfoldinn.com/about#deepaksogani',
         name: 'Deepak Sogani',
         jobTitle: 'Founder & Lead Mentor',
+        image: 'https://www.unfoldinn.com/deepaksogani.jpeg',
         alumniOf: 'JK Lakshmipat University',
         url: 'https://www.unfoldinn.com/about',
         sameAs: ['https://www.linkedin.com/in/deepak-sogani/'],
