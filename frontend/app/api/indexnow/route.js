@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const INDEXNOW_KEY = 'secondinnings99281a94bc72418e9d';
+const INDEXNOW_KEY = 'unfoldinn99281a94bc72418e9d';
 const HOST = 'unfoldinn.com';
 
 const DEFAULT_URLS = [
