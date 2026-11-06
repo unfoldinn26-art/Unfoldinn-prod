@@ -20,11 +20,16 @@ const connectDB = async () => {
     throw missingErr;
   }
 
+  // Optimized for Serverless + MongoDB Atlas (low-latency connection reuse, anti-stale socket detection)
   cachedPromise = mongoose
     .connect(uri, {
       serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-      maxPoolSize: 10
+      connectTimeoutMS: 10000,
+      socketTimeoutMS: 30000,
+      maxIdleTimeMS: 10000, // Closes idle sockets before Atlas terminates them to prevent hangs on lambda thaw
+      maxPoolSize: 10,
+      minPoolSize: 1,
+      heartbeatFrequencyMS: 10000
     })
     .then((conn) => {
       console.log(`MongoDB Connected: ${conn.connection.host}`);
@@ -39,7 +44,7 @@ const connectDB = async () => {
   return cachedPromise;
 };
 
-// Reconnect on drop
+// Reconnect on drop & clean up stale cache
 mongoose.connection.on('disconnected', () => {
   console.warn('MongoDB connection lost. Clearing cached promise...');
   cachedPromise = null;
