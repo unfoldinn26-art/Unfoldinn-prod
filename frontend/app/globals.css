@@ -326,3 +326,12 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     font-size: 16px !important;
   }
 }
+
+/* Google Identity Services (GSI) iframe styling & dark-mode seamless blend */
+iframe[src*="accounts.google.com/gsi"],
+div[id*="g_id"] iframe {
+  border-radius: 9999px !important;
+  background-color: transparent !important;
+  color-scheme: light dark !important;
+}
+

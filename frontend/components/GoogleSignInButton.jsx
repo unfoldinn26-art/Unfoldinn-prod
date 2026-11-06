@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 
@@ -12,6 +13,7 @@ export default function GoogleSignInButton({
 }) {
   const buttonContainerRef = useRef(null);
   const [gsiReady, setGsiReady] = useState(false);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     if (!GOOGLE_CLIENT_ID || typeof window === 'undefined') return;
@@ -32,8 +34,11 @@ export default function GoogleSignInButton({
           }
         });
 
+        // Clear previous render to prevent stacking or wrong theme artifact
+        buttonContainerRef.current.innerHTML = '';
+
         window.google.accounts.id.renderButton(buttonContainerRef.current, {
-          theme: 'outline',
+          theme: isDark ? 'filled_black' : 'outline',
           size: 'large',
           width: 340,
           text: 'continue_with',
@@ -62,17 +67,20 @@ export default function GoogleSignInButton({
     script.defer = true;
     script.onload = initGsi;
     document.head.appendChild(script);
-  }, [onSuccess, onError]);
+  }, [onSuccess, onError, isDark]);
 
   if (GOOGLE_CLIENT_ID) {
     return (
       <div className="w-full flex flex-col items-center">
-        <div ref={buttonContainerRef} className="min-h-[44px] flex justify-center w-full" />
+        <div
+          ref={buttonContainerRef}
+          className="min-h-[44px] flex justify-center w-full [&_iframe]:!rounded-full [&_iframe]:!bg-transparent overflow-hidden"
+        />
         {!gsiReady && (
           <button
             type="button"
             onClick={onFallbackClick}
-            className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-xl border border-stone/40 bg-white hover:bg-warm/40 text-ink font-semibold text-sm transition-all shadow-sm"
+            className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-full border border-line bg-paper-2 hover:bg-paper-3 dark:bg-[#1E1915] dark:hover:bg-[#251F1A] dark:border-[#C8792C]/25 text-ink dark:text-[#FAF6EE] font-semibold text-sm transition-all shadow-sm"
           >
             <GoogleLogoSvg />
             <span>{text}</span>
@@ -86,7 +94,7 @@ export default function GoogleSignInButton({
     <button
       type="button"
       onClick={onFallbackClick}
-      className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-xl border border-stone/40 bg-white hover:bg-warm/40 text-ink font-semibold text-sm transition-all shadow-sm"
+      className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-full border border-line bg-paper-2 hover:bg-paper-3 dark:bg-[#1E1915] dark:hover:bg-[#251F1A] dark:border-[#C8792C]/25 text-ink dark:text-[#FAF6EE] font-semibold text-sm transition-all shadow-sm"
     >
       <GoogleLogoSvg />
       <span>{text}</span>
