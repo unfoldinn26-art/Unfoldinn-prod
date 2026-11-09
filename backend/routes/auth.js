@@ -17,8 +17,9 @@ const {
 } = require('../services/googleMeetService');
 const { normalizePhone10, sendPhoneOtpSms, isSmsGatewayConfigured } = require('../services/phoneOtp');
 const { protectUser, protectAdmin } = require('../middleware/auth');
-const { authLimiter } = require('../middleware/security');
+const { authLimiter, honeypotMiddleware } = require('../middleware/security');
 const { verifyCaptcha } = require('../middleware/captcha');
+const { sendSecurityAlertEmail } = require('../services/emailService');
 
 function hashEmailOtp(email, otp) {
   return crypto
@@ -450,8 +451,8 @@ router.post('/email/verify-otp', authLimiter, async (req, res, next) => {
 
 // @route   POST /api/auth/register
 // @desc    Step 1 of Sign-Up: Validate Name, Email & Password and send 6-digit Email Verification OTP
-// @access  Public
-router.post('/register', authLimiter, verifyCaptcha, async (req, res, next) => {
+// @access  Public (Protected by RateLimiter, Honeypot, reCAPTCHA)
+router.post('/register', authLimiter, honeypotMiddleware(), verifyCaptcha, async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -531,8 +532,8 @@ router.post('/register', authLimiter, verifyCaptcha, async (req, res, next) => {
 
 // @route   POST /api/auth/login
 // @desc    Step 1 of Sign-In: Verify Email & Password, then send 6-digit 2-Factor Auth (2FA) Email OTP
-// @access  Public
-router.post('/login', authLimiter, async (req, res, next) => {
+// @access  Public (Protected by RateLimiter & Honeypot)
+router.post('/login', authLimiter, honeypotMiddleware(), async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -552,6 +553,15 @@ router.post('/login', authLimiter, async (req, res, next) => {
       });
     }
 
+    // Check if account is temporarily locked due to brute-force attempts
+    if (user.isLocked) {
+      const waitMinutes = Math.ceil((new Date(user.lockUntil).getTime() - Date.now()) / (60 * 1000));
+      return res.status(423).json({
+        success: false,
+        error: `Account temporarily locked due to repeated failed login attempts. Please wait ${waitMinutes} minute(s) before trying again.`
+      });
+    }
+
     if (!user.passwordHash) {
       return res.status(401).json({
         success: false,
@@ -561,10 +571,43 @@ router.post('/login', authLimiter, async (req, res, next) => {
 
     const isMatch = await user.matchPassword(String(password));
     if (!isMatch) {
+      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
+      user.lastFailedLoginAt = new Date();
+
+      if (user.failedLoginAttempts >= 5) {
+        user.lockUntil = new Date(Date.now() + 15 * 60 * 1000); // 15-minute lockout
+        await user.save();
+
+        // Send automated security alert email to admin
+        try {
+          const clientIp = (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) || req.ip;
+          sendSecurityAlertEmail({
+            eventType: 'Brute-Force Account Lockout Triggered',
+            email: normalizedEmail,
+            ip: clientIp,
+            details: '5 consecutive failed password attempts. Account locked for 15 minutes.'
+          }).catch(e => console.warn('Security alert email notice:', e.message));
+        } catch (e) {}
+
+        return res.status(423).json({
+          success: false,
+          error: 'Too many failed login attempts. For security, your account has been temporarily locked for 15 minutes.'
+        });
+      }
+
+      await user.save();
+      const remaining = 5 - user.failedLoginAttempts;
       return res.status(401).json({
         success: false,
-        error: 'Invalid email or password'
+        error: `Invalid email or password. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining before temporary lockout.`
       });
+    }
+
+    // Password verified! Reset failed login counters
+    if (user.failedLoginAttempts > 0 || user.lockUntil) {
+      user.failedLoginAttempts = 0;
+      user.lockUntil = null;
+      await user.save();
     }
 
     // Password verified! Send 6-digit 2FA OTP to user's email

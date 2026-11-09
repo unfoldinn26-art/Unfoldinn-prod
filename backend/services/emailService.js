@@ -1808,6 +1808,64 @@ async function sendPaymentFailedEmail({ orderId, booking, transaction, user }) {
   });
 }
 
+/**
+ * Security Alert Email for Repeated Failed Logins / Suspicious Activity
+ */
+async function sendSecurityAlertEmail({ eventType, email, ip, userAgent, details }) {
+  const config = getEmailConfig();
+  const subject = `⚠️ Security Alert: ${eventType} on Unfoldinn`;
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 580px; margin: 0 auto; padding: 24px; color: #23180F; background: #FAF6EE; border: 1px solid #E3D9C8; border-radius: 12px;">
+      <div style="margin-bottom: 20px; border-bottom: 1px solid #E3D9C8; padding-bottom: 12px;">
+        <span style="font-size: 11px; font-family: monospace; text-transform: uppercase; letter-spacing: 0.1em; color: #C8792C; font-weight: 600;">Security Monitoring</span>
+        <h2 style="margin: 6px 0 0; font-size: 20px; color: #23180F; font-weight: 600;">${eventType}</h2>
+      </div>
+      <p style="font-size: 14px; line-height: 1.6; color: #52473D;">
+        An automated security threshold was reached on Unfoldinn. Details of the incident:
+      </p>
+      <table style="width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px;">
+        <tr>
+          <td style="padding: 8px 12px; background: #F1ECE1; font-weight: 600; width: 140px; border: 1px solid #E3D9C8;">Target Email:</td>
+          <td style="padding: 8px 12px; background: #FAF6EE; border: 1px solid #E3D9C8;">${email}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 12px; background: #F1ECE1; font-weight: 600; border: 1px solid #E3D9C8;">IP Address:</td>
+          <td style="padding: 8px 12px; background: #FAF6EE; border: 1px solid #E3D9C8;">${ip || 'Unknown'}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 12px; background: #F1ECE1; font-weight: 600; border: 1px solid #E3D9C8;">Timestamp:</td>
+          <td style="padding: 8px 12px; background: #FAF6EE; border: 1px solid #E3D9C8;">${new Date().toISOString()}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 12px; background: #F1ECE1; font-weight: 600; border: 1px solid #E3D9C8;">Action Taken:</td>
+          <td style="padding: 8px 12px; background: #FAF6EE; border: 1px solid #E3D9C8; color: #B33A3A; font-weight: 600;">${details || 'Account temporarily locked for 15 minutes.'}</td>
+        </tr>
+      </table>
+      <p style="font-size: 12px; color: #8C7E72; margin-top: 24px; border-top: 1px solid #E3D9C8; padding-top: 12px;">
+        This is an automated alert from the Unfoldinn Security Defense System.
+      </p>
+    </div>
+  `;
+
+  const text = [
+    `SECURITY ALERT: ${eventType}`,
+    `Target Email: ${email}`,
+    `IP Address: ${ip || 'Unknown'}`,
+    `Timestamp: ${new Date().toISOString()}`,
+    `Action Taken: ${details || 'Account temporarily locked for 15 minutes.'}`
+  ].join('\n');
+
+  return sendTransactionalEmail({
+    workflow: 'security_alert_admin',
+    to: config.adminEmail,
+    subject,
+    html,
+    text,
+    idempotencyKey: `sec_alert:${email}:${Date.now()}`
+  });
+}
+
 module.exports = {
   getEmailConfig,
   isValidEmailAddress,
@@ -1822,5 +1880,6 @@ module.exports = {
   sendBookingStatusUpdateEmail,
   sendSevenDayFollowUpEmail,
   sendPaymentSuccessEmails,
-  sendPaymentFailedEmail
+  sendPaymentFailedEmail,
+  sendSecurityAlertEmail
 };

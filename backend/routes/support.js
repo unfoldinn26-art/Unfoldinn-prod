@@ -3,11 +3,11 @@ const router = express.Router();
 const SupportTicket = require('../models/SupportTicket');
 const { sendSupportTicketEmails } = require('../services/emailService');
 const { protectAdmin } = require('../middleware/auth');
-const { publicFormLimiter } = require('../middleware/security');
+const { publicFormLimiter, honeypotMiddleware } = require('../middleware/security');
 const { verifyCaptcha } = require('../middleware/captcha');
 
-// POST /api/support - Submit a website issue / support ticket (Public, Rate-Limited, Protected by reCAPTCHA)
-router.post('/', publicFormLimiter, verifyCaptcha, async (req, res, next) => {
+// POST /api/support - Submit a website issue / support ticket (Public, Rate-Limited, Protected by reCAPTCHA & Honeypot)
+router.post('/', publicFormLimiter, honeypotMiddleware(), verifyCaptcha, async (req, res, next) => {
   try {
     const {
       name,

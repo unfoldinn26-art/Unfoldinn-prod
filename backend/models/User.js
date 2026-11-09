@@ -139,8 +139,24 @@ const userSchema = new mongoose.Schema({
   },
   lastLoginAt: {
     type: Date
+  },
+
+  // Brute Force Lockout & Security
+  failedLoginAttempts: {
+    type: Number,
+    default: 0
+  },
+  lockUntil: {
+    type: Date
+  },
+  lastFailedLoginAt: {
+    type: Date
   }
 }, { timestamps: true });
+
+userSchema.virtual('isLocked').get(function() {
+  return !!(this.lockUntil && this.lockUntil > Date.now());
+});
 
 userSchema.methods.setPassword = async function(plainPassword) {
   const salt = await bcrypt.genSalt(10);

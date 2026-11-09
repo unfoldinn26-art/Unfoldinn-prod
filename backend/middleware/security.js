@@ -112,9 +112,38 @@ const publicFormLimiter = createRateLimiter({
 });
 
 /**
+ * Honeypot Anti-Spam Bot Trap Middleware
+ * Silently catches automated spam scripts that autofill hidden trap fields.
+ */
+function honeypotMiddleware(fieldName = '_hp_website') {
+  return (req, res, next) => {
+    if (!req.body || typeof req.body !== 'object') return next();
+
+    const trapValue =
+      req.body[fieldName] ||
+      req.body._hp_website ||
+      req.body.website_url ||
+      req.body._honeypot;
+
+    if (trapValue && String(trapValue).trim().length > 0) {
+      console.warn(`[Security] Honeypot triggered from IP ${req.ip || 'unknown'}: trap=${trapValue}`);
+      // Return synthetic success so the bot believes it completed and abandons retry
+      return res.status(200).json({
+        success: true,
+        message: 'Submission received successfully.'
+      });
+    }
+
+    next();
+  };
+}
+
+/**
  * Strict Origin Whitelist Validator to prevent Open Redirect / Host Header Injection in payment returnUrl
  */
 const ALLOWED_ORIGINS = [
+  'https://unfoldinn.com',
+  'https://www.unfoldinn.com',
   'https://second-innings.in',
   'https://www.second-innings.in',
   'https://second-innings-indol.vercel.app',
@@ -154,6 +183,7 @@ module.exports = {
   authLimiter,
   paymentLimiter,
   publicFormLimiter,
+  honeypotMiddleware,
   getTrustedFrontendOrigin,
   computeDedupFingerprint
 };

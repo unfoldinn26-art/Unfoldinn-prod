@@ -16,6 +16,7 @@ import {
 import { useUserAuth } from '../../context/UserAuthContext';
 import GoogleSignInButton from '../../components/GoogleSignInButton';
 import Captcha from '../../components/Captcha';
+import HoneypotField from '../../components/HoneypotField';
 
 function LoginContent() {
   const router = useRouter();
@@ -45,6 +46,7 @@ function LoginContent() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [captchaToken, setCaptchaToken] = useState('');
+  const [hpWebsite, setHpWebsite] = useState('');
   const captchaRef = useRef(null);
 
   useEffect(() => {
@@ -108,9 +110,9 @@ function LoginContent() {
     try {
       let res;
       if (mode === 'register') {
-        res = await registerWithEmail({ name, email, password, captchaToken });
+        res = await registerWithEmail({ name, email, password, captchaToken, _hp_website: hpWebsite });
       } else {
-        res = await loginWithEmail({ email, password });
+        res = await loginWithEmail({ email, password, _hp_website: hpWebsite });
       }
 
       if (res.requiresOtp) {
@@ -123,6 +125,7 @@ function LoginContent() {
         );
         setResendCooldown(res.retryAfterSeconds || 45);
         setCaptchaToken('');
+        setHpWebsite('');
         captchaRef.current?.reset();
         return;
       }
@@ -399,6 +402,7 @@ function LoginContent() {
               ) : (
                 <>
                   <form onSubmit={handleEmailSubmit} className="space-y-4">
+                    <HoneypotField value={hpWebsite} onChange={(e) => setHpWebsite(e.target.value)} />
                     {mode === 'register' && (
                       <div>
                         <label className="block text-xs font-mono uppercase tracking-wider text-ink-2 mb-1.5">

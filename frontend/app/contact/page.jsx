@@ -6,6 +6,7 @@ import Button from '../../components/ui/Button';
 import Arrow from '../../components/ui/Arrow';
 import PageHero from '../../components/ui/PageHero';
 import Captcha from '../../components/Captcha';
+import HoneypotField from '../../components/HoneypotField';
 import { submitContact, submitInstitutionalEnquiry } from '../../lib/api';
 
 const INTEREST_OPTIONS = [
@@ -20,6 +21,7 @@ export default function Contact() {
   const [status, setStatus] = useState({ type: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
+  const [hpWebsite, setHpWebsite] = useState('');
   const generalCaptchaRef = useRef(null);
   const instCaptchaRef = useRef(null);
 
@@ -45,9 +47,10 @@ export default function Contact() {
     setStatus({ type: '', message: '' });
 
     try {
-      await submitContact({ ...generalForm, captchaToken });
+      await submitContact({ ...generalForm, captchaToken, _hp_website: hpWebsite });
       setStatus({ type: 'success', message: 'Thank you. Your message has been received. We will get back to you shortly.' });
       setGeneralForm({ name: '', email: '', phone: '', subject: '', message: '' });
+      setHpWebsite('');
       setCaptchaToken('');
       generalCaptchaRef.current?.reset();
     } catch (err) {
@@ -69,13 +72,14 @@ export default function Contact() {
     setStatus({ type: '', message: '' });
 
     try {
-      await submitInstitutionalEnquiry({ ...instForm, captchaToken });
+      await submitInstitutionalEnquiry({ ...instForm, captchaToken, _hp_website: hpWebsite });
       setStatus({ type: 'success', message: 'Institutional enquiry submitted successfully. Mr. Deepak Sogani will reach out for a discovery conversation.' });
       setInstForm({
         institutionName: '', institutionType: 'School', contactPerson: '',
         designation: '', email: '', phone: '', city: '', state: '',
         studentStrength: '', enquiryNature: '', interestedIn: []
       });
+      setHpWebsite('');
       setCaptchaToken('');
       instCaptchaRef.current?.reset();
     } catch (err) {
@@ -198,6 +202,7 @@ export default function Contact() {
             {/* General Form */}
             {activeTab === 'general' && (
               <form onSubmit={handleGeneralSubmit} className="space-y-5 sm:space-y-6">
+                <HoneypotField value={hpWebsite} onChange={(e) => setHpWebsite(e.target.value)} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                   <div>
                     <label className="field-label">Name <span className="text-signal">*</span></label>
@@ -275,6 +280,7 @@ export default function Contact() {
             {/* Institutional Form */}
             {activeTab === 'institutional' && (
               <form onSubmit={handleInstitutionalSubmit} className="space-y-5 sm:space-y-6">
+                <HoneypotField value={hpWebsite} onChange={(e) => setHpWebsite(e.target.value)} />
                 <div className="mb-6 sm:mb-8 border-b border-line pb-5 sm:pb-6">
                   <h2 className="font-serif text-[1.5rem] sm:text-[1.75rem] text-ink mb-2">Institutional Partnership Enquiry</h2>
                   <p className="text-xs sm:text-sm text-muted">For schools, colleges and universities interested in our 90-day pilot framework.</p>

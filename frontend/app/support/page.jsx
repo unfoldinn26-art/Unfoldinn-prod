@@ -6,6 +6,7 @@ import Button from '../../components/ui/Button';
 import Arrow from '../../components/ui/Arrow';
 import PageHero from '../../components/ui/PageHero';
 import Captcha from '../../components/Captcha';
+import HoneypotField from '../../components/HoneypotField';
 import { submitSupportTicket } from '../../lib/api';
 
 const CATEGORY_OPTIONS = [
@@ -32,6 +33,7 @@ export default function SupportPage() {
 
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
+  const [hpWebsite, setHpWebsite] = useState('');
   const captchaRef = useRef(null);
   const [status, setStatus] = useState({ type: '', message: '', ticketId: null });
 
@@ -60,7 +62,7 @@ export default function SupportPage() {
     setStatus({ type: '', message: '', ticketId: null });
 
     try {
-      const res = await submitSupportTicket({ ...formData, captchaToken });
+      const res = await submitSupportTicket({ ...formData, captchaToken, _hp_website: hpWebsite });
       setStatus({
         type: 'success',
         message: 'Your support ticket has been recorded in our technical system. Our team will review the issue and follow up via email.',
@@ -76,6 +78,7 @@ export default function SupportPage() {
         description: '',
         deviceInfo: '',
       });
+      setHpWebsite('');
       setCaptchaToken('');
       captchaRef.current?.reset();
     } catch (err) {
@@ -160,6 +163,7 @@ export default function SupportPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+                  <HoneypotField value={hpWebsite} onChange={(e) => setHpWebsite(e.target.value)} />
                   {status.type === 'error' && (
                     <div className="p-4 rounded-xl bg-coral-soft border border-coral-border text-coral text-sm">
                       {status.message}

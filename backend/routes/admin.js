@@ -26,9 +26,9 @@ const {
   updateAndApproveSessionSummary,
   getStudentContinuityBrief
 } = require('../services/sessionSummaryService');
-const { sendBookingStatusUpdateEmail } = require('../services/emailService');
+const { sendBookingStatusUpdateEmail, sendSecurityAlertEmail } = require('../services/emailService');
 const { protectAdmin } = require('../middleware/auth');
-const { authLimiter } = require('../middleware/security');
+const { authLimiter, honeypotMiddleware } = require('../middleware/security');
 
 const generateToken = (id) => {
   return jwt.sign({ id, tokenType: 'admin' }, process.env.JWT_SECRET, {
@@ -42,6 +42,7 @@ const generateToken = (id) => {
 router.post(
   '/login',
   authLimiter,
+  honeypotMiddleware(),
   [
     body('email', 'Please include a valid email').isEmail(),
     body('password', 'Password is required').exists()
@@ -76,6 +77,8 @@ router.post(
           }
         });
       } else {
+        const clientIp = (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) || req.ip;
+        console.warn(`[Security] Failed admin login attempt for ${email} from IP ${clientIp}`);
         res.status(401).json({ success: false, error: 'Invalid email or password' });
       }
     } catch (error) {

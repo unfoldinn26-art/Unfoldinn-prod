@@ -97,16 +97,16 @@ export function UserAuthProvider({ children }) {
     return res;
   };
 
-  const loginWithEmail = async ({ email, password }) => {
-    const res = await loginUserAccount({ email, password });
+  const loginWithEmail = async (credentials) => {
+    const res = await loginUserAccount(credentials);
     if (res.token && res.user) {
       applyAuthPayload(res);
     }
     return res;
   };
 
-  const registerWithEmail = async ({ name, email, password, captchaToken }) => {
-    const res = await registerUserAccount({ name, email, password, captchaToken });
+  const registerWithEmail = async (userData) => {
+    const res = await registerUserAccount(userData);
     if (res.token && res.user) {
       applyAuthPayload(res);
     }
