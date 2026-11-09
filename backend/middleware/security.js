@@ -112,11 +112,75 @@ const publicFormLimiter = createRateLimiter({
 });
 
 /**
- * Honeypot Anti-Spam Bot Trap Middleware
- * Silently catches automated spam scripts that autofill hidden trap fields.
+ * In-Memory 24-Hour IP Jail Store
+ * Tracks IPs flagged for malicious automated behavior (e.g., Honeypot bot traps).
  */
-function honeypotMiddleware(fieldName = '_hp_website') {
-  return (req, res, next) => {
+const ipJail = new Map();
+
+// Periodic cleanup of expired jail entries every 15 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of ipJail.entries()) {
+    if (now > entry.bannedUntil) {
+      ipJail.delete(ip);
+    }
+  }
+}, 15 * 60 * 1000).unref();
+
+function jailIp(ip, durationMs = 24 * 60 * 60 * 1000, reason = 'Honeypot automated bot') {
+  if (!ip || ip === '127.0.0.1' || ip === '::1' || ip === 'unknown') return;
+  const entry = ipJail.get(ip) || { count: 0 };
+  entry.count += 1;
+  entry.bannedUntil = Date.now() + durationMs;
+  entry.reason = reason;
+  ipJail.set(ip, entry);
+  console.warn(`[Security IP Jail] IP ${ip} jailed for 24h until ${new Date(entry.bannedUntil).toISOString()} (Reason: ${reason})`);
+}
+
+function isIpJailed(ip) {
+  if (!ip) return false;
+  const entry = ipJail.get(ip);
+  if (!entry) return false;
+  if (Date.now() > entry.bannedUntil) {
+    ipJail.delete(ip);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Global IP Jail Check Middleware
+ * Intercepts incoming requests before routes. If client IP is jailed, blocks immediately with 403 Forbidden.
+ */
+function ipJailCheckMiddleware(req, res, next) {
+  const clientIp =
+    (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+    req.ip ||
+    req.socket?.remoteAddress ||
+    'unknown';
+
+  if (isIpJailed(clientIp)) {
+    const entry = ipJail.get(clientIp);
+    const retryAfterSec = Math.max(1, Math.ceil(((entry?.bannedUntil || Date.now()) - Date.now()) / 1000));
+    res.setHeader('Retry-After', String(retryAfterSec));
+    return res.status(403).json({
+      success: false,
+      error: 'Access denied. Automated security defenses have temporarily restricted access from this network.',
+      retryAfterSeconds: retryAfterSec
+    });
+  }
+
+  next();
+}
+
+/**
+ * Honeypot Anti-Spam Bot Trap Middleware with Tarpitting and 24-Hour IP Jail
+ * 1. Jails the bot's IP for 24 hours.
+ * 2. Tarpits (delays) response for 4 seconds to drain the bot's thread resources.
+ * 3. Returns synthetic 200 OK so the bot records a success and does not attempt workarounds.
+ */
+function honeypotMiddleware(fieldName = '_hp_website', tarpitDelayMs = 4000) {
+  return async (req, res, next) => {
     if (!req.body || typeof req.body !== 'object') return next();
 
     const trapValue =
@@ -126,8 +190,21 @@ function honeypotMiddleware(fieldName = '_hp_website') {
       req.body._honeypot;
 
     if (trapValue && String(trapValue).trim().length > 0) {
-      console.warn(`[Security] Honeypot triggered from IP ${req.ip || 'unknown'}: trap=${trapValue}`);
-      // Return synthetic success so the bot believes it completed and abandons retry
+      const clientIp =
+        (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+        req.ip ||
+        req.socket?.remoteAddress ||
+        'unknown';
+
+      console.warn(`[Security Honeypot] Bot trapped from IP ${clientIp}: trapField=${fieldName}, value=${trapValue}`);
+
+      // 1. Jail IP for 24 hours
+      jailIp(clientIp, 24 * 60 * 60 * 1000, `Honeypot trap triggered (trap=${trapValue})`);
+
+      // 2. Tarpit: Hold the connection open for 4 seconds to exhaust the bot's socket and memory
+      await new Promise((resolve) => setTimeout(resolve, tarpitDelayMs));
+
+      // 3. Return deceptive 200 OK
       return res.status(200).json({
         success: true,
         message: 'Submission received successfully.'
@@ -184,6 +261,9 @@ module.exports = {
   paymentLimiter,
   publicFormLimiter,
   honeypotMiddleware,
+  ipJailCheckMiddleware,
+  jailIp,
+  isIpJailed,
   getTrustedFrontendOrigin,
   computeDedupFingerprint
 };

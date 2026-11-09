@@ -5,7 +5,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
-const { mongoSanitizeMiddleware } = require('./middleware/security');
+const { mongoSanitizeMiddleware, ipJailCheckMiddleware } = require('./middleware/security');
 const { router: subscriptionsRouter } = require('./routes/subscriptions');
 
 // Load environment variables
@@ -70,6 +70,9 @@ app.use(
 
 // Strip NoSQL injection operators ($gt, $ne, etc.) from body, query, and params
 app.use(mongoSanitizeMiddleware);
+
+// Intercept requests from IPs sentenced to the 24-Hour Security Jail
+app.use(ipJailCheckMiddleware);
 
 // Middleware to ensure active MongoDB connection before routing
 app.use(async (req, res, next) => {
