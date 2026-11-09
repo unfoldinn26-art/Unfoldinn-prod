@@ -4,9 +4,10 @@ const Contact = require('../models/Contact');
 const { sendContactEmails } = require('../services/emailService');
 const { protectAdmin } = require('../middleware/auth');
 const { publicFormLimiter } = require('../middleware/security');
+const { verifyCaptcha } = require('../middleware/captcha');
 
-// POST /api/contact - Submit contact form (Public, Rate-Limited, Field-Whitelisted)
-router.post('/', publicFormLimiter, async (req, res, next) => {
+// POST /api/contact - Submit contact form (Public, Rate-Limited, Protected by reCAPTCHA)
+router.post('/', publicFormLimiter, verifyCaptcha, async (req, res, next) => {
   try {
     const { name, email, phone, subject, message, type } = req.body;
     if (!name || !email || !subject || !message) {

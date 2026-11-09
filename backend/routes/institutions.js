@@ -4,9 +4,10 @@ const InstitutionalEnquiry = require('../models/InstitutionalEnquiry');
 const { sendInstitutionEnquiryEmails } = require('../services/emailService');
 const { protectAdmin } = require('../middleware/auth');
 const { publicFormLimiter } = require('../middleware/security');
+const { verifyCaptcha } = require('../middleware/captcha');
 
-// POST /api/institutions - Submit institutional enquiry (Public, Rate-Limited, Field-Whitelisted)
-router.post('/', publicFormLimiter, async (req, res, next) => {
+// POST /api/institutions - Submit institutional enquiry (Public, Rate-Limited, Protected by reCAPTCHA)
+router.post('/', publicFormLimiter, verifyCaptcha, async (req, res, next) => {
   try {
     const {
       institutionName,

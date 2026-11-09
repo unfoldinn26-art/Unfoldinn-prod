@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useUserAuth } from '../../context/UserAuthContext';
 import GoogleSignInButton from '../../components/GoogleSignInButton';
+import Captcha from '../../components/Captcha';
 
 function LoginContent() {
   const router = useRouter();
@@ -43,6 +44,8 @@ function LoginContent() {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const captchaRef = useRef(null);
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -95,13 +98,17 @@ function LoginContent() {
       setError('Please enter your full name.');
       return;
     }
+    if (mode === 'register' && process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaToken) {
+      setError('Please check the "I am not a robot" box before creating an account.');
+      return;
+    }
 
     setSubmitting(true);
 
     try {
       let res;
       if (mode === 'register') {
-        res = await registerWithEmail({ name, email, password });
+        res = await registerWithEmail({ name, email, password, captchaToken });
       } else {
         res = await loginWithEmail({ email, password });
       }
@@ -115,6 +122,8 @@ function LoginContent() {
             `A 6-digit verification code has been sent to ${email.trim().toLowerCase()}.`
         );
         setResendCooldown(res.retryAfterSeconds || 45);
+        setCaptchaToken('');
+        captchaRef.current?.reset();
         return;
       }
 
@@ -125,6 +134,7 @@ function LoginContent() {
       }
     } catch (err) {
       setError(err.message || (mode === 'register' ? 'Could not create account' : 'Invalid email or password'));
+      captchaRef.current?.reset();
     } finally {
       setSubmitting(false);
     }
@@ -252,6 +262,8 @@ function LoginContent() {
                       setOtpStep(false);
                       setOtpCode('');
                       setError('');
+                      setCaptchaToken('');
+                      captchaRef.current?.reset();
                     }}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       mode === 'login'
@@ -268,6 +280,8 @@ function LoginContent() {
                       setOtpStep(false);
                       setOtpCode('');
                       setError('');
+                      setCaptchaToken('');
+                      captchaRef.current?.reset();
                     }}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       mode === 'register'
@@ -445,6 +459,14 @@ function LoginContent() {
                       </div>
                     </div>
 
+                    {mode === 'register' && (
+                      <Captcha
+                        ref={captchaRef}
+                        onVerify={setCaptchaToken}
+                        onExpired={() => setCaptchaToken('')}
+                      />
+                    )}
+
                     <button
                       type="submit"
                       disabled={submitting}
@@ -471,6 +493,8 @@ function LoginContent() {
                         setOtpStep(false);
                         setOtpCode('');
                         setError('');
+                        setCaptchaToken('');
+                        captchaRef.current?.reset();
                       }}
                       className="text-xs text-muted hover:text-signal transition-colors font-medium"
                     >

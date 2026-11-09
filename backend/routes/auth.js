@@ -18,6 +18,7 @@ const {
 const { normalizePhone10, sendPhoneOtpSms, isSmsGatewayConfigured } = require('../services/phoneOtp');
 const { protectUser, protectAdmin } = require('../middleware/auth');
 const { authLimiter } = require('../middleware/security');
+const { verifyCaptcha } = require('../middleware/captcha');
 
 function hashEmailOtp(email, otp) {
   return crypto
@@ -450,7 +451,7 @@ router.post('/email/verify-otp', authLimiter, async (req, res, next) => {
 // @route   POST /api/auth/register
 // @desc    Step 1 of Sign-Up: Validate Name, Email & Password and send 6-digit Email Verification OTP
 // @access  Public
-router.post('/register', authLimiter, async (req, res, next) => {
+router.post('/register', authLimiter, verifyCaptcha, async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {

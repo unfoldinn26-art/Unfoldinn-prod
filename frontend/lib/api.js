@@ -95,10 +95,10 @@ export async function verifyPhoneOtp({ phone, otp }) {
   });
 }
 
-export async function registerUserAccount({ name, email, password }) {
+export async function registerUserAccount({ name, email, password, captchaToken }) {
   return fetchAPI('/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ name, email, password })
+    body: JSON.stringify({ name, email, password, captchaToken })
   });
 }
 

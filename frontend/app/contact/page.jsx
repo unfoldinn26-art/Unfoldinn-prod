@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import Button from '../../components/ui/Button';
 import Arrow from '../../components/ui/Arrow';
 import PageHero from '../../components/ui/PageHero';
+import Captcha from '../../components/Captcha';
 import { submitContact, submitInstitutionalEnquiry } from '../../lib/api';
 
 const INTEREST_OPTIONS = [
@@ -18,6 +19,9 @@ export default function Contact() {
   const [activeTab, setActiveTab] = useState('general');
   const [status, setStatus] = useState({ type: '', message: '' });
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const generalCaptchaRef = useRef(null);
+  const instCaptchaRef = useRef(null);
 
   // General Form State
   const [generalForm, setGeneralForm] = useState({
@@ -33,16 +37,23 @@ export default function Contact() {
 
   const handleGeneralSubmit = async (e) => {
     e.preventDefault();
+    if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaToken) {
+      setStatus({ type: 'error', message: 'Please complete the "I am not a robot" verification before sending.' });
+      return;
+    }
     setLoading(true);
     setStatus({ type: '', message: '' });
 
     try {
-      await submitContact(generalForm);
+      await submitContact({ ...generalForm, captchaToken });
       setStatus({ type: 'success', message: 'Thank you. Your message has been received. We will get back to you shortly.' });
       setGeneralForm({ name: '', email: '', phone: '', subject: '', message: '' });
+      setCaptchaToken('');
+      generalCaptchaRef.current?.reset();
     } catch (err) {
       console.error(err);
-      setStatus({ type: 'error', message: 'Failed to send message. Please contact us directly via WhatsApp or phone.' });
+      setStatus({ type: 'error', message: err.message || 'Failed to send message. Please contact us directly via WhatsApp or phone.' });
+      generalCaptchaRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -50,20 +61,27 @@ export default function Contact() {
 
   const handleInstitutionalSubmit = async (e) => {
     e.preventDefault();
+    if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaToken) {
+      setStatus({ type: 'error', message: 'Please complete the "I am not a robot" verification before submitting.' });
+      return;
+    }
     setLoading(true);
     setStatus({ type: '', message: '' });
 
     try {
-      await submitInstitutionalEnquiry(instForm);
+      await submitInstitutionalEnquiry({ ...instForm, captchaToken });
       setStatus({ type: 'success', message: 'Institutional enquiry submitted successfully. Mr. Deepak Sogani will reach out for a discovery conversation.' });
       setInstForm({
         institutionName: '', institutionType: 'School', contactPerson: '',
         designation: '', email: '', phone: '', city: '', state: '',
         studentStrength: '', enquiryNature: '', interestedIn: []
       });
+      setCaptchaToken('');
+      instCaptchaRef.current?.reset();
     } catch (err) {
       console.error(err);
-      setStatus({ type: 'error', message: 'Failed to submit enquiry. Please email or message us directly.' });
+      setStatus({ type: 'error', message: err.message || 'Failed to submit enquiry. Please email or message us directly.' });
+      instCaptchaRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -143,7 +161,7 @@ export default function Contact() {
           <div className="flex flex-wrap items-center gap-2 mb-6 sm:mb-8">
             <button
               type="button"
-              onClick={() => setActiveTab('general')}
+              onClick={() => { setActiveTab('general'); setCaptchaToken(''); generalCaptchaRef.current?.reset(); }}
               className={`rounded-full px-5 py-2.5 min-h-[44px] text-xs font-mono uppercase tracking-wider transition-colors duration-300 inline-flex items-center justify-center ${
                 activeTab === 'general'
                   ? 'bg-ink text-paper'
@@ -154,7 +172,7 @@ export default function Contact() {
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('institutional')}
+              onClick={() => { setActiveTab('institutional'); setCaptchaToken(''); instCaptchaRef.current?.reset(); }}
               className={`rounded-full px-5 py-2.5 min-h-[44px] text-xs font-mono uppercase tracking-wider transition-colors duration-300 inline-flex items-center justify-center ${
                 activeTab === 'institutional'
                   ? 'bg-ink text-paper'
@@ -239,6 +257,12 @@ export default function Contact() {
                     className="field resize-none"
                   />
                 </div>
+
+                <Captcha
+                  ref={generalCaptchaRef}
+                  onVerify={setCaptchaToken}
+                  onExpired={() => setCaptchaToken('')}
+                />
 
                 <div className="pt-2">
                   <button type="submit" disabled={loading} className="btn-editorial w-full sm:w-auto">
@@ -382,6 +406,12 @@ export default function Contact() {
                     className="field resize-none"
                   />
                 </div>
+
+                <Captcha
+                  ref={instCaptchaRef}
+                  onVerify={setCaptchaToken}
+                  onExpired={() => setCaptchaToken('')}
+                />
 
                 <div className="pt-2">
                   <button type="submit" disabled={loading} className="btn-editorial w-full sm:w-auto">

@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Button from '../../components/ui/Button';
 import Arrow from '../../components/ui/Arrow';
 import PageHero from '../../components/ui/PageHero';
+import Captcha from '../../components/Captcha';
 import { submitSupportTicket } from '../../lib/api';
 
 const CATEGORY_OPTIONS = [
@@ -30,6 +31,8 @@ export default function SupportPage() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const captchaRef = useRef(null);
   const [status, setStatus] = useState({ type: '', message: '', ticketId: null });
 
   useEffect(() => {
@@ -45,11 +48,19 @@ export default function SupportPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaToken) {
+      setStatus({
+        type: 'error',
+        message: 'Please complete the "I am not a robot" checkbox before submitting.',
+        ticketId: null,
+      });
+      return;
+    }
     setLoading(true);
     setStatus({ type: '', message: '', ticketId: null });
 
     try {
-      const res = await submitSupportTicket(formData);
+      const res = await submitSupportTicket({ ...formData, captchaToken });
       setStatus({
         type: 'success',
         message: 'Your support ticket has been recorded in our technical system. Our team will review the issue and follow up via email.',
@@ -65,13 +76,16 @@ export default function SupportPage() {
         description: '',
         deviceInfo: '',
       });
+      setCaptchaToken('');
+      captchaRef.current?.reset();
     } catch (err) {
       console.error(err);
       setStatus({
         type: 'error',
-        message: 'Failed to submit support ticket. Please email us directly at unfoldinn26@gmail.com or message us on WhatsApp.',
+        message: err.message || 'Failed to submit support ticket. Please email us directly at unfoldinn26@gmail.com or message us on WhatsApp.',
         ticketId: null,
       });
+      captchaRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -252,6 +266,12 @@ export default function SupportPage() {
                       placeholder="Please tell us what you clicked, what you expected to happen, and any error message you saw."
                     />
                   </div>
+
+                  <Captcha
+                    ref={captchaRef}
+                    onVerify={setCaptchaToken}
+                    onExpired={() => setCaptchaToken('')}
+                  />
 
                   <div className="pt-2">
                     <button
