@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Lock, Mail, Eye, EyeOff, ShieldCheck, ArrowRight, ArrowLeft } from 'lucide-react';
 import { loginAdmin, setToken } from '../../../lib/adminApi';
+import Captcha from '../../../components/Captcha';
+import HoneypotField from '../../../components/HoneypotField';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('deepak@unfoldinn.com');
@@ -12,23 +14,38 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [hpWebsite, setHpWebsite] = useState('');
+  const captchaRef = useRef(null);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaToken) {
+      setError('Please complete the "I am not a robot" verification before signing in.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
-      const data = await loginAdmin(email, password);
+      const data = await loginAdmin(email, password, {
+        captchaToken,
+        _hp_website: hpWebsite,
+      });
       if (data.token) {
         setToken(data.token);
         router.push('/admin');
       } else {
         setError('Login failed, no token received');
+        setCaptchaToken('');
+        captchaRef.current?.reset();
       }
     } catch (err) {
       setError(err.message || 'Invalid email or password');
+      setCaptchaToken('');
+      captchaRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -91,6 +108,7 @@ export default function AdminLogin() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              <HoneypotField value={hpWebsite} onChange={(e) => setHpWebsite(e.target.value)} />
               <div>
                 <label className="block text-xs font-mono uppercase tracking-wider text-gray-300 mb-2">
                   Admin Email
@@ -116,7 +134,7 @@ export default function AdminLogin() {
                     Password
                   </label>
                   <span className="text-[11px] text-gray-400 font-mono">
-                    Protected by JWT
+                    Protected by JWT &amp; 5-Attempt Lockout
                   </span>
                 </div>
                 <div className="relative">
@@ -140,6 +158,13 @@ export default function AdminLogin() {
                   </button>
                 </div>
               </div>
+
+              <Captcha
+                ref={captchaRef}
+                onVerify={setCaptchaToken}
+                onExpired={() => setCaptchaToken('')}
+                className="justify-center"
+              />
 
               <button
                 type="submit"

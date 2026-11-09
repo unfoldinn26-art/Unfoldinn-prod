@@ -7,9 +7,16 @@ const adminSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['superadmin', 'admin'], default: 'admin' },
   isActive: { type: Boolean, default: true },
-  lastLogin: { type: Date }
+  lastLogin: { type: Date },
+  failedLoginAttempts: { type: Number, default: 0 },
+  lockUntil: { type: Date, default: null },
+  lastFailedLoginAt: { type: Date }
 }, {
   timestamps: true
+});
+
+adminSchema.virtual('isLocked').get(function() {
+  return !!(this.lockUntil && this.lockUntil > Date.now());
 });
 
 adminSchema.pre('save', async function(next) {

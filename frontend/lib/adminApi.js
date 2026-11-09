@@ -18,13 +18,13 @@ export async function adminFetch(endpoint, options = {}) {
     },
   });
   const data = await res.json();
-  if (res.status === 401) { removeToken(); if(typeof window !== 'undefined') window.location.href = '/admin/login'; }
+  if (res.status === 401 && endpoint !== '/admin/login') { removeToken(); if(typeof window !== 'undefined') window.location.href = '/admin/login'; }
   if (!res.ok) throw new Error(data.error || data.message || 'Request failed');
   return data;
 }
 
 // Auth
-export const loginAdmin = (email, password) => adminFetch('/admin/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+export const loginAdmin = (email, password, extra = {}) => adminFetch('/admin/login', { method: 'POST', body: JSON.stringify({ email, password, ...extra }) });
 export const getMe = () => adminFetch('/admin/me');
 export const getDashboard = () => adminFetch('/admin/dashboard');
 export const changePassword = (data) => adminFetch('/admin/change-password', { method: 'PUT', body: JSON.stringify(data) });

@@ -27,7 +27,11 @@ const seedAdmin = async () => {
       process.exit(0);
     }
 
-    const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'SecondInnings@2026';
+    const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD;
+    if (!adminPassword || adminPassword.length < 10) {
+      console.error('Error: ADMIN_DEFAULT_PASSWORD environment variable (min 10 chars) is required to seed an admin account.');
+      process.exit(1);
+    }
 
     admin = new Admin({
       name: 'Deepak Sogani',

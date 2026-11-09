@@ -29,6 +29,7 @@ const {
 const { sendBookingStatusUpdateEmail, sendSecurityAlertEmail } = require('../services/emailService');
 const { protectAdmin } = require('../middleware/auth');
 const { authLimiter, honeypotMiddleware } = require('../middleware/security');
+const { verifyCaptcha } = require('../middleware/captcha');
 
 const generateToken = (id) => {
   return jwt.sign({ id, tokenType: 'admin' }, process.env.JWT_SECRET, {
@@ -37,12 +38,13 @@ const generateToken = (id) => {
 };
 
 // @route   POST /api/admin/login
-// @desc    Auth admin & get token (Rate-Limited against brute-force)
+// @desc    Auth admin & get token (Rate-Limited, Honeypot, reCAPTCHA v2, & 5-Attempt Lockout)
 // @access  Public
 router.post(
   '/login',
   authLimiter,
   honeypotMiddleware(),
+  verifyCaptcha,
   [
     body('email', 'Please include a valid email').isEmail(),
     body('password', 'Password is required').exists()
@@ -54,33 +56,76 @@ router.post(
     }
 
     const { email, password } = req.body;
+    const normalizedEmail = String(email).trim().toLowerCase();
 
     try {
-      const admin = await Admin.findOne({ email: String(email).toLowerCase() });
+      const admin = await Admin.findOne({ email: normalizedEmail });
 
-      if (admin && (await admin.matchPassword(password))) {
-        if (!admin.isActive) {
-          return res.status(401).json({ success: false, error: 'Account is deactivated' });
+      if (!admin) {
+        return res.status(401).json({ success: false, error: 'Invalid email or password' });
+      }
+
+      if (admin.isLocked) {
+        const waitMinutes = Math.ceil((new Date(admin.lockUntil).getTime() - Date.now()) / (60 * 1000));
+        return res.status(423).json({
+          success: false,
+          error: `Admin account temporarily locked due to repeated failed attempts. Please wait ${waitMinutes} minute(s) before trying again.`
+        });
+      }
+
+      const isMatch = await admin.matchPassword(String(password));
+      if (!isMatch) {
+        const clientIp = (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) || req.ip;
+        admin.failedLoginAttempts = (admin.failedLoginAttempts || 0) + 1;
+        admin.lastFailedLoginAt = new Date();
+        console.warn(`[Security] Failed admin login attempt #${admin.failedLoginAttempts} for ${normalizedEmail} from IP ${clientIp}`);
+
+        if (admin.failedLoginAttempts >= 5) {
+          admin.lockUntil = new Date(Date.now() + 15 * 60 * 1000); // 15-minute lockout
+          await admin.save();
+
+          try {
+            sendSecurityAlertEmail({
+              eventType: 'Admin Portal Brute-Force Lockout Triggered',
+              email: normalizedEmail,
+              ip: clientIp,
+              details: '5 consecutive failed admin password attempts. Admin account locked for 15 minutes.'
+            }).catch((e) => console.warn('Admin security alert email notice:', e.message));
+          } catch (e) {}
+
+          return res.status(423).json({
+            success: false,
+            error: 'Too many failed login attempts. For security, this admin account has been locked for 15 minutes.'
+          });
         }
 
-        admin.lastLogin = Date.now();
         await admin.save();
-
-        res.json({
-          success: true,
-          token: generateToken(admin._id),
-          admin: {
-            id: admin._id,
-            name: admin.name,
-            email: admin.email,
-            role: admin.role
-          }
+        const remaining = 5 - admin.failedLoginAttempts;
+        return res.status(401).json({
+          success: false,
+          error: `Invalid email or password. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining before 15-minute lockout.`
         });
-      } else {
-        const clientIp = (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) || req.ip;
-        console.warn(`[Security] Failed admin login attempt for ${email} from IP ${clientIp}`);
-        res.status(401).json({ success: false, error: 'Invalid email or password' });
       }
+
+      if (!admin.isActive) {
+        return res.status(401).json({ success: false, error: 'Account is deactivated' });
+      }
+
+      admin.failedLoginAttempts = 0;
+      admin.lockUntil = null;
+      admin.lastLogin = Date.now();
+      await admin.save();
+
+      res.json({
+        success: true,
+        token: generateToken(admin._id),
+        admin: {
+          id: admin._id,
+          name: admin.name,
+          email: admin.email,
+          role: admin.role
+        }
+      });
     } catch (error) {
       next(error);
     }
