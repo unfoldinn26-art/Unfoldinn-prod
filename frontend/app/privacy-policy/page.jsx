@@ -7,12 +7,12 @@ export const metadata = {
   description:
     'Privacy Policy for Unfoldinn outlining how personal data is collected, used, protected, and respected under DPDP Act.',
   alternates: {
-    canonical: 'https://unfoldinn.com/privacy-policy',
+    canonical: 'https://www.unfoldinn.com/privacy-policy',
   },
   openGraph: {
     title: 'Privacy Policy — Unfoldinn',
     description: 'Privacy Policy for Unfoldinn outlining how personal data is collected, used, and safeguarded.',
-    url: 'https://unfoldinn.com/privacy-policy',
+    url: 'https://www.unfoldinn.com/privacy-policy',
   },
 };
 

@@ -11,13 +11,13 @@ export const metadata = {
     'Deepak Sogani perspectives',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/resources',
+    canonical: 'https://www.unfoldinn.com/resources',
   },
   openGraph: {
     title: 'Perspectives & Mentoring Resources — Unfoldinn',
     description:
       'Ideas, frameworks, and insights to help you think clearly, decide with ownership, and grow.',
-    url: 'https://unfoldinn.com/resources',
+    url: 'https://www.unfoldinn.com/resources',
   },
 };
 

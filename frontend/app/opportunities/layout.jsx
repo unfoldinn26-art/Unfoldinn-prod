@@ -13,13 +13,13 @@ export const metadata = {
     'gap year opportunities Indian students',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/opportunities',
+    canonical: 'https://www.unfoldinn.com/opportunities',
   },
   openGraph: {
     title: 'Curated Opportunities Knowledge Bank — Unfoldinn',
     description:
       'Curated internships, fellowships, and scholarships selected for relevance to your mentoring journey.',
-    url: 'https://unfoldinn.com/opportunities',
+    url: 'https://www.unfoldinn.com/opportunities',
   },
 };
 

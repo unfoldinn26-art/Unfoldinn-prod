@@ -7,12 +7,12 @@ export const metadata = {
   description:
     'Terms of service and mentoring agreements for Unfoldinn youth mentoring platform. Transparent principles governing private conversations.',
   alternates: {
-    canonical: 'https://unfoldinn.com/terms-and-conditions',
+    canonical: 'https://www.unfoldinn.com/terms-and-conditions',
   },
   openGraph: {
     title: 'Terms & Conditions — Unfoldinn',
     description: 'Terms of service and mentoring agreements for Unfoldinn youth mentoring platform.',
-    url: 'https://unfoldinn.com/terms-and-conditions',
+    url: 'https://www.unfoldinn.com/terms-and-conditions',
   },
 };
 

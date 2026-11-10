@@ -38,7 +38,7 @@ export const metadata = {
   description:
     'Unfoldinn is a space for young people aged 16–25 to talk openly, understand themselves better, explore possibilities and find their own way forward. Founded by Deepak Sogani in Jaipur, India.',
   applicationName: 'Unfoldinn',
-  authors: [{ name: 'Deepak Sogani', url: 'https://unfoldinn.com/about' }],
+  authors: [{ name: 'Deepak Sogani', url: 'https://www.unfoldinn.com/about' }],
   generator: 'Next.js',
     keywords: [
     // Brand, Unfold Variations & Founder

@@ -18,13 +18,13 @@ export const metadata = {
     'youth guidance methodology India',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/how-it-works',
+    canonical: 'https://www.unfoldinn.com/how-it-works',
   },
   openGraph: {
     title: 'How It Works — Unfoldinn',
     description:
       'A structured yet open five-step approach to exploring possibilities and taking ownership of your next steps.',
-    url: 'https://unfoldinn.com/how-it-works',
+    url: 'https://www.unfoldinn.com/how-it-works',
   },
 };
 

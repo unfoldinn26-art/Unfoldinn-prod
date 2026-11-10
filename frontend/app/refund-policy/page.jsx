@@ -13,12 +13,12 @@ export const metadata = {
     'complimentary conversation terms',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/refund-policy',
+    canonical: 'https://www.unfoldinn.com/refund-policy',
   },
   openGraph: {
     title: 'Refund & Engagement Policy — Unfoldinn',
     description: 'Engagement policy for Unfoldinn. Introductory conversations are currently complimentary.',
-    url: 'https://unfoldinn.com/refund-policy',
+    url: 'https://www.unfoldinn.com/refund-policy',
   },
 };
 

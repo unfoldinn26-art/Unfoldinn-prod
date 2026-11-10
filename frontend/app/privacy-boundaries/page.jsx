@@ -7,13 +7,13 @@ export const metadata = {
   description:
     'Our commitment to privacy, discretion, and safeguarding. Understand how private conversations work and our ethical boundaries for participants under and over 18.',
   alternates: {
-    canonical: 'https://unfoldinn.com/privacy-boundaries',
+    canonical: 'https://www.unfoldinn.com/privacy-boundaries',
   },
   openGraph: {
     title: 'Privacy, Safety & Professional Boundaries — Unfoldinn',
     description:
       'A respectful, responsible, and non-judgmental environment for young people aged 16 to 25.',
-    url: 'https://unfoldinn.com/privacy-boundaries',
+    url: 'https://www.unfoldinn.com/privacy-boundaries',
   },
 };
 

@@ -18,13 +18,13 @@ export const metadata = {
     'higher education student support',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/for-institutions',
+    canonical: 'https://www.unfoldinn.com/for-institutions',
   },
   openGraph: {
     title: 'For Institutions — Unfoldinn',
     description:
       'Working alongside existing student-support systems to create an additional space for perspective and life readiness.',
-    url: 'https://unfoldinn.com/for-institutions',
+    url: 'https://www.unfoldinn.com/for-institutions',
   },
 };
 

@@ -5,6 +5,8 @@ export default function robots() {
     '/api',
     '/api/',
     '/book/status',
+    '/dashboard',
+    '/onboarding',
   ];
 
   return {

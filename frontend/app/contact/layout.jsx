@@ -11,13 +11,13 @@ export const metadata = {
     'reach out to Unfoldinn',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/contact',
+    canonical: 'https://www.unfoldinn.com/contact',
   },
   openGraph: {
     title: 'Contact — Unfoldinn',
     description:
       'We welcome inquiries from students, parents, schools, and colleges. Start a conversation with us.',
-    url: 'https://unfoldinn.com/contact',
+    url: 'https://www.unfoldinn.com/contact',
   },
 };
 
@@ -30,13 +30,13 @@ export default function ContactLayout({ children }) {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://unfoldinn.com',
+        item: 'https://www.unfoldinn.com',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Contact',
-        item: 'https://unfoldinn.com/contact',
+        item: 'https://www.unfoldinn.com/contact',
       },
     ],
   };

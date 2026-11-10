@@ -3,7 +3,7 @@ export const metadata = {
   description:
     'Need technical help with bookings, website issues, or platform accessibility? Submit a ticket directly to the Unfoldinn technical support team.',
   alternates: {
-    canonical: 'https://unfoldinn.com/support',
+    canonical: 'https://www.unfoldinn.com/support',
   },
   robots: {
     index: true,

@@ -1,19 +1,19 @@
 import { NextResponse } from 'next/server';
 
 const INDEXNOW_KEY = 'unfoldinn99281a94bc72418e9d';
-const HOST = 'unfoldinn.com';
+const HOST = 'www.unfoldinn.com';
 
 const DEFAULT_URLS = [
-  'https://unfoldinn.com/',
-  'https://unfoldinn.com/for-students',
-  'https://unfoldinn.com/for-parents',
-  'https://unfoldinn.com/for-institutions',
-  'https://unfoldinn.com/how-it-works',
-  'https://unfoldinn.com/about',
-  'https://unfoldinn.com/book',
-  'https://unfoldinn.com/opportunities',
-  'https://unfoldinn.com/resources',
-  'https://unfoldinn.com/contact',
+  'https://www.unfoldinn.com/',
+  'https://www.unfoldinn.com/for-students',
+  'https://www.unfoldinn.com/for-parents',
+  'https://www.unfoldinn.com/for-institutions',
+  'https://www.unfoldinn.com/how-it-works',
+  'https://www.unfoldinn.com/about',
+  'https://www.unfoldinn.com/book',
+  'https://www.unfoldinn.com/opportunities',
+  'https://www.unfoldinn.com/resources',
+  'https://www.unfoldinn.com/contact',
 ];
 
 export async function POST(request) {

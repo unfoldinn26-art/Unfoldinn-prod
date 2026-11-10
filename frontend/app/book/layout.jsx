@@ -11,13 +11,13 @@ export const metadata = {
     'Deepak Sogani conversation',
   ],
   alternates: {
-    canonical: 'https://unfoldinn.com/book',
+    canonical: 'https://www.unfoldinn.com/book',
   },
   openGraph: {
     title: 'Start a Conversation — Unfoldinn',
     description:
       'No ready-made answers. No predetermined path. Just a quiet, private conversation to explore what comes next.',
-    url: 'https://unfoldinn.com/book',
+    url: 'https://www.unfoldinn.com/book',
   },
 };
 
@@ -30,13 +30,13 @@ export default function BookLayout({ children }) {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://unfoldinn.com',
+        item: 'https://www.unfoldinn.com',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Start a Conversation',
-        item: 'https://unfoldinn.com/book',
+        item: 'https://www.unfoldinn.com/book',
       },
     ],
   };

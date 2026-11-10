@@ -22,7 +22,7 @@ export async function generateMetadata({ params }) {
   if (!resource) {
     return { title: 'Resource Not Found | Unfoldinn' };
   }
-  const url = `https://unfoldinn.com/resources/${params.slug}`;
+  const url = `https://www.unfoldinn.com/resources/${params.slug}`;
   return {
     title: `${resource.title} | Unfoldinn Guidance`,
     description: resource.excerpt || 'Thoughtful perspective and mentoring insights by Deepak Sogani.',
