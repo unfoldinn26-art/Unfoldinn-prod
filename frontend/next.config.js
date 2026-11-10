@@ -29,7 +29,7 @@ const connectSrcOrigins = Array.from(
   ])
 ).join(' ');
 
-const cspReportOnlyDirectives = [
+const cspDirectives = [
   "default-src 'self'",
   `script-src 'self' ${THEME_SCRIPT_HASH} https://accounts.google.com https://www.google.com https://www.gstatic.com https://sdk.cashfree.com`,
   "style-src 'self' 'unsafe-inline' https://accounts.google.com",
@@ -83,8 +83,8 @@ const nextConfig = {
             value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
           },
           {
-            key: 'Content-Security-Policy-Report-Only',
-            value: cspReportOnlyDirectives,
+            key: 'Content-Security-Policy',
+            value: cspDirectives,
           },
         ],
       },
