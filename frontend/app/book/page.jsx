@@ -15,6 +15,8 @@ import {
 import { openCashfreeCheckout } from '../../lib/cashfreeClient';
 import { useUserAuth } from '../../context/UserAuthContext';
 import GoogleSignInButton from '../../components/GoogleSignInButton';
+import Captcha from '../../components/Captcha';
+import HoneypotField from '../../components/HoneypotField';
 import Reveal from '../../components/ui/Reveal';
 import {
   ArrowUpRight,
@@ -87,6 +89,9 @@ export default function BookPage() {
   const [authResendCooldown, setAuthResendCooldown] = useState(0);
   const [authSubmitting, setAuthSubmitting] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
+  const [hpWebsite, setHpWebsite] = useState('');
 
   // Session-only fields (Shown ONLY after login & 1-time onboarding)
   const [sessionForm, setSessionForm] = useState({
@@ -272,6 +277,10 @@ export default function BookPage() {
       setAuthError('Please enter your full name.');
       return;
     }
+    if (authMode === 'register' && process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaToken) {
+      setAuthError('Please complete the "I am not a robot" security check.');
+      return;
+    }
 
     setAuthSubmitting(true);
     try {
@@ -280,12 +289,15 @@ export default function BookPage() {
         res = await registerWithEmail({
           name: authName,
           email: authEmail,
-          password: authPassword
+          password: authPassword,
+          captchaToken,
+          _hp_website: hpWebsite
         });
       } else {
         res = await loginWithEmail({
           email: authEmail,
-          password: authPassword
+          password: authPassword,
+          _hp_website: hpWebsite
         });
       }
 
@@ -305,6 +317,8 @@ export default function BookPage() {
         router.push('/onboarding?next=/book');
       }
     } catch (err) {
+      setCaptchaToken('');
+      setCaptchaResetKey((prev) => prev + 1);
       setAuthError(
         err.message || (authMode === 'register' ? 'Could not create account' : 'Invalid email or password')
       );
@@ -826,6 +840,7 @@ export default function BookPage() {
                   ) : (
                     <>
                       <form onSubmit={handleEmailAuthSubmit} className="space-y-4">
+                        <HoneypotField value={hpWebsite} onChange={setHpWebsite} />
                         {authMode === 'register' && (
                           <div>
                             <label className="block text-xs font-mono uppercase tracking-wider text-ink-2 mb-1.5">
@@ -876,6 +891,19 @@ export default function BookPage() {
                             className="field"
                           />
                         </div>
+
+                        {authMode === 'register' && (
+                          <div className="pt-1">
+                            <Captcha
+                              onVerify={(token) => {
+                                setCaptchaToken(token);
+                                setAuthError('');
+                              }}
+                              onExpired={() => setCaptchaToken('')}
+                              resetKey={captchaResetKey}
+                            />
+                          </div>
+                        )}
 
                         <button
                           type="submit"
