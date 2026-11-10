@@ -10,9 +10,6 @@ try {
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-// SHA-256 hash of the inline theme initialization script in app/layout.js
-const THEME_SCRIPT_HASH = "'sha256-zSsb2AaG66ILpG+Yf9BOoCl9TgjhESipos0G2HrIYb4='";
-
 const connectSrcOrigins = Array.from(
   new Set([
     "'self'",
@@ -31,7 +28,7 @@ const connectSrcOrigins = Array.from(
 
 const cspDirectives = [
   "default-src 'self'",
-  `script-src 'self' ${THEME_SCRIPT_HASH} https://accounts.google.com https://www.google.com https://www.gstatic.com https://sdk.cashfree.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://accounts.google.com https://www.google.com https://www.gstatic.com https://sdk.cashfree.com`,
   "style-src 'self' 'unsafe-inline' https://accounts.google.com",
   "img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com",
   "font-src 'self' data:",
