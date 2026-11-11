@@ -64,3 +64,9 @@ temp/
 # Demo Video & Media
 demo_video/
 demo-video/
+
+# Local AI Agent Skills
+.agents/
+*/.agents/
+skills-lock.json
+*/skills-lock.json
