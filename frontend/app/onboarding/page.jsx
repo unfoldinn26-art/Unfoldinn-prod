@@ -45,6 +45,7 @@ function OnboardingContent() {
     parentEmail: '',
     parentRelation: 'Parent / Guardian',
     parentConsentConfirmed: false,
+    dpdpConsentConfirmed: false,
     whereCurrently: '',
     institutionOrOrg: '',
     city: '',
@@ -73,6 +74,7 @@ function OnboardingContent() {
         parentPhone: user.parentPhone || prev.parentPhone,
         parentEmail: user.parentEmail || prev.parentEmail,
         parentConsentConfirmed: Boolean(user.parentConsentConfirmed),
+        dpdpConsentConfirmed: Boolean(user.dpdpConsentConfirmed || user.onboardingCompleted),
         whereCurrently: user.whereCurrently || prev.whereCurrently,
         institutionOrOrg: user.institutionOrOrg || prev.institutionOrOrg,
         city: user.city || prev.city,
@@ -114,12 +116,24 @@ function OnboardingContent() {
     }
 
     if (isUnder18) {
-      if (!formData.parentName.trim() || !formData.parentPhone.trim() || !formData.parentConsentConfirmed) {
+      if (
+        !formData.parentName.trim() ||
+        !formData.parentPhone.trim() ||
+        !formData.parentEmail.trim() ||
+        !formData.parentConsentConfirmed
+      ) {
         setError(
-          'Since you are under 18, please share a parent or guardian’s name, phone number, and confirm their consent.'
+          'Under India’s DPDP Act (Section 9) for minors under 18, please share your parent/guardian’s name, phone number, email address, and confirm their consent.'
         );
         return;
       }
+    }
+
+    if (!formData.dpdpConsentConfirmed) {
+      setError(
+        'Please confirm that you have read and consent to the Unfoldinn Privacy Notice (DPDP Act, 2023).'
+      );
+      return;
     }
 
     setSubmitting(true);
@@ -276,11 +290,12 @@ function OnboardingContent() {
                 </div>
                 <div>
                   <label className="block text-[11px] font-mono uppercase tracking-wider text-charcoal mb-1.5">
-                    Parent Email (Optional)
+                    Parent Email (Safeguarding Notice) <span className="text-terracotta">*</span>
                   </label>
                   <input
                     type="email"
                     name="parentEmail"
+                    required={isUnder18}
                     value={formData.parentEmail}
                     onChange={handleChange}
                     placeholder="parent@email.com"
@@ -408,6 +423,32 @@ function OnboardingContent() {
                 className="w-full px-4 py-3 rounded-lg border border-stone bg-paper text-ink focus:outline-none focus:border-ink transition-colors text-sm"
               />
             </div>
+          </div>
+
+          {/* Mandatory DPDP Act 2023 Section 6(1) Affirmative Privacy Notice Consent */}
+          <div className="p-4 rounded-xl border border-stone bg-paper/70">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                name="dpdpConsentConfirmed"
+                required
+                checked={formData.dpdpConsentConfirmed}
+                onChange={handleChange}
+                className="mt-1 rounded border-stone text-ink focus:ring-ink"
+              />
+              <span className="text-xs text-charcoal leading-relaxed">
+                I have read the{' '}
+                <a
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-ink underline font-medium"
+                >
+                  DPDP Data Protection &amp; Privacy Notice
+                </a>{' '}
+                and give my free, specific, and informed affirmative consent for Unfoldinn to process my personal data for mentoring conversations. I understand I can withdraw consent or erase my data anytime from my Dashboard. <span className="text-terracotta">*</span>
+              </span>
+            </label>
           </div>
 
           {error && (

@@ -135,13 +135,13 @@ export default function PrivacyPolicyPage() {
               </p>
               <ul className="list-disc pl-6 space-y-2 text-[0.875rem] text-muted">
                 <li>
-                  <strong className="text-ink">Verifiable Parental/Guardian Consent:</strong> Mentoring conversations with individuals under 18 require affirmative parental or guardian awareness and consent before any session is arranged.
+                  <strong className="text-ink">Verifiable Parental/Guardian Consent (Section 9):</strong> Mentoring conversations with individuals under 18 require parent/guardian name, phone number, email address, and affirmative parental consent before any session is arranged. An automated safeguarding &amp; consent record notification is sent directly to the parent/guardian&apos;s email.
                 </li>
                 <li>
-                  <strong className="text-ink">No Behavioral Profiling or Targeted Advertising:</strong> We never engage in tracking, behavioral profiling, or commercial targeting of children.
+                  <strong className="text-ink">No Behavioral Profiling or Targeted Advertising:</strong> We never engage in tracking, behavioral monitoring, profiling, or commercial targeting of children.
                 </li>
                 <li>
-                  <strong className="text-ink">Parental Involvement:</strong> Parents or guardians may request to inspect the personal data processed regarding their minor child or request deletion at any time.
+                  <strong className="text-ink">Parental Involvement &amp; Erasure Rights:</strong> Parents or guardians may inspect, correct, or withdraw consent and request immediate erasure of their minor child&apos;s personal data at any time.
                 </li>
               </ul>
             </section>
@@ -149,11 +149,17 @@ export default function PrivacyPolicyPage() {
             {/* Section 4 */}
             <section id="section-4" className="scroll-mt-32 space-y-4">
               <h2 className="font-serif text-[2rem] text-ink leading-snug">
-                4. Data Storage and Security Measures
+                4. Data Storage, Security Safeguards &amp; Data Processors
               </h2>
               <p>
-                Your personal data is transmitted using modern Secure Sockets Layer (SSL/TLS) encryption and stored in secure, access-controlled databases (MongoDB Atlas) protected by network firewalls and strong authentication credentials. Access to intake submissions is strictly restricted to Deepak Sogani and authorized administrative oversight.
+                In compliance with Section 8(5) of the DPDP Act, your personal data is transmitted over enforced HTTPS/TLS (HSTS) and stored in access-controlled databases protected by cryptographic hashing, brute-force account lockouts, and strict Content Security Policies. We engage only trusted infrastructure Data Processors strictly necessary to deliver our mentoring service:
               </p>
+              <ul className="list-disc pl-6 space-y-1.5 text-[0.9375rem] text-muted">
+                <li><strong className="text-ink">MongoDB Atlas:</strong> Encrypted cloud database storage for profile and session records.</li>
+                <li><strong className="text-ink">Google Workspace (Google Meet &amp; Calendar):</strong> Generation of private 1-on-1 video session links.</li>
+                <li><strong className="text-ink">Resend:</strong> Delivery of transactional verification OTPs, booking confirmations, and safeguarding notices.</li>
+                <li><strong className="text-ink">Cashfree Payments India Pvt. Ltd.:</strong> RBI-regulated payment gateway for paid sessions or subscription plans.</li>
+              </ul>
             </section>
 
             {/* Section 5 */}
@@ -187,29 +193,33 @@ export default function PrivacyPolicyPage() {
                 </div>
               </div>
               <p className="text-sm text-muted pt-2">
-                To exercise any of these rights, email us at{' '}
+                <strong className="text-ink">1-Click Self-Service in Dashboard (Section 6(4)):</strong> You can exercise your Right to Access (&ldquo;Download My Data (JSON)&rdquo;), Right to Correction (&ldquo;Edit Profile&rdquo;), or Right to Withdraw Consent &amp; Erasure (&ldquo;Withdraw Consent &amp; Erase Account&rdquo;) instantaneously inside your <Link href="/dashboard" className="text-ink underline font-medium">Mentee Dashboard</Link>, or by emailing{' '}
                 <a href="mailto:unfoldinn26@gmail.com" className="text-ink underline decoration-ink/20 hover:decoration-signal font-medium">
                   unfoldinn26@gmail.com
                 </a>{' '}
-                with the subject line &ldquo;Data Request&rdquo;. We respond within 7 business days.
+                with the subject line &ldquo;Data Request&rdquo;.
               </p>
             </section>
 
             {/* Section 7 */}
             <section id="section-7" className="scroll-mt-32 rounded-[1.75rem] border border-line bg-paper-2 p-8 space-y-3">
-              <span className="meta text-signal block">Safeguarding &amp; Privacy</span>
+              <span className="meta text-signal block">Safeguarding &amp; Grievance Redressal (Section 13)</span>
               <h2 className="font-serif text-[1.75rem] text-ink leading-snug">
-                7. Privacy &amp; Grievance Contact
+                7. Grievance Officer &amp; DPBI Escalation
               </h2>
               <p className="text-sm text-muted leading-relaxed">
-                For any questions, concerns, or inquiries regarding personal information and privacy safeguards, you may contact:
+                In accordance with Section 8(10) and Section 13 of the Digital Personal Data Protection Act, 2023, any grievances regarding personal data processing or exercise of your rights may be addressed to our Grievance Officer:
               </p>
               <div className="text-xs sm:text-sm text-ink-2 font-mono space-y-1.5 pt-2">
-                <p><strong>Contact:</strong> Deepak Sogani</p>
+                <p><strong>Grievance Officer:</strong> Deepak Sogani</p>
                 <p><strong>Designation:</strong> Founder, Unfoldinn</p>
                 <p><strong>Email:</strong> <a href="mailto:unfoldinn26@gmail.com" className="underline hover:text-signal">unfoldinn26@gmail.com</a></p>
+                <p><strong>Resolution Timeline:</strong> Acknowledged within 48 hours; resolved within 7 business days (and no later than the statutory 30-day period).</p>
                 <p><strong>Location:</strong> Jaipur, Rajasthan, India</p>
               </div>
+              <p className="text-xs text-muted leading-relaxed pt-2 border-t border-line">
+                <strong>Right to Approach the Data Protection Board of India (Section 13(3)):</strong> If your grievance is not resolved within the statutory timeline or you are dissatisfied with the resolution provided by our Grievance Officer, you have the right to file a complaint with the <strong>Data Protection Board of India (DPBI)</strong> established under the DPDP Act, 2023.
+              </p>
             </section>
 
             {/* Bottom Nav */}

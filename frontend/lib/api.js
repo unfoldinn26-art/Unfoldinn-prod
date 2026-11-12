@@ -156,6 +156,16 @@ export async function updateMySessionReflection(bookingId, data) {
   });
 }
 
+export async function exportMyDpdpData() {
+  return fetchAPI('/auth/dpdp/my-data');
+}
+
+export async function eraseMyDpdpAccount() {
+  return fetchAPI('/auth/dpdp/erase-account', {
+    method: 'DELETE'
+  });
+}
+
 // ============================================================================
 // SUBSCRIPTION PLANS & CREDIT BOOKING
 // ============================================================================

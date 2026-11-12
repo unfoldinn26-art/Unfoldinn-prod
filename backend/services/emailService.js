@@ -1866,6 +1866,109 @@ async function sendSecurityAlertEmail({ eventType, email, ip, userAgent, details
   });
 }
 
+/**
+ * DPDP Act Section 9 Verifiable Parental Consent & Safeguarding Notification Email
+ */
+async function sendParentalConsentNotificationEmail({
+  studentName,
+  studentEmail,
+  studentAge,
+  parentName,
+  parentEmail,
+  parentPhone
+}) {
+  if (!parentEmail || !isValidEmailAddress(parentEmail)) return { sent: false };
+  const config = getEmailConfig();
+  const subject = `Parental Safeguarding & Consent Notice for ${studentName} — Unfoldinn`;
+
+  const html = renderBrandEmailLayout({
+    eyebrow: 'UNDER-18 SAFEGUARDING & DPDP NOTICE',
+    title: 'Parental Consent & Safeguarding Record',
+    greeting: `Dear ${parentName || 'Parent / Guardian'},`,
+    introHtml: `<p style="margin: 0 0 12px 0;">This is an official safeguarding and data protection notification under India's <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>.</p><p style="margin: 0 0 12px 0;">Your child/ward <strong>${escapeHtml(
+      studentName
+    )}</strong> (Age: ${escapeHtml(
+      String(studentAge || 'Under 18')
+    )}) has created a mentee profile on <strong>Unfoldinn</strong> (founded by Deepak Sogani, Jaipur) and listed you as their parent/legal guardian with affirmative parental consent.</p>`,
+    detailsRows: [
+      { label: 'Student Name', value: studentName },
+      { label: 'Student Email', value: studentEmail },
+      { label: 'Student Age', value: `${studentAge} years (Minor < 18)` },
+      { label: 'Parent / Guardian', value: `${parentName} (${parentPhone || 'N/A'})` },
+      { label: 'Consent Recorded At', value: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) }
+    ],
+    calloutTitle: 'Your Parental Rights Under the DPDP Act (Section 9)',
+    calloutBodyHtml: `<p style="margin: 0;">We never conduct behavioral tracking, profiling, or targeted advertising for minors. As a parent/guardian, you have the right to review, correct, or withdraw consent and request complete erasure of ${escapeHtml(
+      studentName
+    )}'s personal data at any time by replying directly to this email (${escapeHtml(
+      config.adminEmail
+    )}).</p>`,
+    ctaLabel: 'Review Privacy & Safeguarding Policy',
+    ctaUrl: `${config.frontendUrl}/privacy-policy#under-18`
+  });
+
+  const text = [
+    `Dear ${parentName || 'Parent / Guardian'},`,
+    '',
+    `This is an official safeguarding notice under India's Digital Personal Data Protection (DPDP) Act, 2023.`,
+    `${studentName} (Age: ${studentAge}) has registered on Unfoldinn and recorded your parental consent.`,
+    '',
+    `If you wish to review, update, or withdraw consent / erase this account at any time, please reply to ${config.adminEmail}.`,
+    '',
+    `Privacy Policy: ${config.frontendUrl}/privacy-policy`
+  ].join('\n');
+
+  return sendTransactionalEmail({
+    workflow: 'dpdp_parental_consent_notice',
+    to: parentEmail,
+    subject,
+    html,
+    text,
+    idempotencyKey: `dpdp_parent_notice:${studentEmail}:${parentEmail}`
+  });
+}
+
+/**
+ * DPDP Act Section 6(4) & Section 12 Account Erasure / Consent Withdrawal Confirmation
+ */
+async function sendAccountErasureConfirmationEmail({ email, name }) {
+  if (!email || !isValidEmailAddress(email)) return { sent: false };
+  const config = getEmailConfig();
+  const subject = 'Confirmation of Consent Withdrawal & Account Erasure — Unfoldinn';
+
+  const html = renderBrandEmailLayout({
+    eyebrow: 'DPDP ACT • RIGHT TO ERASURE',
+    title: 'Your Personal Data Has Been Erased',
+    greeting: `Hello ${name || 'there'},`,
+    introHtml: `<p style="margin: 0 0 12px 0;">In accordance with Sections 6(4) and 12 of India's <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>, we confirm that your consent withdrawal and account erasure request has been processed immediately.</p>`,
+    detailsRows: [
+      { label: 'Account Email', value: email },
+      { label: 'Status', value: 'Personal Profile & Intake Data Erased' },
+      { label: 'Processed At', value: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) }
+    ],
+    calloutTitle: 'Statutory Retention Note (Section 8(7))',
+    calloutBodyHtml: `<p style="margin: 0;">Your personal profile, contact details, and mentoring intake notes have been permanently removed. Where applicable, anonymized financial/tax transaction references are retained solely to comply with Indian tax and accounting laws.</p>`
+  });
+
+  const text = [
+    `Hello ${name || 'there'},`,
+    '',
+    `Under India's DPDP Act 2023 (Sections 6(4) & 12), we confirm that your Unfoldinn account (${email}) and personal profile data have been permanently erased.`,
+    '',
+    'Warm regards,',
+    'Deepak Sogani — Grievance & Data Protection Officer, Unfoldinn'
+  ].join('\n');
+
+  return sendTransactionalEmail({
+    workflow: 'dpdp_account_erasure',
+    to: email,
+    subject,
+    html,
+    text,
+    idempotencyKey: `dpdp_erasure:${email}:${Date.now()}`
+  });
+}
+
 module.exports = {
   getEmailConfig,
   isValidEmailAddress,
@@ -1881,5 +1984,7 @@ module.exports = {
   sendSevenDayFollowUpEmail,
   sendPaymentSuccessEmails,
   sendPaymentFailedEmail,
-  sendSecurityAlertEmail
+  sendSecurityAlertEmail,
+  sendParentalConsentNotificationEmail,
+  sendAccountErasureConfirmationEmail
 };

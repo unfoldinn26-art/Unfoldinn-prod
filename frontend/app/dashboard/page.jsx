@@ -24,7 +24,9 @@ import {
   updateMySessionReflection,
   getSubscriptionPlans,
   createPaymentOrder,
-  generateIdempotencyKey
+  generateIdempotencyKey,
+  exportMyDpdpData,
+  eraseMyDpdpAccount
 } from '../../lib/api';
 import { openCashfreeCheckout } from '../../lib/cashfreeClient';
 
@@ -62,6 +64,43 @@ export default function MenteeDashboardPage() {
   const isBuyingPlanRef = useRef(false);
   const [buyingPlanCode, setBuyingPlanCode] = useState(null);
   const [checkoutError, setCheckoutError] = useState('');
+  const [dpdpExporting, setDpdpExporting] = useState(false);
+  const [dpdpErasing, setDpdpErasing] = useState(false);
+  const [confirmEraseOpen, setConfirmEraseOpen] = useState(false);
+
+  const handleDownloadMyData = async () => {
+    setDpdpExporting(true);
+    try {
+      const res = await exportMyDpdpData();
+      const blob = new Blob([JSON.stringify(res.dpdpSummary, null, 2)], {
+        type: 'application/json'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `unfoldinn-dpdp-data-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err.message || 'Could not export your data summary.');
+    } finally {
+      setDpdpExporting(false);
+    }
+  };
+
+  const handleEraseMyAccount = async () => {
+    setDpdpErasing(true);
+    try {
+      await eraseMyDpdpAccount();
+      logout();
+      router.replace('/?erased=true');
+    } catch (err) {
+      alert(err.message || 'Could not process account erasure.');
+      setDpdpErasing(false);
+    }
+  };
 
   useEffect(() => {
     if (!authLoading) {
@@ -841,6 +880,66 @@ export default function MenteeDashboardPage() {
             </div>
           </div>
         )}
+
+        {/* DPDP Act 2023 Self-Service Data Principal Rights (Sections 6(4), 11 & 12) */}
+        <div className="mt-12 pt-8 border-t border-stone/40">
+          <div className="card-editorial bg-white p-6 md:p-7 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-1.5 max-w-2xl">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-sage">
+                <ShieldCheck className="w-4 h-4" />
+                <span>DPDP Act 2023 • Your Data &amp; Privacy Rights</span>
+              </div>
+              <h4 className="font-serif text-xl text-ink">
+                Full Autonomy Over Your Personal Data
+              </h4>
+              <p className="text-xs text-charcoal leading-relaxed">
+                Under India&apos;s Digital Personal Data Protection (DPDP) Act, you can download a complete summary of your personal data and processors (Section 11), update your profile, or withdraw consent and permanently erase your account (Sections 6(4) &amp; 12) at any time.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={handleDownloadMyData}
+                disabled={dpdpExporting}
+                className="px-4 py-2.5 rounded-xl border border-stone bg-paper hover:border-ink text-xs font-semibold text-ink transition-colors disabled:opacity-50"
+              >
+                {dpdpExporting ? 'Preparing Summary...' : 'Download My Data (JSON)'}
+              </button>
+
+              {!confirmEraseOpen ? (
+                <button
+                  type="button"
+                  onClick={() => setConfirmEraseOpen(true)}
+                  className="px-4 py-2.5 rounded-xl border border-terracotta/40 text-terracotta hover:bg-terracotta/10 text-xs font-semibold transition-colors"
+                >
+                  Withdraw Consent &amp; Erase Account
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 p-2 rounded-xl bg-terracotta/10 border border-terracotta/30">
+                  <span className="text-[11px] text-terracotta font-semibold px-1">
+                    Permanently erase?
+                  </span>
+                  <button
+                    type="button"
+                    disabled={dpdpErasing}
+                    onClick={handleEraseMyAccount}
+                    className="px-3 py-1.5 rounded-lg bg-terracotta text-white text-xs font-semibold disabled:opacity-50"
+                  >
+                    {dpdpErasing ? 'Erasing...' : 'Yes, Erase'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmEraseOpen(false)}
+                    className="px-2.5 py-1.5 rounded-lg bg-white text-charcoal text-xs font-medium border border-stone"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

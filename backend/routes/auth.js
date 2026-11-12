@@ -10,16 +10,21 @@ const PaymentTransaction = require('../models/PaymentTransaction');
 const EmailOtp = require('../models/EmailOtp');
 const PhoneOtp = require('../models/PhoneOtp');
 const { sendOtpEmail } = require('../services/emailOtp');
-const { sendWelcomeEmail } = require('../services/emailService');
+const {
+  sendWelcomeEmail,
+  sendSecurityAlertEmail,
+  sendParentalConsentNotificationEmail,
+  sendAccountErasureConfirmationEmail
+} = require('../services/emailService');
 const {
   getGoogleIntegrationStatus,
   ensureBookingCalendarAndMeet
 } = require('../services/googleMeetService');
+const { releaseSlotLock } = require('../services/slotLockService');
 const { normalizePhone10, sendPhoneOtpSms, isSmsGatewayConfigured } = require('../services/phoneOtp');
 const { protectUser, protectAdmin } = require('../middleware/auth');
 const { authLimiter, honeypotMiddleware } = require('../middleware/security');
 const { verifyCaptcha } = require('../middleware/captcha');
-const { sendSecurityAlertEmail } = require('../services/emailService');
 
 function hashEmailOtp(email, otp) {
   return crypto
@@ -822,12 +827,22 @@ router.put('/onboarding', protectUser, async (req, res, next) => {
       parentEmail,
       parentRelation,
       parentConsentConfirmed,
+      dpdpConsentConfirmed,
       whereCurrently,
       institutionOrOrg,
       city,
       source,
       referredBy
     } = req.body;
+
+    // DPDP Act Section 6(1) & 6(10): Require explicit affirmative consent to Privacy Notice
+    const hasDpdpConsent = Boolean(dpdpConsentConfirmed ?? req.user.dpdpConsentConfirmed);
+    if (!hasDpdpConsent) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please review and confirm your affirmative consent to the Unfoldinn DPDP Privacy Notice to proceed.'
+      });
+    }
 
     const cleanPhone = normalizePhone10(phone || req.user.phone || '');
     if (!cleanPhone || cleanPhone.length !== 10) {
@@ -853,10 +868,10 @@ router.put('/onboarding', protectUser, async (req, res, next) => {
 
     const isUnder18 = resolvedUserType === 'student' && parsedAge < 18;
     if (isUnder18) {
-      if (!parentName || !parentPhone || !parentConsentConfirmed) {
+      if (!parentName || !parentPhone || !parentEmail || !parentConsentConfirmed) {
         return res.status(400).json({
           success: false,
-          error: 'For students under 18, parent/guardian name, contact number, and consent confirmation are mandatory.'
+          error: 'Under India’s DPDP Act (Section 9) for minors under 18, parent/guardian name, mobile number, email address, and verifiable parental consent confirmation are mandatory.'
         });
       }
     }
@@ -875,13 +890,33 @@ router.put('/onboarding', protectUser, async (req, res, next) => {
     req.user.ageGroup = computedAgeGroup;
     req.user.isUnder18 = isUnder18;
 
+    const clientIp =
+      (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+      req.ip ||
+      'unknown';
+
+    req.user.dpdpConsentConfirmed = true;
+    if (!req.user.dpdpConsentAt) {
+      req.user.dpdpConsentAt = new Date();
+    }
+    req.user.dpdpNoticeVersion = '2026.1';
+    req.user.dpdpConsentIp = clientIp;
+
+    let shouldNotifyParent = false;
     if (isUnder18) {
+      const cleanParentEmail = parentEmail ? String(parentEmail).trim().toLowerCase() : '';
+      if (!req.user.parentConsentNotifiedAt || req.user.parentEmail !== cleanParentEmail) {
+        shouldNotifyParent = Boolean(cleanParentEmail);
+      }
       req.user.parentName = String(parentName).trim();
       req.user.parentPhone = String(parentPhone).trim();
-      req.user.parentEmail = parentEmail ? String(parentEmail).trim().toLowerCase() : '';
+      req.user.parentEmail = cleanParentEmail;
       req.user.parentRelation = parentRelation ? String(parentRelation).trim() : 'Parent/Guardian';
       req.user.parentConsentConfirmed = Boolean(parentConsentConfirmed);
       req.user.parentConsentAt = new Date();
+      if (shouldNotifyParent) {
+        req.user.parentConsentNotifiedAt = new Date();
+      }
     } else {
       req.user.parentConsentConfirmed = false;
     }
@@ -898,6 +933,17 @@ router.put('/onboarding', protectUser, async (req, res, next) => {
     }
 
     await req.user.save();
+
+    if (shouldNotifyParent && req.user.parentEmail) {
+      sendParentalConsentNotificationEmail({
+        studentName: req.user.name,
+        studentEmail: req.user.email,
+        studentAge: req.user.age,
+        parentName: req.user.parentName,
+        parentEmail: req.user.parentEmail,
+        parentPhone: req.user.parentPhone
+      }).catch((e) => console.warn('Parental consent email notice:', e.message));
+    }
     await linkHistoricalBookings(req.user);
     const subSummary = await getUserSubscriptionSummary(req.user._id);
 
@@ -1054,6 +1100,178 @@ router.get('/admin/users', protectAdmin, async (req, res, next) => {
       success: true,
       count: enriched.length,
       data: enriched
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   GET /api/auth/dpdp/my-data
+// @desc    DPDP Act Section 11: Right to Access Personal Data Summary & Data Processors
+// @access  Private (User)
+router.get('/dpdp/my-data', protectUser, async (req, res, next) => {
+  try {
+    const sessions = await Booking.find({ userId: req.user._id })
+      .select('sessionNumber topic usefulGoal preferredDate preferredTime status aiNotesConsent aiNotesConsentAt sharedNotes actionAgreed studentReflection createdAt')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const subscriptions = await UserSubscription.find({ userId: req.user._id })
+      .select('planCode planName status totalCredits usedCredits remainingCredits amountPaid startsAt expiresAt createdAt')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      dpdpSummary: {
+        exportedAt: new Date().toISOString(),
+        dataFiduciary: {
+          name: 'Unfoldinn',
+          grievanceOfficer: 'Deepak Sogani',
+          email: 'unfoldinn26@gmail.com',
+          jurisdiction: 'Jaipur, Rajasthan, India'
+        },
+        consentAuditRecord: {
+          dpdpConsentConfirmed: Boolean(req.user.dpdpConsentConfirmed),
+          dpdpConsentAt: req.user.dpdpConsentAt || req.user.onboardingCompletedAt || req.user.createdAt,
+          dpdpNoticeVersion: req.user.dpdpNoticeVersion || '2026.1',
+          isUnder18: Boolean(req.user.isUnder18),
+          parentConsentConfirmed: Boolean(req.user.parentConsentConfirmed),
+          parentConsentAt: req.user.parentConsentAt || null,
+          parentConsentNotifiedAt: req.user.parentConsentNotifiedAt || null
+        },
+        personalProfile: {
+          name: req.user.name,
+          email: req.user.email,
+          phone: req.user.phone,
+          whatsapp: req.user.whatsapp,
+          userType: req.user.userType,
+          age: req.user.age,
+          ageGroup: req.user.ageGroup,
+          whereCurrently: req.user.whereCurrently,
+          institutionOrOrg: req.user.institutionOrOrg,
+          city: req.user.city,
+          parentName: req.user.parentName || null,
+          parentPhone: req.user.parentPhone || null,
+          parentEmail: req.user.parentEmail || null,
+          createdAt: req.user.createdAt
+        },
+        dataProcessorsSharedWith: [
+          {
+            processor: 'MongoDB Atlas (Cloud Database)',
+            purpose: 'Encrypted storage of account profile and mentoring session records'
+          },
+          {
+            processor: 'Resend (Transactional Email Delivery)',
+            purpose: 'Delivery of OTP codes, session confirmations, and safeguarding notices'
+          },
+          {
+            processor: 'Google Workspace (Google Meet & Calendar)',
+            purpose: 'Generating private 1-on-1 video mentoring links upon session confirmation'
+          },
+          {
+            processor: 'Cashfree Payments India Pvt. Ltd.',
+            purpose: 'Processing online session or subscription payments (only when a paid plan is selected)'
+          }
+        ],
+        mentoringSessions: sessions,
+        subscriptions
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   DELETE /api/auth/dpdp/erase-account
+// @desc    DPDP Act Section 6(4) & Section 12: Right to Withdraw Consent & Erase Personal Data
+// @access  Private (User)
+router.delete('/dpdp/erase-account', protectUser, async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const userEmail = req.user.email;
+    const userName = req.user.name;
+
+    // 1. Find any upcoming/pending bookings to release their time-slot locks
+    const userBookings = await Booking.find({ userId });
+    for (const b of userBookings) {
+      if (b.status === 'pending' || b.status === 'confirmed') {
+        await releaseSlotLock({ bookingId: b._id });
+      }
+    }
+
+    // 2. Under DPDP Act Section 8(7), erase personal profile & mentoring intake data,
+    // while anonymizing any paid booking/transaction records required for statutory Indian tax/audit compliance
+    await Booking.deleteMany({
+      userId,
+      paymentStatus: { $in: ['not_required', 'pending', 'failed'] }
+    });
+
+    await Booking.updateMany(
+      { userId },
+      {
+        $set: {
+          userId: null,
+          name: 'Erased User (DPDP Sec 12)',
+          email: 'erased@privacy.unfoldinn.com',
+          phone: '0000000000',
+          whatsapp: '',
+          parentName: '',
+          parentPhone: '',
+          parentEmail: '',
+          institutionOrOrg: '',
+          city: '',
+          topic: '[Erased under DPDP Right to Erasure]',
+          concern: '[Erased under DPDP Right to Erasure]',
+          usefulGoal: '',
+          notes: '',
+          sharedNotes: '',
+          studentReflection: '',
+          feedback: '',
+          status: 'cancelled'
+        }
+      }
+    );
+
+    await UserSubscription.updateMany(
+      { userId },
+      {
+        $set: {
+          status: 'cancelled',
+          remainingCredits: 0,
+          pendingInitialBookingData: null
+        }
+      }
+    );
+
+    await PaymentTransaction.updateMany(
+      { userId },
+      {
+        $set: {
+          customerName: 'Erased User (DPDP Sec 12)',
+          customerEmail: 'erased@privacy.unfoldinn.com',
+          customerPhone: '0000000000'
+        }
+      }
+    );
+
+    await EmailOtp.deleteMany({ email: userEmail });
+    if (req.user.phone) {
+      await PhoneOtp.deleteMany({ phone: req.user.phone });
+    }
+
+    // 3. Permanently delete the User document
+    await User.deleteOne({ _id: userId });
+
+    // 4. Send final confirmation email of erasure
+    sendAccountErasureConfirmationEmail({
+      email: userEmail,
+      name: userName
+    }).catch((e) => console.warn('Erasure confirmation email notice:', e.message));
+
+    res.status(200).json({
+      success: true,
+      message: 'Your consent has been withdrawn and your personal account data has been permanently erased under the DPDP Act.'
     });
   } catch (error) {
     next(error);

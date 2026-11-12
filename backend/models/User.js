@@ -102,6 +102,25 @@ const userSchema = new mongoose.Schema({
   parentConsentAt: {
     type: Date
   },
+  parentConsentNotifiedAt: {
+    type: Date
+  },
+
+  // DPDP Act 2023 Section 6(1) & 6(10) Affirmative Consent Audit Trail
+  dpdpConsentConfirmed: {
+    type: Boolean,
+    default: false
+  },
+  dpdpConsentAt: {
+    type: Date
+  },
+  dpdpNoticeVersion: {
+    type: String,
+    default: '2026.1'
+  },
+  dpdpConsentIp: {
+    type: String
+  },
 
   whereCurrently: {
     type: String,
