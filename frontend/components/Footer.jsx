@@ -96,7 +96,16 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 border-t border-line py-6 text-[0.8125rem] text-muted md:flex-row md:items-center md:justify-between pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-          <p>© 2026 Unfoldinn. Young Minds. New Perspectives. Wider Possibilities.</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <p>© 2026 Unfoldinn. Young Minds. New Perspectives. Wider Possibilities.</p>
+            <span className="hidden sm:inline text-line">•</span>
+            <Link
+              href="/made-by-aman"
+              className="font-mono text-xs text-muted hover:text-signal transition-colors underline decoration-ink/20 underline-offset-4"
+            >
+              Made by Aman ↗
+            </Link>
+          </div>
           <ThemeToggle variant="footer" />
         </div>
       </div>
