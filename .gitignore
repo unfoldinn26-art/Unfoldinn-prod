@@ -70,3 +70,7 @@ demo-video/
 */.agents/
 skills-lock.json
 */skills-lock.json
+
+# UI Backups
+ui_backup/
+ui_backup_*/
