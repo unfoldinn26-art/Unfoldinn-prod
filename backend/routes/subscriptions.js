@@ -111,6 +111,9 @@ router.get('/plans', optionalAdmin, async (req, res, next) => {
     }
 
     const plans = await SubscriptionPlan.find(query).sort({ sortOrder: 1, createdAt: 1 });
+    if (!req.admin) {
+      res.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
+    }
     res.status(200).json({
       success: true,
       count: plans.length,

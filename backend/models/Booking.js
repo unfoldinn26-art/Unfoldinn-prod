@@ -143,4 +143,19 @@ const bookingSchema = new mongoose.Schema({
   paymentTime: { type: Date }
 }, { timestamps: true });
 
+// CP Idempotency Guarantee: Prevents duplicate bookings with the same (userId, idempotencyKey) across concurrent serverless instances
+bookingSchema.index(
+  { userId: 1, idempotencyKey: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      userId: { $type: 'objectId' },
+      idempotencyKey: { $type: 'string' }
+    }
+  }
+);
+
+// Fast range index for slot availability & overlap queries
+bookingSchema.index({ status: 1, scheduledStartAt: 1, scheduledEndAt: 1 });
+
 module.exports = mongoose.model('Booking', bookingSchema);

@@ -167,32 +167,50 @@ async function validateAndComputeCoupon({ code, user, planCode = 'SINGLE_SESSION
 }
 
 /**
- * Record coupon redemption atomically
+ * Record coupon redemption atomically (CP-safe against concurrent redemptions)
  */
 async function recordCouponRedemption({ couponCode, user, orderId = null, bookingId = null }) {
   if (!couponCode) return null;
   const normalizedCode = String(couponCode).trim().toUpperCase();
-  const coupon = await Coupon.findOne({ code: normalizedCode });
-  if (!coupon) return null;
 
-  // Prevent double-counting the same orderId or bookingId
-  const alreadyRecorded = (coupon.usedBy || []).some(
-    (entry) =>
-      (orderId && entry.orderId && entry.orderId === orderId) ||
-      (bookingId && entry.bookingId && String(entry.bookingId) === String(bookingId))
+  // Build atomic filter: avoid double-counting the same orderId or bookingId, and enforce maxUses if set
+  const duplicateChecks = [];
+  if (orderId) {
+    duplicateChecks.push({ 'usedBy.orderId': orderId });
+  }
+  if (bookingId) {
+    duplicateChecks.push({ 'usedBy.bookingId': bookingId });
+  }
+
+  const filter = {
+    code: normalizedCode,
+    ...(duplicateChecks.length > 0 ? { $nor: duplicateChecks } : {}),
+    $or: [
+      { maxUses: null },
+      { maxUses: { $lte: 0 } },
+      { $expr: { $lt: ['$usedCount', '$maxUses'] } }
+    ]
+  };
+
+  const updated = await Coupon.findOneAndUpdate(
+    filter,
+    {
+      $inc: { usedCount: 1 },
+      $push: {
+        usedBy: {
+          userId: user?._id || null,
+          email: user?.email || '',
+          orderId: orderId || '',
+          bookingId: bookingId || null,
+          usedAt: new Date()
+        }
+      }
+    },
+    { new: true }
   );
-  if (alreadyRecorded) return coupon;
 
-  coupon.usedCount = (coupon.usedCount || 0) + 1;
-  coupon.usedBy.push({
-    userId: user?._id || null,
-    email: user?.email || '',
-    orderId: orderId || '',
-    bookingId: bookingId || null,
-    usedAt: new Date()
-  });
-  await coupon.save();
-  return coupon;
+  if (updated) return updated;
+  return Coupon.findOne({ code: normalizedCode });
 }
 
 module.exports = {

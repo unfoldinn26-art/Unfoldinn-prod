@@ -20,7 +20,7 @@ const connectDB = async () => {
     throw missingErr;
   }
 
-  // Optimized for Serverless + MongoDB Atlas (low-latency connection reuse, anti-stale socket detection)
+  // Optimized for Serverless + MongoDB Atlas (CP consistency: primary reads + majority journaled writes)
   cachedPromise = mongoose
     .connect(uri, {
       serverSelectionTimeoutMS: 5000,
@@ -29,7 +29,10 @@ const connectDB = async () => {
       maxIdleTimeMS: 10000, // Closes idle sockets before Atlas terminates them to prevent hangs on lambda thaw
       maxPoolSize: 10,
       minPoolSize: 1,
-      heartbeatFrequencyMS: 10000
+      heartbeatFrequencyMS: 10000,
+      readPreference: 'primary',
+      retryWrites: true,
+      writeConcern: { w: 'majority', j: true }
     })
     .then((conn) => {
       console.log(`MongoDB Connected: ${conn.connection.host}`);

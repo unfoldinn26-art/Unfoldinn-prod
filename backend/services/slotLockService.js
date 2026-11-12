@@ -367,7 +367,8 @@ async function releaseSlotLock({ lockId = null, bookingId = null, userSubscripti
 }
 
 /**
- * Get live availability status for all standard time slots on a given date (YYYY-MM-DD)
+ * Get live availability status for all standard time slots on a given date (YYYY-MM-DD).
+ * Optimized to execute 2 parallel queries for the entire day instead of 14 sequential queries.
  */
 async function getAvailableSlotsForDate(dateInput, excludeBookingId = null) {
   const datePart = toIstDatePart(dateInput);
@@ -378,6 +379,86 @@ async function getAvailableSlotsForDate(dateInput, excludeBookingId = null) {
   }
 
   const now = new Date();
+  const pendingCutoff = new Date(now.getTime() - PENDING_HOLD_MINUTES * 60 * 1000);
+  const dayStart = new Date(`${datePart}T00:00:00+05:30`);
+  const dayEnd = new Date(`${datePart}T23:59:59+05:30`);
+
+  const lockQuery = {
+    $and: [
+      {
+        $or: [
+          { datePart },
+          { startAt: { $lt: dayEnd }, endAt: { $gt: dayStart } }
+        ]
+      },
+      {
+        $or: [
+          { status: 'confirmed' },
+          { status: 'pending_payment', expiresAt: { $gt: now } }
+        ]
+      }
+    ]
+  };
+  if (excludeBookingId) {
+    lockQuery.$and.push({ bookingId: { $ne: excludeBookingId } });
+  }
+
+  const bookingQuery = {
+    status: { $ne: 'cancelled' },
+    $or: [
+      { scheduledStartAt: { $lt: dayEnd }, scheduledEndAt: { $gt: dayStart } },
+      { preferredDate: { $gte: dayStart, $lte: dayEnd } }
+    ]
+  };
+  if (excludeBookingId) {
+    bookingQuery._id = { $ne: excludeBookingId };
+  }
+
+  // Single parallel round-trip (2 queries total instead of 14 sequential queries)
+  const [dayLocks, dayBookings] = await Promise.all([
+    SlotLock.find(lockQuery).lean(),
+    Booking.find(bookingQuery)
+      .select('_id status paymentStatus preferredDate preferredTime duration scheduledStartAt scheduledEndAt createdAt')
+      .lean()
+  ]);
+
+  // Pre-compute active booking windows for fast in-memory overlap evaluation
+  const activeBookingById = new Map();
+  const activeBookingWindows = [];
+
+  for (const b of dayBookings) {
+    if (b.status === 'pending' && b.paymentStatus === 'pending' && new Date(b.createdAt) < pendingCutoff) {
+      continue;
+    }
+
+    activeBookingById.set(String(b._id), b);
+
+    let bStart = b.scheduledStartAt ? new Date(b.scheduledStartAt) : null;
+    let bEnd = b.scheduledEndAt ? new Date(b.scheduledEndAt) : null;
+
+    if (!bStart || !bEnd) {
+      const computed = parseSlotWindow({
+        preferredDate: b.preferredDate,
+        preferredTime: b.preferredTime,
+        duration: b.duration || 45
+      });
+      if (computed) {
+        bStart = computed.startDate;
+        bEnd = computed.endDate;
+      }
+    }
+
+    if (bStart && bEnd) {
+      activeBookingWindows.push({ startDate: bStart, endDate: bEnd });
+    }
+  }
+
+  // Filter out stale locks whose linked booking was cancelled or expired
+  const validLocks = dayLocks.filter((lock) => {
+    if (!lock.bookingId) return true;
+    return activeBookingById.has(String(lock.bookingId));
+  });
+
   const results = [];
 
   for (const slotLabel of STANDARD_TIME_SLOTS) {
@@ -402,13 +483,17 @@ async function getAvailableSlotsForDate(dateInput, excludeBookingId = null) {
       continue;
     }
 
-    const conflict = await findConflictingBooking({
-      startDate: windowInfo.startDate,
-      endDate: windowInfo.endDate,
-      datePart: windowInfo.datePart,
-      slotKey: windowInfo.slotKey,
-      excludeBookingId
-    });
+    const hasLockConflict = validLocks.some(
+      (l) =>
+        l.slotKey === windowInfo.slotKey ||
+        (l.startAt && l.endAt && new Date(l.startAt) < windowInfo.endDate && new Date(l.endAt) > windowInfo.startDate)
+    );
+
+    const hasBookingConflict = activeBookingWindows.some(
+      (bw) => bw.startDate < windowInfo.endDate && bw.endDate > windowInfo.startDate
+    );
+
+    const conflict = hasLockConflict || hasBookingConflict;
 
     results.push({
       slot: slotLabel,

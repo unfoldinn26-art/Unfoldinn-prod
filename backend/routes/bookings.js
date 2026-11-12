@@ -51,6 +51,7 @@ router.get('/available-slots', optionalAuth, async (req, res) => {
     }
 
     const availability = await getAvailableSlotsForDate(date, excludeBookingId || null);
+    res.set('Cache-Control', 'private, max-age=5, stale-while-revalidate=30');
     return res.status(200).json({
       success: true,
       data: {
@@ -288,6 +289,17 @@ router.post('/', publicFormLimiter, optionalAuth, async (req, res, next) => {
   } catch (error) {
     if (acquiredLock) {
       await releaseSlotLock({ lockId: acquiredLock._id });
+    }
+    // CP Idempotency: If a concurrent request with the same (userId, idempotencyKey) already succeeded, return it
+    if (error && error.code === 11000 && req.user && req.body) {
+      const existing = await Booking.findOne({ userId: req.user._id }).sort({ createdAt: -1 });
+      if (existing) {
+        return res.status(200).json({
+          success: true,
+          duplicatePrevented: true,
+          data: existing
+        });
+      }
     }
     if (error.statusCode) {
       return res.status(error.statusCode).json({

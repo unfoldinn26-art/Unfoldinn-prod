@@ -17,6 +17,9 @@ router.get('/', optionalAdmin, async (req, res, next) => {
     if (category) query.category = category;
 
     const resources = await Resource.find(query).sort({ createdAt: -1 });
+    if (!isAdminRequest) {
+      res.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
+    }
     res.status(200).json({ success: true, count: resources.length, data: resources });
   } catch (error) {
     next(error);
