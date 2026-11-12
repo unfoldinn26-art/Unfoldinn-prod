@@ -103,7 +103,7 @@ export default function Footer() {
               href="/made-by-aman"
               className="font-mono text-xs text-muted hover:text-signal transition-colors underline decoration-ink/20 underline-offset-4"
             >
-              Made by Aman ↗
+              Made by Aman Pratap Singh ↗
             </Link>
           </div>
           <ThemeToggle variant="footer" />

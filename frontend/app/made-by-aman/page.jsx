@@ -1,18 +1,27 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import PageHero from '../../components/ui/PageHero';
 
 export const metadata = {
-  title: 'Made by Aman — Platform Architecture & Engineering | Unfoldinn',
+  title: 'Aman Pratap Singh — Platform Architecture & Engineering | Unfoldinn',
   description:
-    'Full-stack architecture, distributed concurrency engineering, defense-in-depth security, and regulatory compliance crafted by Aman for Unfoldinn.',
+    'Full-stack architecture, distributed concurrency engineering, defense-in-depth security, and regulatory compliance crafted by Aman Pratap Singh for Unfoldinn.',
   alternates: {
     canonical: 'https://www.unfoldinn.com/made-by-aman',
   },
   openGraph: {
-    title: 'Made by Aman — Platform Architecture & Engineering | Unfoldinn',
+    title: 'Aman Pratap Singh — Platform Architecture & Engineering | Unfoldinn',
     description:
-      'A complete technical overview of the full-stack engineering, high-concurrency architecture, security posture, and regulatory compliance behind Unfoldinn.',
+      'A complete technical overview of the full-stack engineering, high-concurrency architecture, security posture, and regulatory compliance behind Unfoldinn, built by Aman Pratap Singh.',
     url: 'https://www.unfoldinn.com/made-by-aman',
+    images: [
+      {
+        url: 'https://www.unfoldinn.com/aman-pratap-singh.jpg',
+        width: 882,
+        height: 963,
+        alt: 'Aman Pratap Singh — Lead Full-Stack Engineer & System Architect of Unfoldinn',
+      },
+    ],
   },
 };
 
@@ -222,35 +231,68 @@ export default function MadeByAmanPage() {
   return (
     <div className="w-full">
       <PageHero
-        breadcrumbs={[{ name: 'Made by Aman', href: '/made-by-aman' }]}
+        breadcrumbs={[{ name: 'Made by Aman Pratap Singh', href: '/made-by-aman' }]}
         meta={['Full-Stack Engineering', 'Security & Concurrency', 'System Architecture']}
-        title="Architected &amp; engineered by Aman."
+        title="Architected &amp; engineered by Aman Pratap Singh."
         lede="A complete technical overview of the full-stack architecture, high-concurrency state machines, defense-in-depth security, and regulatory compliance powering Unfoldinn."
       />
 
       <div className="page-x py-10 sm:py-16 md:py-24 max-w-[76rem]">
-        {/* Highlights Banner */}
-        <section className="mb-12 sm:mb-16 rounded-[1.25rem] sm:rounded-[1.75rem] border border-line bg-paper-2 p-6 sm:p-8 md:p-10">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-1">
-              <span className="font-mono text-xs uppercase tracking-wider text-signal">Architecture</span>
-              <p className="font-serif text-2xl sm:text-3xl text-ink">15 Core Layers</p>
-              <p className="text-xs text-muted">End-to-end cloud, edge, API, payment &amp; AI stack</p>
+        {/* Architect Profile Card */}
+        <section className="mb-12 sm:mb-16 overflow-hidden rounded-[1.25rem] sm:rounded-[1.75rem] border border-line bg-paper-2 p-6 sm:p-8 md:p-10">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-center">
+            <div className="md:col-span-4 lg:col-span-3">
+              <div className="relative mx-auto aspect-[4/4.3] w-full max-w-[260px] overflow-hidden rounded-2xl border border-line bg-paper shadow-sm">
+                <Image
+                  src="/aman-pratap-singh.jpg"
+                  alt="Aman Pratap Singh — Full-Stack Architect & Engineer of Unfoldinn"
+                  fill
+                  sizes="(max-width: 768px) 260px, 280px"
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
             </div>
-            <div className="space-y-1">
-              <span className="font-mono text-xs uppercase tracking-wider text-signal">Concurrency</span>
-              <p className="font-serif text-2xl sm:text-3xl text-ink">1,000+ Parallel</p>
-              <p className="text-xs text-muted">Stress-tested atomic locks with zero race conditions</p>
-            </div>
-            <div className="space-y-1">
-              <span className="font-mono text-xs uppercase tracking-wider text-signal">Security Posture</span>
-              <p className="font-serif text-2xl sm:text-3xl text-ink">Defense-in-Depth</p>
-              <p className="text-xs text-muted">2FA OTP, OAuth 2.0, CSP, Bot Quarantine &amp; HMAC Webhooks</p>
-            </div>
-            <div className="space-y-1">
-              <span className="font-mono text-xs uppercase tracking-wider text-signal">Compliance</span>
-              <p className="font-serif text-2xl sm:text-3xl text-ink">DPDP 2023 &amp; 2025</p>
-              <p className="text-xs text-muted">1-click data portability, erasure &amp; verifiable parental consent</p>
+
+            <div className="space-y-4 md:col-span-8 lg:col-span-9">
+              <div className="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-3.5 py-1">
+                <span className="h-2 w-2 rounded-full bg-signal" />
+                <span className="font-mono text-[0.75rem] uppercase tracking-wider text-ink">
+                  Platform Architect &amp; Lead Full-Stack Engineer
+                </span>
+              </div>
+
+              <h2 className="font-serif text-[2rem] sm:text-[2.5rem] leading-tight text-ink">
+                Aman Pratap Singh
+              </h2>
+
+              <p className="max-w-[64ch] text-[1rem] sm:text-[1.0625rem] leading-relaxed text-ink-2">
+                Designed, engineered, and hardened the complete Unfoldinn digital ecosystem from the ground up — combining editorial frontend craftsmanship with distributed high-concurrency state machines, cryptographic payment &amp; OTP verification, automated Google Workspace scheduling, and full Indian DPDP Act compliance.
+              </p>
+
+              {/* Key Engineering Metrics */}
+              <div className="grid grid-cols-2 gap-4 border-t border-line pt-5 sm:grid-cols-4">
+                <div>
+                  <span className="font-mono text-[0.7rem] uppercase tracking-wider text-signal">Architecture</span>
+                  <p className="font-serif text-xl sm:text-2xl text-ink">15 Core Layers</p>
+                  <p className="text-xs text-muted">Edge, UI, API, DB &amp; AI</p>
+                </div>
+                <div>
+                  <span className="font-mono text-[0.7rem] uppercase tracking-wider text-signal">Concurrency</span>
+                  <p className="font-serif text-xl sm:text-2xl text-ink">1,000+ Parallel</p>
+                  <p className="text-xs text-muted">Zero-race atomic locks</p>
+                </div>
+                <div>
+                  <span className="font-mono text-[0.7rem] uppercase tracking-wider text-signal">Security</span>
+                  <p className="font-serif text-xl sm:text-2xl text-ink">Defense-in-Depth</p>
+                  <p className="text-xs text-muted">2FA, OAuth 2.0, CSP &amp; HMAC</p>
+                </div>
+                <div>
+                  <span className="font-mono text-[0.7rem] uppercase tracking-wider text-signal">Compliance</span>
+                  <p className="font-serif text-xl sm:text-2xl text-ink">DPDP 2023 &amp; 2025</p>
+                  <p className="text-xs text-muted">Export, erasure &amp; consent</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -287,9 +329,9 @@ export default function MadeByAmanPage() {
         {/* Bottom CTA */}
         <div className="mt-14 sm:mt-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-line pt-8">
           <div>
-            <p className="font-serif text-xl text-ink">Built with precision for human-led mentoring.</p>
+            <p className="font-serif text-xl text-ink">Engineered with precision by Aman Pratap Singh.</p>
             <p className="text-sm text-muted">
-              Every layer is engineered to keep student conversations private, reliable, and effortless.
+              Every layer is built to keep student conversations private, reliable, and effortless.
             </p>
           </div>
           <Link
