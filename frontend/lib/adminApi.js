@@ -6,19 +6,39 @@ export function setToken(token) { localStorage.setItem('admin_token', token); }
 export function removeToken() { localStorage.removeItem('admin_token'); }
 export function isAuthenticated() { return !!getToken(); }
 
-// Authenticated fetch
-export async function adminFetch(endpoint, options = {}) {
+// Authenticated fetch with resilient JSON parsing & cold-start retry on GET
+export async function adminFetch(endpoint, options = {}, _retryCount = 0) {
   const token = getToken();
-  const res = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
-  });
-  const data = await res.json();
-  if (res.status === 401 && endpoint !== '/admin/login') { removeToken(); if(typeof window !== 'undefined') window.location.href = '/admin/login'; }
+  const method = (options.method || 'GET').toUpperCase();
+
+  let res;
+  try {
+    res = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+    });
+  } catch (networkErr) {
+    if (_retryCount < 1 && method === 'GET') {
+      await new Promise((r) => setTimeout(r, 1200));
+      return adminFetch(endpoint, options, _retryCount + 1);
+    }
+    throw new Error('Network error while connecting to Admin API.');
+  }
+
+  if ([502, 503, 504].includes(res.status) && _retryCount < 1 && method === 'GET') {
+    await new Promise((r) => setTimeout(r, 1200));
+    return adminFetch(endpoint, options, _retryCount + 1);
+  }
+
+  const data = await res.json().catch(() => ({}));
+  if ((res.status === 401 || res.status === 423) && endpoint !== '/admin/login') {
+    removeToken();
+    if (typeof window !== 'undefined') window.location.href = '/admin/login';
+  }
   if (!res.ok) throw new Error(data.error || data.message || 'Request failed');
   return data;
 }

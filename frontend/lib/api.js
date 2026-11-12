@@ -26,7 +26,7 @@ export function generateIdempotencyKey(prefix = 'si') {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export async function fetchAPI(endpoint, options = {}) {
+export async function fetchAPI(endpoint, options = {}, _retryCount = 0) {
   const userToken = getUserToken();
   const headers = {
     'Content-Type': 'application/json',
@@ -34,15 +34,40 @@ export async function fetchAPI(endpoint, options = {}) {
     ...options.headers
   };
 
-  const res = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers
-  });
+  const method = (options.method || 'GET').toUpperCase();
+  const isSafeToRetry =
+    method === 'GET' || Boolean(headers['X-Idempotency-Key'] || headers['x-idempotency-key']);
 
-  const data = await res.json();
+  let res;
+  try {
+    res = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers
+    });
+  } catch (networkErr) {
+    if (_retryCount < 1 && isSafeToRetry) {
+      await new Promise((r) => setTimeout(r, 1200));
+      return fetchAPI(endpoint, options, _retryCount + 1);
+    }
+    throw new Error('Network connection error. Please check your internet connection and try again.');
+  }
+
+  // Automatically retry once on transient 502/503/504 serverless cold-start or DB reconnect blips
+  if ([502, 503, 504].includes(res.status) && _retryCount < 1 && isSafeToRetry) {
+    await new Promise((r) => setTimeout(r, 1200));
+    return fetchAPI(endpoint, options, _retryCount + 1);
+  }
+
+  const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    const error = new Error(data.error || data.message || 'Something went wrong');
+    const error = new Error(
+      data.error ||
+        data.message ||
+        (res.status === 503
+          ? 'Service is warming up. Please try again in a moment.'
+          : 'Something went wrong')
+    );
     error.statusCode = res.status;
     throw error;
   }
