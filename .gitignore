@@ -74,3 +74,7 @@ skills-lock.json
 # UI Backups
 ui_backup/
 ui_backup_*/
+
+# MongoDB Backend Backups
+mongodb_backup/
+mongodb_backup_*/
