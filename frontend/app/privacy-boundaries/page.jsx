@@ -67,6 +67,16 @@ export default function PrivacyBoundariesPage() {
             <p className="text-muted leading-relaxed">
               Where a matter falls outside the scope of Unfoldinn, the young person will always be encouraged and supported to seek appropriate professional support.
             </p>
+            <div className="p-5 rounded-2xl border border-line bg-paper-2 space-y-2 text-xs sm:text-sm">
+              <p className="font-mono text-xs uppercase tracking-wider text-signal font-semibold">
+                24×7 Government of India Emergency &amp; Mental Health Helplines (Mental Healthcare Act, 2017 &amp; POCSO Act, 2012)
+              </p>
+              <ul className="space-y-1 text-muted">
+                <li><strong className="text-ink">Tele-MANAS (24×7 National Mental Health Helpline, MoHFW):</strong> Call <a href="tel:14416" className="underline text-ink font-mono">14416</a> or <a href="tel:18008914416" className="underline text-ink font-mono">1800-891-4416</a></li>
+                <li><strong className="text-ink">Childline India (24×7 Protection for Minors Under 18):</strong> Call <a href="tel:1098" className="underline text-ink font-mono">1098</a></li>
+                <li><strong className="text-ink">National Emergency Response Support System:</strong> Call <a href="tel:112" className="underline text-ink font-mono">112</a></li>
+              </ul>
+            </div>
           </section>
 
           {/* Section 4 */}

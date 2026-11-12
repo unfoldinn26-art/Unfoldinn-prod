@@ -109,10 +109,10 @@ export default function TermsAndConditionsPage() {
               </p>
               <ul className="list-disc pl-6 space-y-2 text-[0.875rem] text-muted">
                 <li>
-                  <strong>Not Medical Treatment:</strong> Mentoring conversations do not substitute for clinical mental healthcare, diagnosis, or crisis intervention. If a student is experiencing clinical depression, self-harm ideation, or severe distress, they must consult qualified medical professionals or crisis helplines.
+                  <strong>Not Medical Treatment (Mental Healthcare Act, 2017):</strong> Mentoring conversations do not substitute for clinical mental healthcare, diagnosis, or crisis intervention. If a student is experiencing clinical depression, self-harm ideation, or severe distress, they must immediately consult qualified medical professionals or call India&apos;s 24×7 Toll-Free National Mental Health Helpline (<strong>Tele-MANAS: 14416 / 1800-891-4416</strong>, or <strong>Childline: 1098</strong> for minors under 18).
                 </li>
                 <li>
-                  <strong>Not Competitive Exam Coaching:</strong> We do not provide academic tutoring or guarantee entrance exam ranks.
+                  <strong>Not Competitive Exam Coaching (MoE Guidelines, 2024 &amp; CCPA Norms):</strong> We do not operate as a cramming/coaching center, nor do we make misleading claims or guarantee entrance exam ranks or admissions.
                 </li>
                 <li>
                   <strong>Not Placement Agency:</strong> While we connect students to curated fellowships, internships, and opportunities, we do not operate as an employment consultancy or promise job offers.

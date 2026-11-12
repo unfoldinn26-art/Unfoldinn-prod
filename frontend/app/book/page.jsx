@@ -94,12 +94,13 @@ export default function BookPage() {
   const [hpWebsite, setHpWebsite] = useState('');
 
   // Session-only fields (Shown ONLY after login & 1-time onboarding)
+  // Note: aiNotesConsent defaults to false per DPDP Act Sec 6(1) & CCPA Dark Patterns Guidelines 2023 (no pre-ticked boxes)
   const [sessionForm, setSessionForm] = useState({
     topic: '',
     usefulGoal: '',
     preferredDate: '',
     preferredTime: '',
-    aiNotesConsent: true
+    aiNotesConsent: false
   });
 
   // Booking Factor: 'CREDIT' | 'SINGLE_SESSION' | 'MONTHLY_4' | 'QUARTERLY_8'

@@ -165,10 +165,13 @@ export default function PrivacyPolicyPage() {
             {/* Section 5 */}
             <section id="section-5" className="scroll-mt-32 space-y-4">
               <h2 className="font-serif text-[2rem] text-ink leading-snug">
-                5. Data Retention Policy
+                5. Data Retention, Inactivity Notice &amp; Breach Intimation (DPDP Rules, 2025)
               </h2>
               <p>
-                We retain personal data only for the duration necessary to conduct your mentoring discussions and reasonable follow-through (typically 12 to 24 months after your last engagement), unless a longer retention period is required by law or safeguarding necessity. Inquiries that do not proceed to a conversation may be deleted periodically.
+                In compliance with Rule 8 of the Digital Personal Data Protection Rules, 2025, we retain personal data only for as long as necessary to fulfill your mentoring journey (or up to 3 years of account inactivity, unless statutory tax/audit retention applies under Section 8(7)). Before erasing an inactive account, we provide at least <strong>48 hours advance notice</strong> via email.
+              </p>
+              <p className="text-sm text-muted">
+                <strong className="text-ink">72-Hour Breach Notification Commitment (Rule 7):</strong> In the unlikely event of a personal data breach, Unfoldinn will notify affected Data Principals and the Data Protection Board of India (DPBI) within 72 hours with full details of the incident and remedial measures taken.
               </p>
             </section>
 
@@ -214,7 +217,7 @@ export default function PrivacyPolicyPage() {
                 <p><strong>Grievance Officer:</strong> Deepak Sogani</p>
                 <p><strong>Designation:</strong> Founder, Unfoldinn</p>
                 <p><strong>Email:</strong> <a href="mailto:unfoldinn26@gmail.com" className="underline hover:text-signal">unfoldinn26@gmail.com</a></p>
-                <p><strong>Resolution Timeline:</strong> Acknowledged within 48 hours; resolved within 7 business days (and no later than the statutory 30-day period).</p>
+                <p><strong>Resolution Timeline (IT Rules 2021 &amp; DPDP Act):</strong> Acknowledged within <strong>24 hours</strong>; resolved within <strong>7 to 15 days</strong> (and never exceeding the statutory 30-day consumer/DPDP ceiling).</p>
                 <p><strong>Location:</strong> Jaipur, Rajasthan, India</p>
               </div>
               <p className="text-xs text-muted leading-relaxed pt-2 border-t border-line">
