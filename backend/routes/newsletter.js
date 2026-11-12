@@ -3,7 +3,7 @@ const router = express.Router();
 const Newsletter = require('../models/Newsletter');
 const { sendNewsletterWelcomeEmail } = require('../services/emailService');
 const { protectAdmin } = require('../middleware/auth');
-const { publicFormLimiter } = require('../middleware/security');
+const { publicFormLimiter, honeypotMiddleware } = require('../middleware/security');
 
 // GET /api/newsletter - Get all subscribers (Admin Only)
 router.get('/', protectAdmin, async (req, res, next) => {
@@ -15,8 +15,8 @@ router.get('/', protectAdmin, async (req, res, next) => {
   }
 });
 
-// POST /api/newsletter - Subscribe (Public, Rate-Limited)
-router.post('/', publicFormLimiter, async (req, res, next) => {
+// POST /api/newsletter - Subscribe (Public, Rate-Limited & Honeypot-Protected)
+router.post('/', publicFormLimiter, honeypotMiddleware(), async (req, res, next) => {
   try {
     const { email, name } = req.body;
     if (!email) {

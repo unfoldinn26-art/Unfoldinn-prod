@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const Testimonial = require('../models/Testimonial');
 const { protectAdmin, optionalAdmin } = require('../middleware/auth');
-const { publicFormLimiter } = require('../middleware/security');
+const { publicFormLimiter, honeypotMiddleware } = require('../middleware/security');
 
 // GET /api/testimonials/featured - Get featured testimonials (Public)
 router.get('/featured', async (req, res, next) => {
   try {
     const testimonials = await Testimonial.find({ isApproved: true, isFeatured: true }).sort({ order: 1, createdAt: -1 });
+    res.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
     res.status(200).json({ success: true, count: testimonials.length, data: testimonials });
   } catch (error) {
     next(error);
@@ -24,6 +25,9 @@ router.get('/', optionalAdmin, async (req, res, next) => {
       query.isApproved = true;
     }
     const testimonials = await Testimonial.find(query).sort({ order: 1, createdAt: -1 });
+    if (!isAdminRequest) {
+      res.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
+    }
     res.status(200).json({ success: true, count: testimonials.length, data: testimonials });
   } catch (error) {
     next(error);
@@ -31,7 +35,7 @@ router.get('/', optionalAdmin, async (req, res, next) => {
 });
 
 // POST /api/testimonials - Submit testimonial (Public or Admin)
-router.post('/', publicFormLimiter, optionalAdmin, async (req, res, next) => {
+router.post('/', publicFormLimiter, honeypotMiddleware(), optionalAdmin, async (req, res, next) => {
   try {
     const { name, role, quote, isApproved, isFeatured, order } = req.body;
     if (!name || !quote) {

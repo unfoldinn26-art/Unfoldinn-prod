@@ -34,6 +34,9 @@ const protectAdmin = async (req, res, next) => {
     if (!admin || !admin.isActive) {
       return res.status(401).json({ success: false, error: 'Not authorized, admin account inactive or not found' });
     }
+    if (admin.lockUntil && admin.lockUntil > Date.now()) {
+      return res.status(423).json({ success: false, error: 'Admin account is temporarily locked due to security checks.' });
+    }
 
     req.admin = admin;
     next();
