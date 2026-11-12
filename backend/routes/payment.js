@@ -169,9 +169,10 @@ async function reconcileOrderPayment(orderId, verifiedBySource = 'verify_endpoin
     };
   }
 
-  // 4. Atomically update PaymentTransaction ledger
+  // 4. Atomically update PaymentTransaction ledger (tracks whether THIS invocation won the atomic race)
+  let wonAtomicTransition = false;
   if (tx && tx.status !== 'PAID') {
-    await PaymentTransaction.findOneAndUpdate(
+    const transitionedTx = await PaymentTransaction.findOneAndUpdate(
       { _id: tx._id, status: { $ne: 'PAID' } },
       {
         $set: {
@@ -187,8 +188,12 @@ async function reconcileOrderPayment(orderId, verifiedBySource = 'verify_endpoin
             paymentGroup: paymentMethod
           }
         }
-      }
+      },
+      { new: true }
     );
+    if (transitionedTx) {
+      wonAtomicTransition = true;
+    }
   }
 
   // 5. If this is a Subscription Purchase, atomically activate UserSubscription & credits
@@ -232,6 +237,7 @@ async function reconcileOrderPayment(orderId, verifiedBySource = 'verify_endpoin
     );
 
     if (subTransitioned) {
+      wonAtomicTransition = true;
       activatedSub = subTransitioned;
 
       // If user also filled out their first session topic while purchasing the subscription, create/confirm that session now!
@@ -323,6 +329,7 @@ async function reconcileOrderPayment(orderId, verifiedBySource = 'verify_endpoin
     ).select('+slotUpdateToken');
 
     if (updatedBooking) {
+      wonAtomicTransition = true;
       booking = updatedBooking;
     } else {
       booking = await Booking.findById(booking._id).select('+slotUpdateToken');
@@ -330,7 +337,7 @@ async function reconcileOrderPayment(orderId, verifiedBySource = 'verify_endpoin
   }
 
   // 7. Confirm atomic slot lock + Create Google Calendar event & unique Google Meet link BEFORE sending confirmation emails
-  if (booking && booking.status === 'confirmed') {
+  if (booking && booking.status === 'confirmed' && (wonAtomicTransition || !booking.meetingLink)) {
     await bindAndConfirmSlotLock({
       bookingId: booking._id,
       userSubscriptionId: activatedSub?._id || null,
@@ -340,30 +347,32 @@ async function reconcileOrderPayment(orderId, verifiedBySource = 'verify_endpoin
     booking = await Booking.findById(booking._id).select('+slotUpdateToken');
   }
 
-  // Record coupon redemption if a coupon was used on this paid order
-  const redeemedCouponCode = tx?.couponCode || booking?.couponCode || activatedSub?.couponCode;
-  if (redeemedCouponCode) {
-    await recordCouponRedemption({
-      couponCode: redeemedCouponCode,
-      user: {
-        _id: tx?.userId || booking?.userId || activatedSub?.userId || null,
-        email: tx?.customerEmail || booking?.email || ''
-      },
+  // Record coupon redemption & send emails ONLY on the atomic winner (prevents duplicate emails when /verify and /webhook race)
+  if (wonAtomicTransition) {
+    const redeemedCouponCode = tx?.couponCode || booking?.couponCode || activatedSub?.couponCode;
+    if (redeemedCouponCode) {
+      await recordCouponRedemption({
+        couponCode: redeemedCouponCode,
+        user: {
+          _id: tx?.userId || booking?.userId || activatedSub?.userId || null,
+          email: tx?.customerEmail || booking?.email || ''
+        },
+        orderId: cleanOrderId,
+        bookingId: booking?._id || null
+      }).catch(() => null);
+    }
+
+    // 8. Dispatch idempotent payment receipt + booking confirmation emails (never blocks or rolls back payment)
+    await sendPaymentSuccessEmails({
       orderId: cleanOrderId,
-      bookingId: booking?._id || null
-    }).catch(() => null);
-  }
+      booking,
+      subscription: activatedSub,
+      transaction: tx
+    });
 
-  // 8. Dispatch idempotent payment receipt + booking confirmation emails (never blocks or rolls back payment)
-  await sendPaymentSuccessEmails({
-    orderId: cleanOrderId,
-    booking,
-    subscription: activatedSub,
-    transaction: tx
-  });
-
-  if (booking && booking.status === 'confirmed') {
-    await sendBookingConfirmationEmails(booking, { stage: 'confirmed' });
+    if (booking && booking.status === 'confirmed') {
+      await sendBookingConfirmationEmails(booking, { stage: 'confirmed' });
+    }
   }
 
   return {

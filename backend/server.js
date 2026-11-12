@@ -26,21 +26,25 @@ app.use(
   })
 );
 
-// CORS configuration - allow production domain, Vercel preview URLs, and localhost
+// CORS configuration - allow production domain, Unfoldinn Vercel preview URLs only, and localhost
 const allowedOrigins = [
-  'https://unfoldinn.com', 'https://www.unfoldinn.com', 'https://second-innings.in',
+  'https://unfoldinn.com',
   'https://www.unfoldinn.com',
+  'https://second-innings.in',
+  'https://www.second-innings.in',
   'https://second-innings-indol.vercel.app',
   'http://localhost:3000',
   'http://localhost:3001',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
+const ownVercelPreviewRegex = /^https:\/\/(unfoldinn|second-innings)[a-z0-9-]*\.vercel\.app$/i;
+
 app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      if (allowedOrigins.includes(origin) || ownVercelPreviewRegex.test(origin)) {
         return callback(null, true);
       }
       return callback(new Error('Not allowed by CORS'));
@@ -74,7 +78,7 @@ app.use(mongoSanitizeMiddleware);
 // Intercept requests from IPs sentenced to the 24-Hour Security Jail
 app.use(ipJailCheckMiddleware);
 
-// Middleware to ensure active MongoDB connection before routing
+// Middleware to ensure active MongoDB connection before routing (fast-fail 503 instead of 10s Mongoose buffer hang)
 app.use(async (req, res, next) => {
   if (req.path === '/' || req.path === '/api/health') return next();
   if (require('mongoose').connection.readyState !== 1) {
@@ -82,6 +86,11 @@ app.use(async (req, res, next) => {
       await connectDB();
     } catch (e) {
       console.warn('On-demand DB reconnect error:', e.message);
+      res.setHeader('Retry-After', '3');
+      return res.status(503).json({
+        success: false,
+        error: 'Database is temporarily reconnecting. Please try again in a few seconds.'
+      });
     }
   }
   next();
