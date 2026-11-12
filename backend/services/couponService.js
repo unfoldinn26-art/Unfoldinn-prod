@@ -7,27 +7,30 @@ const SubscriptionPlan = require('../models/SubscriptionPlan');
  * Read payment, introductory complimentary session, and fee settings from MongoDB
  */
 async function getPaymentSettings() {
-  const [
-    enabledDoc,
-    feeDoc,
-    firstFreeDoc,
-    limitOneFreeDoc,
-    noticeDoc
-  ] = await Promise.all([
-    Setting.findOne({ key: 'paymentsEnabled' }),
-    Setting.findOne({ key: 'sessionFee' }),
-    Setting.findOne({ key: 'firstSessionFreeEnabled' }),
-    Setting.findOne({ key: 'limitOneFreeSessionPerUser' }),
-    Setting.findOne({ key: 'feeNotice' })
-  ]);
+  const docs = await Setting.find({
+    key: {
+      $in: [
+        'paymentsEnabled',
+        'sessionFee',
+        'firstSessionFreeEnabled',
+        'limitOneFreeSessionPerUser',
+        'feeNotice'
+      ]
+    }
+  }).lean();
 
-  const rawFee = feeDoc && Number(feeDoc.value) >= 0 ? Number(feeDoc.value) : 500;
+  const map = {};
+  for (const doc of docs) {
+    map[doc.key] = doc.value;
+  }
+
+  const rawFee = map.sessionFee !== undefined && Number(map.sessionFee) >= 0 ? Number(map.sessionFee) : 500;
   return {
-    paymentsEnabled: enabledDoc ? Boolean(enabledDoc.value) : false,
+    paymentsEnabled: map.paymentsEnabled !== undefined ? Boolean(map.paymentsEnabled) : false,
     sessionFee: rawFee > 0 ? rawFee : 500,
-    firstSessionFreeEnabled: firstFreeDoc ? Boolean(firstFreeDoc.value) : true,
-    limitOneFreeSessionPerUser: limitOneFreeDoc ? Boolean(limitOneFreeDoc.value) : true,
-    feeNotice: noticeDoc && typeof noticeDoc.value === 'string' ? noticeDoc.value : ''
+    firstSessionFreeEnabled: map.firstSessionFreeEnabled !== undefined ? Boolean(map.firstSessionFreeEnabled) : true,
+    limitOneFreeSessionPerUser: map.limitOneFreeSessionPerUser !== undefined ? Boolean(map.limitOneFreeSessionPerUser) : true,
+    feeNotice: typeof map.feeNotice === 'string' ? map.feeNotice : ''
   };
 }
 

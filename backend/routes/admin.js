@@ -76,22 +76,35 @@ router.post(
       const isMatch = await admin.matchPassword(String(password));
       if (!isMatch) {
         const clientIp = (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) || req.ip;
-        admin.failedLoginAttempts = (admin.failedLoginAttempts || 0) + 1;
-        admin.lastFailedLoginAt = new Date();
-        console.warn(`[Security] Failed admin login attempt #${admin.failedLoginAttempts} for ${normalizedEmail} from IP ${clientIp}`);
+        // Atomically increment failedLoginAttempts so concurrent password guesses cannot bypass the 5-attempt lockout
+        const updatedAdmin = await Admin.findOneAndUpdate(
+          { _id: admin._id },
+          {
+            $inc: { failedLoginAttempts: 1 },
+            $set: { lastFailedLoginAt: new Date() }
+          },
+          { new: true }
+        );
+        const currentAttempts = updatedAdmin ? updatedAdmin.failedLoginAttempts : (admin.failedLoginAttempts || 0) + 1;
+        console.warn(`[Security] Failed admin login attempt #${currentAttempts} for ${normalizedEmail} from IP ${clientIp}`);
 
-        if (admin.failedLoginAttempts >= 5) {
-          admin.lockUntil = new Date(Date.now() + 15 * 60 * 1000); // 15-minute lockout
-          await admin.save();
+        if (currentAttempts >= 5) {
+          const lockUntilDate = new Date(Date.now() + 15 * 60 * 1000); // 15-minute lockout
+          await Admin.updateOne(
+            { _id: admin._id, $or: [{ lockUntil: null }, { lockUntil: { $lt: new Date() } }] },
+            { $set: { lockUntil: lockUntilDate } }
+          );
 
-          try {
-            sendSecurityAlertEmail({
-              eventType: 'Admin Portal Brute-Force Lockout Triggered',
-              email: normalizedEmail,
-              ip: clientIp,
-              details: '5 consecutive failed admin password attempts. Admin account locked for 15 minutes.'
-            }).catch((e) => console.warn('Admin security alert email notice:', e.message));
-          } catch (e) {}
+          if (currentAttempts === 5) {
+            try {
+              sendSecurityAlertEmail({
+                eventType: 'Admin Portal Brute-Force Lockout Triggered',
+                email: normalizedEmail,
+                ip: clientIp,
+                details: '5 consecutive failed admin password attempts. Admin account locked for 15 minutes.'
+              }).catch((e) => console.warn('Admin security alert email notice:', e.message));
+            } catch (e) {}
+          }
 
           return res.status(423).json({
             success: false,
@@ -99,8 +112,7 @@ router.post(
           });
         }
 
-        await admin.save();
-        const remaining = 5 - admin.failedLoginAttempts;
+        const remaining = Math.max(0, 5 - currentAttempts);
         return res.status(401).json({
           success: false,
           error: `Invalid email or password. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining before 15-minute lockout.`
@@ -111,10 +123,10 @@ router.post(
         return res.status(401).json({ success: false, error: 'Account is deactivated' });
       }
 
-      admin.failedLoginAttempts = 0;
-      admin.lockUntil = null;
-      admin.lastLogin = Date.now();
-      await admin.save();
+      await Admin.updateOne(
+        { _id: admin._id },
+        { $set: { failedLoginAttempts: 0, lockUntil: null, lastLogin: new Date() } }
+      );
 
       res.json({
         success: true,

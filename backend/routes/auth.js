@@ -367,20 +367,33 @@ router.post('/email/verify-otp', authLimiter, async (req, res, next) => {
       });
     }
 
-    const otpRecord = await EmailOtp.findOne({ email: normalizedEmail }).select('+pendingPasswordHash');
-    if (!otpRecord || new Date() > new Date(otpRecord.expiresAt)) {
-      if (otpRecord) await EmailOtp.deleteOne({ _id: otpRecord._id });
+    // Atomically increment attempt counter BEFORE verifying hash so parallel botnet requests cannot bypass the 5-attempt limit
+    const now = new Date();
+    const otpRecord = await EmailOtp.findOneAndUpdate(
+      {
+        email: normalizedEmail,
+        expiresAt: { $gt: now },
+        attempts: { $lt: 5 }
+      },
+      { $inc: { attempts: 1 } },
+      { new: true }
+    ).select('+pendingPasswordHash');
+
+    if (!otpRecord) {
+      const existingOtp = await EmailOtp.findOne({ email: normalizedEmail });
+      if (existingOtp) {
+        const exhausted = existingOtp.attempts >= 5 && new Date(existingOtp.expiresAt) > now;
+        await EmailOtp.deleteOne({ _id: existingOtp._id });
+        if (exhausted) {
+          return res.status(429).json({
+            success: false,
+            error: 'Too many incorrect OTP attempts. Please request a new verification code.'
+          });
+        }
+      }
       return res.status(400).json({
         success: false,
         error: 'Verification code has expired or was not found. Please request a new OTP.'
-      });
-    }
-
-    if (otpRecord.attempts >= 5) {
-      await EmailOtp.deleteOne({ _id: otpRecord._id });
-      return res.status(429).json({
-        success: false,
-        error: 'Too many incorrect OTP attempts. Please request a new verification code.'
       });
     }
 
@@ -391,18 +404,29 @@ router.post('/email/verify-otp', authLimiter, async (req, res, next) => {
     );
 
     if (!isMatch) {
-      otpRecord.attempts += 1;
-      await otpRecord.save();
+      if (otpRecord.attempts >= 5) {
+        await EmailOtp.deleteOne({ _id: otpRecord._id });
+        return res.status(429).json({
+          success: false,
+          error: 'Too many incorrect OTP attempts. Please request a new verification code.'
+        });
+      }
       return res.status(400).json({
         success: false,
         error: `Invalid verification code. ${5 - otpRecord.attempts} attempts remaining.`
       });
     }
 
-    // OTP verified! Capture stored metadata and delete OTP record immediately so it can never be replayed
+    // OTP verified! Atomically consume and delete the OTP record so concurrent replays cannot both succeed
+    const consumedOtp = await EmailOtp.findOneAndDelete({ _id: otpRecord._id });
+    if (!consumedOtp) {
+      return res.status(400).json({
+        success: false,
+        error: 'Verification code has already been used. Please sign in.'
+      });
+    }
     const savedName = name || otpRecord.name || normalizedEmail.split('@')[0];
     const savedPasswordHash = otpRecord.pendingPasswordHash || null;
-    await EmailOtp.deleteOne({ _id: otpRecord._id });
 
     let user = await User.findOne({ email: normalizedEmail }).select('+passwordHash');
 
@@ -576,23 +600,36 @@ router.post('/login', authLimiter, honeypotMiddleware(), async (req, res, next) 
 
     const isMatch = await user.matchPassword(String(password));
     if (!isMatch) {
-      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
-      user.lastFailedLoginAt = new Date();
+      // Atomically increment failedLoginAttempts so concurrent password guesses cannot bypass the 5-attempt lockout
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+          $inc: { failedLoginAttempts: 1 },
+          $set: { lastFailedLoginAt: new Date() }
+        },
+        { new: true }
+      );
+      const currentAttempts = updatedUser ? updatedUser.failedLoginAttempts : (user.failedLoginAttempts || 0) + 1;
 
-      if (user.failedLoginAttempts >= 5) {
-        user.lockUntil = new Date(Date.now() + 15 * 60 * 1000); // 15-minute lockout
-        await user.save();
+      if (currentAttempts >= 5) {
+        const lockUntilDate = new Date(Date.now() + 15 * 60 * 1000); // 15-minute lockout
+        await User.updateOne(
+          { _id: user._id, $or: [{ lockUntil: null }, { lockUntil: { $lt: new Date() } }] },
+          { $set: { lockUntil: lockUntilDate } }
+        );
 
-        // Send automated security alert email to admin
-        try {
-          const clientIp = (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) || req.ip;
-          sendSecurityAlertEmail({
-            eventType: 'Brute-Force Account Lockout Triggered',
-            email: normalizedEmail,
-            ip: clientIp,
-            details: '5 consecutive failed password attempts. Account locked for 15 minutes.'
-          }).catch(e => console.warn('Security alert email notice:', e.message));
-        } catch (e) {}
+        // Send automated security alert email to admin on exact 5th attempt
+        if (currentAttempts === 5) {
+          try {
+            const clientIp = (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) || req.ip;
+            sendSecurityAlertEmail({
+              eventType: 'Brute-Force Account Lockout Triggered',
+              email: normalizedEmail,
+              ip: clientIp,
+              details: '5 consecutive failed password attempts. Account locked for 15 minutes.'
+            }).catch(e => console.warn('Security alert email notice:', e.message));
+          } catch (e) {}
+        }
 
         return res.status(423).json({
           success: false,
@@ -600,19 +637,19 @@ router.post('/login', authLimiter, honeypotMiddleware(), async (req, res, next) 
         });
       }
 
-      await user.save();
-      const remaining = 5 - user.failedLoginAttempts;
+      const remaining = Math.max(0, 5 - currentAttempts);
       return res.status(401).json({
         success: false,
         error: `Invalid email or password. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining before temporary lockout.`
       });
     }
 
-    // Password verified! Reset failed login counters
+    // Password verified! Atomically reset failed login counters
     if (user.failedLoginAttempts > 0 || user.lockUntil) {
-      user.failedLoginAttempts = 0;
-      user.lockUntil = null;
-      await user.save();
+      await User.updateOne(
+        { _id: user._id },
+        { $set: { failedLoginAttempts: 0, lockUntil: null } }
+      );
     }
 
     // Password verified! Send 6-digit 2FA OTP to user's email
@@ -758,20 +795,33 @@ router.post('/phone/verify-otp', authLimiter, protectUser, async (req, res, next
       });
     }
 
-    const otpRecord = await PhoneOtp.findOne({ phone: cleanPhone });
-    if (!otpRecord || new Date() > new Date(otpRecord.expiresAt)) {
-      if (otpRecord) await PhoneOtp.deleteOne({ _id: otpRecord._id });
+    // Atomically increment attempt counter BEFORE verifying hash so parallel botnet requests cannot bypass the 5-attempt limit
+    const now = new Date();
+    const otpRecord = await PhoneOtp.findOneAndUpdate(
+      {
+        phone: cleanPhone,
+        expiresAt: { $gt: now },
+        attempts: { $lt: 5 }
+      },
+      { $inc: { attempts: 1 } },
+      { new: true }
+    );
+
+    if (!otpRecord) {
+      const existingOtp = await PhoneOtp.findOne({ phone: cleanPhone });
+      if (existingOtp) {
+        const exhausted = existingOtp.attempts >= 5 && new Date(existingOtp.expiresAt) > now;
+        await PhoneOtp.deleteOne({ _id: existingOtp._id });
+        if (exhausted) {
+          return res.status(429).json({
+            success: false,
+            error: 'Too many incorrect Phone OTP attempts. Please request a new code.'
+          });
+        }
+      }
       return res.status(400).json({
         success: false,
         error: 'Phone OTP has expired or was not found. Please request a new OTP.'
-      });
-    }
-
-    if (otpRecord.attempts >= 5) {
-      await PhoneOtp.deleteOne({ _id: otpRecord._id });
-      return res.status(429).json({
-        success: false,
-        error: 'Too many incorrect Phone OTP attempts. Please request a new code.'
       });
     }
 
@@ -782,16 +832,27 @@ router.post('/phone/verify-otp', authLimiter, protectUser, async (req, res, next
     );
 
     if (!isMatch) {
-      otpRecord.attempts += 1;
-      await otpRecord.save();
+      if (otpRecord.attempts >= 5) {
+        await PhoneOtp.deleteOne({ _id: otpRecord._id });
+        return res.status(429).json({
+          success: false,
+          error: 'Too many incorrect Phone OTP attempts. Please request a new code.'
+        });
+      }
       return res.status(400).json({
         success: false,
         error: `Invalid Phone OTP. ${5 - otpRecord.attempts} attempts remaining.`
       });
     }
 
-    // Verified! Delete OTP record immediately to prevent replay
-    await PhoneOtp.deleteOne({ _id: otpRecord._id });
+    // Verified! Atomically consume and delete OTP record immediately to prevent replay
+    const consumedPhoneOtp = await PhoneOtp.findOneAndDelete({ _id: otpRecord._id });
+    if (!consumedPhoneOtp) {
+      return res.status(400).json({
+        success: false,
+        error: 'Phone OTP has already been used.'
+      });
+    }
 
     req.user.phone = cleanPhone;
     req.user.whatsapp = cleanPhone;

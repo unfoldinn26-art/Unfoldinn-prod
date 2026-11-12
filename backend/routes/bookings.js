@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Booking = require('../models/Booking');
+const User = require('../models/User');
 const Setting = require('../models/Setting');
 const UserSubscription = require('../models/UserSubscription');
 const {
@@ -70,10 +71,12 @@ router.get('/available-slots', optionalAuth, async (req, res) => {
 // POST /api/bookings - Create booking (Complimentary Introductory Session, 100% Coupon Waiver, OR Admin Manual Entry)
 router.post('/', publicFormLimiter, optionalAuth, async (req, res, next) => {
   let acquiredLock = null;
+  let claimedFreeSessionForUserId = null;
   try {
     const isAdminManual = Boolean(req.admin);
     const user = req.user || null;
     let appliedCouponInfo = null;
+    let settings = null;
 
     // 1. If NOT an Admin manual entry, require authenticated & onboarded user + check free session / coupon eligibility
     if (!isAdminManual) {
@@ -90,7 +93,7 @@ router.post('/', publicFormLimiter, optionalAuth, async (req, res, next) => {
         });
       }
 
-      const settings = await getPaymentSettings();
+      settings = await getPaymentSettings();
       const rawCouponCode = req.body.couponCode ? String(req.body.couponCode).trim() : '';
 
       if (rawCouponCode) {
@@ -172,7 +175,24 @@ router.post('/', publicFormLimiter, optionalAuth, async (req, res, next) => {
       }
     }
 
-    // 2. Atomically validate & lock the requested date + time slot (prevents double-booking & simultaneous race conditions)
+    // 2. Atomically claim 1st complimentary session flag BEFORE acquiring slot lock or creating booking (prevents multi-tab free-session exploit)
+    if (!isAdminManual && !appliedCouponInfo && user && settings && settings.limitOneFreeSessionPerUser) {
+      const atomicClaim = await User.findOneAndUpdate(
+        { _id: user._id, hasUsedFreeSession: { $ne: true } },
+        { $set: { hasUsedFreeSession: true } },
+        { new: true }
+      );
+      if (!atomicClaim) {
+        return res.status(402).json({
+          success: false,
+          error:
+            'You have already completed or booked your 1 complimentary introductory session. From Session #2 onwards, please pay the session fee, use a subscription credit, or apply an admin coupon code.'
+        });
+      }
+      claimedFreeSessionForUserId = user._id;
+    }
+
+    // 3. Atomically validate & lock the requested date + time slot (prevents double-booking & simultaneous race conditions)
     let slotWindow = null;
     if (req.body.preferredDate && req.body.preferredTime) {
       const slotReservation = await acquireAtomicSlotLock({
@@ -248,6 +268,7 @@ router.post('/', publicFormLimiter, optionalAuth, async (req, res, next) => {
     };
 
     let booking = await Booking.create(bookingPayload);
+    claimedFreeSessionForUserId = null; // Booking committed; keep hasUsedFreeSession = true
     if (acquiredLock) {
       await bindAndConfirmSlotLock({
         lockId: acquiredLock._id,
@@ -257,8 +278,7 @@ router.post('/', publicFormLimiter, optionalAuth, async (req, res, next) => {
     }
 
     if (user && !user.hasUsedFreeSession && bookingPayload.bookingMode === 'free_intro') {
-      user.hasUsedFreeSession = true;
-      await user.save();
+      await User.updateOne({ _id: user._id }, { $set: { hasUsedFreeSession: true } });
     }
     if (appliedCouponInfo) {
       await recordCouponRedemption({
@@ -287,6 +307,9 @@ router.post('/', publicFormLimiter, optionalAuth, async (req, res, next) => {
       }
     });
   } catch (error) {
+    if (claimedFreeSessionForUserId) {
+      await User.updateOne({ _id: claimedFreeSessionForUserId }, { $set: { hasUsedFreeSession: false } }).catch(() => {});
+    }
     if (acquiredLock) {
       await releaseSlotLock({ lockId: acquiredLock._id });
     }
