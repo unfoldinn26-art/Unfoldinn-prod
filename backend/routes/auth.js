@@ -25,6 +25,17 @@ const { normalizePhone10, sendPhoneOtpSms, isSmsGatewayConfigured } = require('.
 const { protectUser, protectAdmin } = require('../middleware/auth');
 const { authLimiter, honeypotMiddleware } = require('../middleware/security');
 const { verifyCaptcha } = require('../middleware/captcha');
+const { prisma } = require('../config/prisma');
+const {
+  RedisKeys,
+  checkOtpCooldown,
+  storeOtpInGoldfish,
+  verifyOtpInGoldfish
+} = require('../config/redis');
+const {
+  writeAuditLog,
+  writeConsentRecord
+} = require('../services/auditAndConsentService');
 
 function hashEmailOtp(email, otp) {
   return crypto
@@ -329,6 +340,18 @@ router.post('/email/send-otp', authLimiter, async (req, res, next) => {
       { upsert: true, new: true }
     );
 
+    // Also store hashed OTP in Redis Cloud (Goldfish) with 10-min TTL & 60s resend cooldown
+    await storeOtpInGoldfish({
+      otpKey: RedisKeys.emailOtp(normalizedEmail),
+      cooldownKey: RedisKeys.otpCooldown(normalizedEmail),
+      otpHash,
+      purpose: resolvedPurpose,
+      name: resolvedName,
+      pendingPasswordHash: existingOtp?.pendingPasswordHash || null,
+      ttlSeconds: 600,
+      cooldownSeconds: 60
+    }).catch(() => null);
+
     const delivery = await sendOtpEmail({
       email: normalizedEmail,
       otp: otpCode,
@@ -366,6 +389,14 @@ router.post('/email/verify-otp', authLimiter, async (req, res, next) => {
         error: 'Please enter the 6-digit verification code sent to your email.'
       });
     }
+
+    // Also consume/self-destruct in Redis Cloud (Goldfish)
+    const expectedHashForRedis = hashEmailOtp(normalizedEmail, cleanOtp);
+    await verifyOtpInGoldfish({
+      otpKey: RedisKeys.emailOtp(normalizedEmail),
+      expectedHash: expectedHashForRedis,
+      maxAttempts: 5
+    }).catch(() => null);
 
     // Atomically increment attempt counter BEFORE verifying hash so parallel botnet requests cannot bypass the 5-attempt limit
     const now = new Date();
@@ -537,6 +568,17 @@ router.post('/register', authLimiter, honeypotMiddleware(), verifyCaptcha, async
       { upsert: true, new: true }
     );
 
+    await storeOtpInGoldfish({
+      otpKey: RedisKeys.emailOtp(normalizedEmail),
+      cooldownKey: RedisKeys.otpCooldown(normalizedEmail),
+      otpHash,
+      purpose: 'register',
+      name: cleanName,
+      pendingPasswordHash,
+      ttlSeconds: 600,
+      cooldownSeconds: 60
+    }).catch(() => null);
+
     const delivery = await sendOtpEmail({
       email: normalizedEmail,
       otp: otpCode,
@@ -672,6 +714,17 @@ router.post('/login', authLimiter, honeypotMiddleware(), async (req, res, next) 
       { upsert: true, new: true }
     );
 
+    await storeOtpInGoldfish({
+      otpKey: RedisKeys.emailOtp(normalizedEmail),
+      cooldownKey: RedisKeys.otpCooldown(normalizedEmail),
+      otpHash,
+      purpose: 'login_2fa',
+      name: user.name || '',
+      pendingPasswordHash: null,
+      ttlSeconds: 600,
+      cooldownSeconds: 60
+    }).catch(() => null);
+
     const delivery = await sendOtpEmail({
       email: normalizedEmail,
       otp: otpCode,
@@ -754,6 +807,15 @@ router.post('/phone/send-otp', authLimiter, protectUser, async (req, res, next) 
       { upsert: true, new: true }
     );
 
+    await storeOtpInGoldfish({
+      otpKey: RedisKeys.phoneOtp(cleanPhone),
+      cooldownKey: RedisKeys.otpCooldown(`phone:${cleanPhone}`),
+      otpHash,
+      purpose: 'phone_verify',
+      ttlSeconds: 600,
+      cooldownSeconds: 60
+    }).catch(() => null);
+
     const isConfigured = isSmsGatewayConfigured();
     if (!isConfigured) {
       return res.status(400).json({
@@ -794,6 +856,14 @@ router.post('/phone/verify-otp', authLimiter, protectUser, async (req, res, next
         error: 'Please enter a valid 10-digit mobile number and the 6-digit OTP.'
       });
     }
+
+    // Also consume/self-destruct in Redis Cloud (Goldfish)
+    const expectedPhoneHashForRedis = hashPhoneOtp(cleanPhone, cleanOtp);
+    await verifyOtpInGoldfish({
+      otpKey: RedisKeys.phoneOtp(cleanPhone),
+      expectedHash: expectedPhoneHashForRedis,
+      maxAttempts: 5
+    }).catch(() => null);
 
     // Atomically increment attempt counter BEFORE verifying hash so parallel botnet requests cannot bypass the 5-attempt limit
     const now = new Date();
@@ -859,6 +929,18 @@ router.post('/phone/verify-otp', authLimiter, protectUser, async (req, res, next
     req.user.phoneVerified = true;
     req.user.phoneVerifiedAt = new Date();
     await req.user.save();
+
+    await prisma.user
+      .updateMany({
+        where: { email: req.user.email.toLowerCase() },
+        data: {
+          phone: cleanPhone,
+          whatsapp: cleanPhone,
+          phoneVerified: true,
+          phoneVerifiedAt: new Date()
+        }
+      })
+      .catch(() => null);
 
     res.status(200).json({
       success: true,
@@ -994,6 +1076,106 @@ router.put('/onboarding', protectUser, async (req, res, next) => {
     }
 
     await req.user.save();
+
+    // Sync user profile & write versioned ConsentRecord + AuditLog to Neon PostgreSQL (Elephant)
+    try {
+      const pgUser = await prisma.user.upsert({
+        where: { email: req.user.email.toLowerCase() },
+        create: {
+          name: req.user.name,
+          email: req.user.email.toLowerCase(),
+          phone: req.user.phone || '',
+          whatsapp: req.user.whatsapp || '',
+          phoneVerified: Boolean(req.user.phoneVerified),
+          phoneVerifiedAt: req.user.phoneVerifiedAt || new Date(),
+          userType: req.user.userType || 'student',
+          age: req.user.age || null,
+          ageGroup: req.user.ageGroup || '',
+          isUnder18: Boolean(req.user.isUnder18),
+          parentName: req.user.parentName || '',
+          parentPhone: req.user.parentPhone || '',
+          parentEmail: req.user.parentEmail || '',
+          parentRelation: req.user.parentRelation || 'Parent/Guardian',
+          parentConsentConfirmed: Boolean(req.user.parentConsentConfirmed),
+          parentConsentAt: req.user.parentConsentAt || null,
+          dpdpConsentConfirmed: true,
+          dpdpConsentAt: req.user.dpdpConsentAt || new Date(),
+          dpdpNoticeVersion: '2026.1',
+          whereCurrently: req.user.whereCurrently || '',
+          institutionOrOrg: req.user.institutionOrOrg || '',
+          city: req.user.city || '',
+          source: req.user.source || '',
+          referredBy: req.user.referredBy || '',
+          onboardingCompleted: true,
+          onboardingCompletedAt: req.user.onboardingCompletedAt || new Date()
+        },
+        update: {
+          name: req.user.name,
+          phone: req.user.phone || '',
+          whatsapp: req.user.whatsapp || '',
+          phoneVerified: Boolean(req.user.phoneVerified),
+          userType: req.user.userType || 'student',
+          age: req.user.age || null,
+          ageGroup: req.user.ageGroup || '',
+          isUnder18: Boolean(req.user.isUnder18),
+          parentName: req.user.parentName || '',
+          parentPhone: req.user.parentPhone || '',
+          parentEmail: req.user.parentEmail || '',
+          parentRelation: req.user.parentRelation || 'Parent/Guardian',
+          parentConsentConfirmed: Boolean(req.user.parentConsentConfirmed),
+          parentConsentAt: req.user.parentConsentAt || null,
+          dpdpConsentConfirmed: true,
+          dpdpNoticeVersion: '2026.1',
+          whereCurrently: req.user.whereCurrently || '',
+          institutionOrOrg: req.user.institutionOrOrg || '',
+          city: req.user.city || '',
+          source: req.user.source || '',
+          referredBy: req.user.referredBy || '',
+          onboardingCompleted: true
+        }
+      });
+
+      await writeConsentRecord({
+        userId: pgUser.id,
+        consentType: 'DPDP_PRIVACY_NOTICE',
+        noticeVersion: '2026.1',
+        granted: true,
+        ip: clientIp,
+        userAgent: req.headers['user-agent'] || ''
+      });
+
+      if (isUnder18 && req.user.parentConsentConfirmed) {
+        await writeConsentRecord({
+          userId: pgUser.id,
+          consentType: 'UNDER_18_PARENTAL_CONSENT',
+          noticeVersion: '2026.1',
+          granted: true,
+          parentName: req.user.parentName,
+          parentEmail: req.user.parentEmail,
+          parentPhone: req.user.parentPhone,
+          parentRelation: req.user.parentRelation,
+          ip: clientIp,
+          userAgent: req.headers['user-agent'] || ''
+        });
+      }
+
+      await writeAuditLog({
+        actorType: 'USER',
+        actorId: pgUser.id,
+        actorEmail: pgUser.email,
+        action: 'USER_ONBOARDING_CONSENT_RECORDED',
+        entityType: 'User',
+        entityId: pgUser.id,
+        ip: clientIp,
+        userAgent: req.headers['user-agent'] || '',
+        metadata: {
+          dpdpNoticeVersion: '2026.1',
+          isUnder18: Boolean(isUnder18)
+        }
+      });
+    } catch (pgSyncErr) {
+      console.warn('[Neon Consent Sync Notice]:', pgSyncErr.message);
+    }
 
     if (shouldNotifyParent && req.user.parentEmail) {
       sendParentalConsentNotificationEmail({
@@ -1219,8 +1401,16 @@ router.get('/dpdp/my-data', protectUser, async (req, res, next) => {
         },
         dataProcessorsSharedWith: [
           {
-            processor: 'MongoDB Atlas (Cloud Database)',
-            purpose: 'Encrypted storage of account profile and mentoring session records'
+            processor: 'Neon PostgreSQL 18 (Primary Relational Ledger)',
+            purpose: 'ACID relational storage of account profile, mentoring bookings, payment ledger, and versioned DPDP consent audit records'
+          },
+          {
+            processor: 'Redis Cloud (Ephemeral In-Memory Store)',
+            purpose: 'Temporary storage of hashed 6-digit OTPs (10-min TTL) and 15-minute checkout slot holds'
+          },
+          {
+            processor: 'MongoDB Atlas (Secondary Data Mirror)',
+            purpose: 'Encrypted secondary mirror of account profile and mentoring session records'
           },
           {
             processor: 'Resend (Transactional Email Delivery)',
@@ -1321,8 +1511,36 @@ router.delete('/dpdp/erase-account', protectUser, async (req, res, next) => {
       await PhoneOtp.deleteMany({ phone: req.user.phone });
     }
 
-    // 3. Permanently delete the User document
+    // 3. Permanently delete the User document (and sync erasure + immutable AuditLog in Neon PostgreSQL)
     await User.deleteOne({ _id: userId });
+
+    try {
+      const clientIp =
+        (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+        req.ip ||
+        'unknown';
+      const pgUser = await prisma.user.findUnique({ where: { email: userEmail.toLowerCase() } });
+      if (pgUser) {
+        await prisma.consentRecord.updateMany({
+          where: { userId: pgUser.id, withdrawnAt: null },
+          data: { withdrawnAt: new Date() }
+        });
+        await prisma.user.delete({ where: { id: pgUser.id } }).catch(() => null);
+      }
+      await writeAuditLog({
+        actorType: 'USER',
+        actorId: pgUser?.id || String(userId),
+        actorEmail: 'erased@privacy.unfoldinn.com',
+        action: 'DPDP_ACCOUNT_ERASURE_COMPLETED',
+        entityType: 'User',
+        entityId: pgUser?.id || String(userId),
+        ip: clientIp,
+        userAgent: req.headers['user-agent'] || '',
+        metadata: { dpdpSection: 'Section 12 Right to Erasure' }
+      });
+    } catch (pgEraseErr) {
+      console.warn('[Neon DPDP Erasure Notice]:', pgEraseErr.message);
+    }
 
     // 4. Send final confirmation email of erasure
     sendAccountErasureConfirmationEmail({

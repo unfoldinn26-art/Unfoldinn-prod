@@ -1,32 +1,46 @@
 const mongoose = require('mongoose');
+const { prisma, ensurePostgresEngineConstraints } = require('./prisma');
+const { initRedis } = require('./redis');
 
 let cachedPromise = null;
+let pgInitialized = false;
 
 const connectDB = async () => {
-  // If already connected, return existing connection immediately
+  // 1. Initialize Goldfish Redis Cloud (Disposable Ephemeral Store & Cache)
+  initRedis();
+
+  // 2. Initialize Elephant Neon PostgreSQL 18 (Primary ACID Source of Truth)
+  if (!pgInitialized && process.env.DATABASE_URL) {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      await ensurePostgresEngineConstraints();
+      pgInitialized = true;
+      console.log('🐘 [Elephant Neon PostgreSQL 18] Connected & Engine Constraints Active');
+    } catch (pgErr) {
+      console.error('Neon PostgreSQL connection notice:', pgErr.message);
+    }
+  }
+
+  // 3. Keep secondary MongoDB connection for legacy model bridge / optional mirror
   if (mongoose.connection.readyState === 1) {
     return mongoose.connection;
   }
 
-  // If already connecting, await that exact connection promise
   if (cachedPromise) {
     return cachedPromise;
   }
 
   const uri = process.env.MONGODB_URI;
   if (!uri) {
-    const missingErr = new Error('MONGODB_URI environment variable is missing in project settings!');
-    console.error(missingErr.message);
-    throw missingErr;
+    return null;
   }
 
-  // Optimized for Serverless + MongoDB Atlas (CP consistency: primary reads + majority journaled writes)
   cachedPromise = mongoose
     .connect(uri, {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 10000,
       socketTimeoutMS: 30000,
-      maxIdleTimeMS: 10000, // Closes idle sockets before Atlas terminates them to prevent hangs on lambda thaw
+      maxIdleTimeMS: 10000,
       maxPoolSize: 10,
       minPoolSize: 1,
       heartbeatFrequencyMS: 10000,
@@ -35,7 +49,7 @@ const connectDB = async () => {
       writeConcern: { w: 'majority', j: true }
     })
     .then((conn) => {
-      console.log(`MongoDB Connected: ${conn.connection.host}`);
+      console.log(`MongoDB Mirror Connected: ${conn.connection.host}`);
       return conn;
     })
     .catch((err) => {
@@ -47,14 +61,11 @@ const connectDB = async () => {
   return cachedPromise;
 };
 
-// Reconnect on drop & clean up stale cache
 mongoose.connection.on('disconnected', () => {
-  console.warn('MongoDB connection lost. Clearing cached promise...');
   cachedPromise = null;
 });
 
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err.message);
+mongoose.connection.on('error', () => {
   cachedPromise = null;
 });
 

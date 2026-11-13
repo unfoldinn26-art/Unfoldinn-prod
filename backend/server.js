@@ -97,13 +97,24 @@ app.use(async (req, res, next) => {
 });
 
 // Health Check Route
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  const { prisma } = require('./config/prisma');
+  const { isRedisConnected } = require('./config/redis');
+  let pgConnected = false;
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    pgConnected = true;
+  } catch (_) {
+    pgConnected = false;
+  }
   const state = require('mongoose').connection.readyState;
-  const stateMap = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
   res.status(200).json({
     status: 'ok',
-    database: stateMap[state] || 'unknown',
-    connected: state === 1
+    architecture: 'elephant_neon_pg18_plus_goldfish_redis',
+    postgres: pgConnected ? 'connected' : 'reconnecting',
+    redis: isRedisConnected() ? 'connected' : 'fallback_mode',
+    database: pgConnected || state === 1 ? 'connected' : 'disconnected',
+    connected: pgConnected || state === 1
   });
 });
 

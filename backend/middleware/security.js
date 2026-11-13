@@ -1,4 +1,8 @@
 const crypto = require('crypto');
+const {
+  recordGraduatedIpStrike,
+  isIpTemporarilyBlocked
+} = require('../config/redis');
 
 /**
  * Recursive NoSQL Injection Sanitizer
@@ -127,20 +131,38 @@ setInterval(() => {
   }
 }, 15 * 60 * 1000).unref();
 
-function jailIp(ip, durationMs = 24 * 60 * 60 * 1000, reason = 'Honeypot automated bot') {
+function jailIp(ip, durationMs = 15 * 60 * 1000, reason = 'Honeypot automated bot') {
   if (!ip || ip === '127.0.0.1' || ip === '::1' || ip === 'unknown') return;
   const entry = ipJail.get(ip) || { count: 0 };
   entry.count += 1;
-  entry.bannedUntil = Date.now() + durationMs;
+
+  // Graduated strike duration (never permanently block an IP on 1 suspicious request):
+  // Strike 1-2: warning only; Strike 3-4: 15 min; Strike 5+: up to 24h
+  let effectiveDurationMs = 0;
+  if (entry.count >= 5) {
+    effectiveDurationMs = Math.min(durationMs, 24 * 60 * 60 * 1000);
+  } else if (entry.count >= 3) {
+    effectiveDurationMs = 15 * 60 * 1000;
+  }
+
+  entry.bannedUntil = effectiveDurationMs > 0 ? Date.now() + effectiveDurationMs : 0;
   entry.reason = reason;
   ipJail.set(ip, entry);
-  console.warn(`[Security IP Jail] IP ${ip} jailed for 24h until ${new Date(entry.bannedUntil).toISOString()} (Reason: ${reason})`);
+
+  // Also record graduated strike in Redis Cloud (Goldfish) asynchronously
+  recordGraduatedIpStrike(ip, reason).catch(() => null);
+
+  if (effectiveDurationMs > 0) {
+    console.warn(
+      `[Security Graduated IP Protection] IP ${ip} (strike #${entry.count}) restricted until ${new Date(entry.bannedUntil).toISOString()} (Reason: ${reason})`
+    );
+  }
 }
 
 function isIpJailed(ip) {
   if (!ip) return false;
   const entry = ipJail.get(ip);
-  if (!entry) return false;
+  if (!entry || !entry.bannedUntil) return false;
   if (Date.now() > entry.bannedUntil) {
     ipJail.delete(ip);
     return false;
@@ -150,9 +172,9 @@ function isIpJailed(ip) {
 
 /**
  * Global IP Jail Check Middleware
- * Intercepts incoming requests before routes. If client IP is jailed, blocks immediately with 403 Forbidden.
+ * Intercepts incoming requests before routes. Checks graduated strikes in memory + Redis Cloud.
  */
-function ipJailCheckMiddleware(req, res, next) {
+async function ipJailCheckMiddleware(req, res, next) {
   const clientIp =
     (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
     req.ip ||
@@ -162,6 +184,17 @@ function ipJailCheckMiddleware(req, res, next) {
   if (isIpJailed(clientIp)) {
     const entry = ipJail.get(clientIp);
     const retryAfterSec = Math.max(1, Math.ceil(((entry?.bannedUntil || Date.now()) - Date.now()) / 1000));
+    res.setHeader('Retry-After', String(retryAfterSec));
+    return res.status(403).json({
+      success: false,
+      error: 'Access denied. Automated security defenses have temporarily restricted access from this network.',
+      retryAfterSeconds: retryAfterSec
+    });
+  }
+
+  const redisBlock = await isIpTemporarilyBlocked(clientIp).catch(() => ({ blocked: false }));
+  if (redisBlock && redisBlock.blocked) {
+    const retryAfterSec = Math.max(1, redisBlock.retryAfterSeconds || 60);
     res.setHeader('Retry-After', String(retryAfterSec));
     return res.status(403).json({
       success: false,

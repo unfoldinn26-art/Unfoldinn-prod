@@ -1,0 +1,1243 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum AuthProvider {
+  google
+  email
+  both
+}
+
+enum UserType {
+  student
+  parent
+  institution
+  mentor
+  other
+}
+
+enum AdminRole {
+  superadmin
+  admin
+}
+
+enum ConsentType {
+  DPDP_PRIVACY_NOTICE
+  UNDER_18_PARENTAL_CONSENT
+  AI_SESSION_NOTES
+  MARKETING_COMMUNICATION
+}
+
+enum BookingMode {
+  free_intro
+  single_paid
+  subscription_credit
+  support_contribution
+  admin_manual
+  coupon_waiver
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+}
+
+enum PaymentStatus {
+  not_required
+  pending
+  paid
+  failed
+  refunded
+  credit_redeemed
+}
+
+enum CalendarEventStatus {
+  not_created
+  pending
+  confirmed
+  cancelled
+  failed
+}
+
+enum SummaryStatus {
+  none
+  pending
+  processing
+  ready
+  failed
+  reviewed
+}
+
+enum SlotLockStatus {
+  confirmed
+  pending_payment
+  released
+}
+
+enum PlanType {
+  single
+  monthly_subscription
+  multi_pack
+}
+
+enum SubscriptionStatus {
+  pending_payment
+  active
+  exhausted
+  expired
+  cancelled
+}
+
+enum CreditLedgerAction {
+  CREDITED
+  CONSUMED
+  REFUNDED
+  ADMIN_ADJUSTED
+  EXPIRED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FLAT
+}
+
+enum CouponApplicableTo {
+  ALL
+  SINGLE_SESSION
+  SUBSCRIPTION
+}
+
+enum PaymentPurpose {
+  single_booking
+  subscription_purchase
+  support_contribution
+}
+
+enum OrderStatus {
+  CREATED
+  PENDING
+  PAID
+  FAILED
+  EXPIRED
+  AMOUNT_MISMATCH_HOLD
+  PARTIALLY_REFUNDED
+  REFUNDED
+}
+
+enum TransactionStatus {
+  INITIATED
+  PENDING
+  SUCCESS
+  FAILED
+  USER_DROPPED
+  EXPIRED
+  AMOUNT_MISMATCH_HOLD
+  DUPLICATE_PAID_NEEDS_REFUND
+}
+
+enum RefundStatus {
+  PENDING
+  PROCESSED
+  FAILED
+  CANCELLED
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  DEAD_LETTER
+}
+
+enum AssetVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum BackupStatus {
+  STARTED
+  UPLOADED
+  CHECKSUM_VERIFIED
+  RESTORE_VERIFIED
+  FAILED
+}
+
+// ============================================================================
+// 1. IDENTITY, MENTOR PROFILES, AVAILABILITY & CONSENT EVIDENCE
+// ============================================================================
+
+model User {
+  id                       String          @id @default(uuid())
+  googleId                 String?         @unique
+  email                    String          @unique
+  passwordHash             String?
+  name                     String
+  avatar                   String          @default("")
+  avatarAssetId            String?
+  authProvider             AuthProvider    @default(google)
+
+  onboardingCompleted      Boolean         @default(false)
+  onboardingCompletedAt    DateTime?
+
+  userType                 UserType        @default(student)
+  phone                    String?
+  phoneVerified            Boolean         @default(false)
+  phoneVerifiedAt          DateTime?
+  whatsapp                 String?
+  age                      Int?
+  ageGroup                 String?
+  isUnder18                Boolean         @default(false)
+  parentName               String?
+  parentPhone              String?
+  parentEmail              String?
+  parentRelation           String?
+  parentConsentConfirmed   Boolean         @default(false)
+  parentConsentAt          DateTime?
+  parentConsentNotifiedAt  DateTime?
+
+  // DPDP Act 2023 & Rules 2025 Status Snapshot (Full evidence stored in ConsentRecord)
+  dpdpConsentConfirmed     Boolean         @default(false)
+  dpdpConsentAt            DateTime?
+  dpdpNoticeVersion        String          @default("2026.1")
+  dpdpConsentIp            String?
+  deletedAt                DateTime?
+
+  whereCurrently           String?
+  institutionOrOrg         String?
+  city                     String?
+  source                   String?
+  referredBy               String?
+
+  hasUsedFreeSession       Boolean         @default(false)
+  totalSessionsCompleted   Int             @default(0)
+  isActive                 Boolean         @default(true)
+  lastLoginAt              DateTime?
+
+  // Brute-Force Lockout
+  failedLoginAttempts      Int             @default(0)
+  lockUntil                DateTime?
+  lastFailedLoginAt        DateTime?
+
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
+
+  // Authoritative Mentor Profile (1:1 if user is a mentor)
+  mentorProfile            MentorProfile?
+
+  // Relations
+  sessions                 UserSession[]
+  consentRecords           ConsentRecord[]
+  studentBookings          Booking[]            @relation("StudentBookings")
+  studentSlotLocks         SlotLock[]           @relation("StudentSlotLocks")
+  studentSummaries         SessionSummary[]     @relation("StudentSummaries")
+  studentReviews           Review[]             @relation("StudentReviews")
+  studentThreads           ConversationThread[] @relation("StudentThreads")
+  sentMessages             ConversationMessage[]
+  subscriptions            UserSubscription[]
+  paymentOrders            PaymentOrder[]
+  couponRedemptions        CouponRedemption[]
+  notifications            Notification[]
+  uploadedAssets           MediaAsset[]
+
+  @@index([phone])
+  @@index([userType, isActive])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model MentorProfile {
+  id                  String               @id @default(uuid())
+  userId              String               @unique
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
+  slug                String               @unique
+  displayName         String
+  headline            String               @default("Founder & Lead Mentor")
+  bio                 String?              @db.Text
+  specializations     String[]             @default([])
+  languages           String[]             @default(["English", "Hindi"])
+  defaultDurationMins Int                  @default(45)
+  bufferMins          Int                  @default(15)
+  sessionFee          Decimal              @default(500.00) @db.Decimal(12, 2)
+  timezone            String               @default("Asia/Kolkata")
+  standardSlots       String[]             @default([])
+  isAcceptingBookings Boolean              @default(true)
+
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  availabilities      MentorAvailability[]
+  timeOffs            MentorTimeOff[]
+  bookings            Booking[]            @relation("MentorProfileBookings")
+  slotLocks           SlotLock[]           @relation("MentorProfileSlotLocks")
+  sessionSummaries    SessionSummary[]     @relation("MentorProfileSummaries")
+  reviews             Review[]             @relation("MentorProfileReviews")
+  conversationThreads ConversationThread[] @relation("MentorProfileThreads")
+
+  @@index([isAcceptingBookings])
+  @@map("mentor_profiles")
+}
+
+model MentorAvailability {
+  id              String        @id @default(uuid())
+  mentorProfileId String
+  mentorProfile   MentorProfile @relation(fields: [mentorProfileId], references: [id], onDelete: Cascade)
+  dayOfWeek       Int           // 0 (Sunday) .. 6 (Saturday)
+  startTime       String        // "10:00"
+  endTime         String        // "18:00"
+  slotLabels      String[]      @default([])
+  isActive        Boolean       @default(true)
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([mentorProfileId, dayOfWeek, startTime, endTime])
+  @@index([mentorProfileId, isActive])
+  @@map("mentor_availabilities")
+}
+
+model MentorTimeOff {
+  id              String        @id @default(uuid())
+  mentorProfileId String
+  mentorProfile   MentorProfile @relation(fields: [mentorProfileId], references: [id], onDelete: Cascade)
+  startAt         DateTime
+  endAt           DateTime
+  isFullDay       Boolean       @default(true)
+  reason          String?
+  createdByAdmin  String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([mentorProfileId, startAt, endAt])
+  @@map("mentor_time_offs")
+}
+
+model ConsentRecord {
+  id                 String      @id @default(uuid())
+  userId             String
+  user               User        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  bookingId          String?
+  booking            Booking?    @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+
+  consentType        ConsentType
+  noticeVersion      String      @default("2026.1")
+  purpose            String
+  granted            Boolean
+  parentName         String?
+  parentEmail        String?
+  parentPhone        String?
+  parentRelation     String?
+  verificationMethod String      // e.g. "CHECKBOX_PLUS_EMAIL_NOTICE", "EXPLICIT_OPT_IN_TOGGLE"
+  evidenceHash       String      // SHA-256 of notice text + payload + timestamp
+  ipHash             String?     // HMAC-SHA256 hashed IP (avoids retaining raw IP)
+  userAgentSummary   String?
+
+  grantedAt          DateTime    @default(now())
+  revokedAt          DateTime?
+
+  @@index([userId, consentType])
+  @@index([bookingId])
+  @@map("consent_records")
+}
+
+model UserSession {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash     String    @unique
+  deviceInfo    String?
+  ipHash        String?
+  expiresAt     DateTime
+  revokedAt     DateTime?
+  revokedReason String?
+  lastActiveAt  DateTime  @default(now())
+
+  createdAt     DateTime  @default(now())
+
+  @@index([userId, expiresAt])
+  @@map("user_sessions")
+}
+
+model Admin {
+  id                  String              @id @default(uuid())
+  name                String
+  email               String              @unique
+  passwordHash        String
+  role                AdminRole           @default(admin)
+  isActive            Boolean             @default(true)
+  lastLogin           DateTime?
+  failedLoginAttempts Int                 @default(0)
+  lockUntil           DateTime?
+  lastFailedLoginAt   DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  reviewedSummaries   SessionSummary[]
+  googleIntegrations  GoogleIntegration[]
+  initiatedRefunds    Refund[]
+
+  @@map("admins")
+}
+
+// ============================================================================
+// 2. SCHEDULING, BOOKINGS (STUDENT + MENTOR PROFILE) & SLOT LOCKS
+// ============================================================================
+
+model Booking {
+  id                     String              @id @default(uuid())
+
+  // Required Authoritative Student & MentorProfile Relationships
+  studentId              String
+  student                User                @relation("StudentBookings", fields: [studentId], references: [id], onDelete: Restrict)
+  mentorProfileId        String
+  mentorProfile          MentorProfile       @relation("MentorProfileBookings", fields: [mentorProfileId], references: [id], onDelete: Restrict)
+
+  sessionNumber          Int                 @default(1)
+  bookingMode            BookingMode         @default(single_paid)
+
+  userSubscriptionId     String?
+  userSubscription       UserSubscription?   @relation("SubscriptionBookings", fields: [userSubscriptionId], references: [id], onDelete: Restrict)
+  planCode               String?
+
+  // Student Intake Snapshot
+  name                   String
+  age                    Int?
+  ageGroup               String?
+  isUnder18              Boolean             @default(false)
+  parentName             String?
+  parentPhone            String?
+  parentEmail            String?
+  parentConsentConfirmed Boolean             @default(false)
+
+  whereCurrently         String?
+  currentStage           String?
+  institutionOrOrg       String?
+  city                   String?
+  topic                  String?             @db.VarChar(1000)
+  concern                String?             @db.VarChar(1000)
+  usefulGoal             String?             @db.VarChar(500)
+
+  phone                  String
+  whatsapp               String?
+  email                  String?
+  source                 String?
+  referredBy             String?
+
+  userType               UserType            @default(student)
+  preferredDate          DateTime?
+  preferredTime          String?
+  duration               Int                 @default(45)
+  timezone               String              @default("Asia/Kolkata")
+  scheduledStartAt       DateTime?
+  scheduledEndAt         DateTime?
+  slotUpdateTokenHash    String?
+
+  // Google Calendar & Meet
+  meetingLink            String?
+  calendarEventId        String?
+  calendarHtmlLink       String?
+  meetConferenceId       String?
+  calendarEventStatus    CalendarEventStatus @default(not_created)
+  calendarLastError      String?
+
+  // AI Notes Consent & Summary Status (Authoritative 1:1 relation lives on SessionSummary.bookingId)
+  aiNotesConsent         Boolean             @default(false)
+  aiNotesConsentAt       DateTime?
+  summaryStatus          SummaryStatus       @default(none)
+
+  // 5-Stage Mentoring Lifecycle
+  status                 BookingStatus       @default(pending)
+  notes                  String?             @db.Text
+  sharedNotes            String?             @db.Text
+  followUpDate           DateTime?
+  actionAgreed           String?             @db.Text
+  actionStatus           String              @default("not-started")
+  studentReflection      String?             @db.VarChar(1500)
+  feedback               String?             @db.Text
+
+  // Simplified Transactional Payment Status Snapshot (Full details live in PaymentOrder & PaymentTransaction)
+  paymentRequired        Boolean             @default(false)
+  paymentStatus          PaymentStatus       @default(not_required)
+  couponCode             String?
+  discountAmount         Decimal             @default(0.00) @db.Decimal(12, 2)
+  paymentMode            String?
+  paymentTime            DateTime?
+  idempotencyKey         String?
+
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+
+  // Relations
+  slotLock               SlotLock?
+  sessionSummary         SessionSummary?
+  review                 Review?
+  paymentOrders          PaymentOrder[]
+  creditLedgerEntries    SubscriptionCreditLedger[]
+  couponRedemptions      CouponRedemption[]
+  consentRecords         ConsentRecord[]
+  conversationThread     ConversationThread?
+  initialForSubscriptions UserSubscription[] @relation("InitialSubscriptionBooking")
+
+  @@unique([studentId, idempotencyKey])
+  @@index([studentId, status])
+  @@index([mentorProfileId, status, scheduledStartAt, scheduledEndAt])
+  @@index([status, scheduledStartAt, scheduledEndAt])
+  @@index([phone])
+  @@index([email])
+  @@map("bookings")
+}
+
+model SlotLock {
+  id                 String         @id @default(uuid())
+  mentorProfileId    String
+  mentorProfile      MentorProfile  @relation("MentorProfileSlotLocks", fields: [mentorProfileId], references: [id], onDelete: Restrict)
+  studentId          String?
+  student            User?          @relation("StudentSlotLocks", fields: [studentId], references: [id], onDelete: SetNull)
+
+  slotKey            String         // e.g. "2026-12-01T10:00"
+  datePart           String         // "YYYY-MM-DD"
+  startAt            DateTime
+  endAt              DateTime
+
+  bookingId          String?        @unique
+  booking            Booking?       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  userSubscriptionId String?
+
+  status             SlotLockStatus @default(confirmed)
+  expiresAt          DateTime?
+
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@unique([mentorProfileId, slotKey])
+  @@index([mentorProfileId, datePart, status])
+  @@index([startAt, endAt])
+  @@index([expiresAt])
+  @@map("slot_locks")
+}
+
+model SessionSummary {
+  id                          String        @id @default(uuid())
+  bookingId                   String        @unique
+  booking                     Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  studentId                   String
+  student                     User          @relation("StudentSummaries", fields: [studentId], references: [id], onDelete: Restrict)
+  mentorProfileId             String
+  mentorProfile               MentorProfile @relation("MentorProfileSummaries", fields: [mentorProfileId], references: [id], onDelete: Restrict)
+
+  participantKey              String
+  studentName                 String
+  studentEmail                String        @default("")
+  mentorName                  String        @default("Mr. Deepak Sogani")
+  sessionNumber               Int           @default(1)
+  sessionDate                 DateTime      @default(now())
+  status                      SummaryStatus @default(pending)
+  sourceType                  String        @default("mentor_notes")
+  consentRecorded             Boolean       @default(false)
+  consentMode                 String        @default("mentor_notes_fallback")
+
+  // Strictly access-controlled in service layer (never returned to student API)
+  rawSourceTextEncrypted      String        @default("") @db.Text
+  sourceHash                  String        @default("")
+
+  goalsAndConcernsDiscussed   String        @default("Unavailable — not explicitly recorded in session notes.") @db.Text
+  keyTopicsAndPerspectives    String        @default("Unavailable — not explicitly recorded in session notes.") @db.Text
+  importantObservations       Json          @default("{}")
+  agreedActions               String        @default("Unavailable — not explicitly recorded in session notes.") @db.Text
+  progressFromPreviousSession String        @default("Unavailable — no previous session action progress recorded.") @db.Text
+  unresolvedQuestions         String        @default("Unavailable — not explicitly recorded in session notes.") @db.Text
+  suggestedOpeningQuestions   String[]      @default([])
+
+  // Strictly private to mentor/admin (stripped from student serializer)
+  privateMentorPrepBrief      String        @default("Unavailable — not explicitly recorded in session notes.") @db.Text
+
+  isApproved                  Boolean       @default(false)
+  reviewedByAdminId           String?
+  reviewedByAdmin             Admin?        @relation(fields: [reviewedByAdminId], references: [id], onDelete: SetNull)
+  reviewedAt                  DateTime?
+  generationMethod            String        @default("deterministic_structured")
+  lastError                   String?
+  retentionExpiresAt          DateTime?
+
+  createdAt                   DateTime      @default(now())
+  updatedAt                   DateTime      @updatedAt
+
+  @@index([studentId])
+  @@index([mentorProfileId])
+  @@index([status])
+  @@index([retentionExpiresAt])
+  @@map("session_summaries")
+}
+
+model Review {
+  id              String        @id @default(uuid())
+  bookingId       String        @unique
+  booking         Booking       @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  studentId       String
+  student         User          @relation("StudentReviews", fields: [studentId], references: [id], onDelete: Restrict)
+  mentorProfileId String
+  mentorProfile   MentorProfile @relation("MentorProfileReviews", fields: [mentorProfileId], references: [id], onDelete: Restrict)
+  rating          Int           // 1..5
+  comment         String?       @db.VarChar(1500)
+  isPublic        Boolean       @default(false)
+  isApproved      Boolean       @default(false)
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([mentorProfileId, isApproved])
+  @@map("reviews")
+}
+
+// ============================================================================
+// 3. AUDITED FINANCIAL LEDGER (DECIMAL 12,2 + RESTRICT DELETE + REFUND MODEL)
+// ============================================================================
+
+model PaymentOrder {
+  id                 String               @id @default(uuid())
+  idempotencyKey     String?              @unique
+  dedupFingerprint   String?
+
+  userId             String?
+  user               User?                @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  // Enforced by SQL CHECK constraint chk_payment_order_purpose_target
+  purpose            PaymentPurpose
+  bookingId          String?
+  booking            Booking?             @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  userSubscriptionId String?
+  userSubscription   UserSubscription?    @relation(fields: [userSubscriptionId], references: [id], onDelete: Restrict)
+  planCode           String?
+
+  customerName       String?
+  customerPhone      String?
+  customerEmail      String?
+
+  baseAmount         Decimal              @db.Decimal(12, 2)
+  discountAmount     Decimal              @default(0.00) @db.Decimal(12, 2)
+  expectedAmount     Decimal              @db.Decimal(12, 2)
+  paidAmount         Decimal              @default(0.00) @db.Decimal(12, 2)
+  refundedAmount     Decimal              @default(0.00) @db.Decimal(12, 2)
+  currency           String               @default("INR")
+  couponCode         String?
+
+  status             OrderStatus          @default(CREATED)
+  paidAt             DateTime?
+  verifiedBy         String?
+
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  events             PaymentOrderEvent[]
+  transactions       PaymentTransaction[]
+  refunds            Refund[]
+  couponRedemptions  CouponRedemption[]
+
+  @@index([userId, status])
+  @@index([bookingId])
+  @@index([userSubscriptionId])
+  @@index([dedupFingerprint])
+  @@map("payment_orders")
+}
+
+model PaymentOrderEvent {
+  id             String       @id @default(uuid())
+  paymentOrderId String
+  paymentOrder   PaymentOrder @relation(fields: [paymentOrderId], references: [id], onDelete: Restrict)
+  fromStatus     String?
+  toStatus       String
+  actor          String       // "system", "webhook", "verify_endpoint", "admin"
+  reason         String?
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+
+  @@index([paymentOrderId, createdAt])
+  @@map("payment_order_events")
+}
+
+model PaymentTransaction {
+  id                       String            @id @default(uuid())
+  paymentOrderId           String
+  paymentOrder             PaymentOrder      @relation(fields: [paymentOrderId], references: [id], onDelete: Restrict)
+
+  attemptNumber            Int               @default(1)
+  cashfreeOrderId          String            @unique
+  cashfreePaymentSessionId String?
+  cashfreePaymentId        String?           @unique
+
+  amount                   Decimal           @db.Decimal(12, 2)
+  currency                 String            @default("INR")
+  status                   TransactionStatus @default(INITIATED)
+  paymentMethod            String?
+  errorMessage             String?
+  processedAt              DateTime?
+  verifiedBy               String?
+  rawGatewaySummary        Json?
+
+  createdAt                DateTime          @default(now())
+
+  webhookEvents            WebhookEvent[]
+  refunds                  Refund[]
+
+  @@unique([paymentOrderId, attemptNumber])
+  @@index([status])
+  @@map("payment_transactions")
+}
+
+model Refund {
+  id                   String             @id @default(uuid())
+  idempotencyKey       String             @unique
+  paymentOrderId       String
+  paymentOrder         PaymentOrder       @relation(fields: [paymentOrderId], references: [id], onDelete: Restrict)
+  paymentTransactionId String
+  paymentTransaction   PaymentTransaction @relation(fields: [paymentTransactionId], references: [id], onDelete: Restrict)
+
+  cashfreeRefundId     String?            @unique
+  amount               Decimal            @db.Decimal(12, 2)
+  currency             String             @default("INR")
+  reason               String
+  status               RefundStatus       @default(PENDING)
+  initiatedByAdminId   String?
+  initiatedByAdmin     Admin?             @relation(fields: [initiatedByAdminId], references: [id], onDelete: SetNull)
+  processedAt          DateTime?
+  errorMessage         String?
+  rawGatewaySummary    Json?
+
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@index([paymentOrderId])
+  @@index([paymentTransactionId])
+  @@index([status])
+  @@map("refunds")
+}
+
+model WebhookEvent {
+  id                   String              @id @default(uuid())
+  eventKey             String              @unique
+  paymentTransactionId String?
+  paymentTransaction   PaymentTransaction? @relation(fields: [paymentTransactionId], references: [id], onDelete: Restrict)
+  cashfreeOrderId      String?
+  cashfreePaymentId    String?
+  eventType            String
+  signatureVerified    Boolean
+  webhookTimestamp     String?
+  processedResult      String?
+  payloadSummary       Json?
+
+  createdAt            DateTime            @default(now())
+
+  @@index([cashfreeOrderId])
+  @@map("webhook_events")
+}
+
+// ============================================================================
+// 4. SUBSCRIPTIONS, CREDIT LEDGER & COUPONS
+// ============================================================================
+
+model SubscriptionPlan {
+  id            String             @id @default(uuid())
+  code          String             @unique
+  name          String
+  subtitle      String?
+  description   String?            @db.Text
+  planType      PlanType
+  sessionsCount Int
+  durationDays  Int                @default(30)
+  price         Decimal            @db.Decimal(12, 2)
+  originalPrice Decimal?           @db.Decimal(12, 2)
+  badgeText     String?
+  features      String[]           @default([])
+  isPopular     Boolean            @default(false)
+  isActive      Boolean            @default(true)
+  sortOrder     Int                @default(0)
+
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  subscriptions UserSubscription[]
+
+  @@map("subscription_plans")
+}
+
+model UserSubscription {
+  id                        String                     @id @default(uuid())
+  userId                    String
+  user                      User                       @relation(fields: [userId], references: [id], onDelete: Restrict)
+  planId                    String?
+  plan                      SubscriptionPlan?          @relation(fields: [planId], references: [id], onDelete: Restrict)
+  planCode                  String
+  planName                  String
+  planType                  PlanType                   @default(monthly_subscription)
+
+  // Maintained transactionally with SubscriptionCreditLedger + SQL CHECK constraint
+  totalCredits              Int
+  usedCredits               Int                        @default(0)
+  remainingCredits          Int
+
+  amountPaid                Decimal                    @default(0.00) @db.Decimal(12, 2)
+  couponCode                String?
+  discountAmount            Decimal                    @default(0.00) @db.Decimal(12, 2)
+  status                    SubscriptionStatus         @default(pending_payment)
+  startsAt                  DateTime?
+  expiresAt                 DateTime?
+
+  pendingInitialBookingData Json?
+  initialBookingId          String?
+  initialBooking            Booking?                   @relation("InitialSubscriptionBooking", fields: [initialBookingId], references: [id], onDelete: SetNull)
+
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
+
+  bookings                  Booking[]                  @relation("SubscriptionBookings")
+  creditLedger              SubscriptionCreditLedger[]
+  paymentOrders             PaymentOrder[]
+
+  @@index([userId, status])
+  @@index([expiresAt])
+  @@map("user_subscriptions")
+}
+
+model SubscriptionCreditLedger {
+  id                 String             @id @default(uuid())
+  userSubscriptionId String
+  userSubscription   UserSubscription   @relation(fields: [userSubscriptionId], references: [id], onDelete: Restrict)
+  action             CreditLedgerAction
+  bookingId          String?
+  booking            Booking?           @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  creditsDelta       Int
+  balanceAfter       Int
+  note               String?
+  timestamp          DateTime           @default(now())
+
+  @@index([userSubscriptionId, timestamp])
+  @@map("subscription_credit_ledger")
+}
+
+model Coupon {
+  id             String             @id @default(uuid())
+  code           String             @unique
+  description    String             @default("")
+  discountType   DiscountType       @default(PERCENTAGE)
+  discountValue  Decimal            @db.Decimal(12, 2)
+  applicableTo   CouponApplicableTo @default(ALL)
+  maxUses        Int?
+  maxUsesPerUser Int                @default(1)
+  usedCount      Int                @default(0)
+  expiresAt      DateTime?
+  isActive       Boolean            @default(true)
+
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  redemptions    CouponRedemption[]
+
+  @@index([isActive])
+  @@map("coupons")
+}
+
+model CouponRedemption {
+  id             String        @id @default(uuid())
+  couponId       String
+  coupon         Coupon        @relation(fields: [couponId], references: [id], onDelete: Restrict)
+  userId         String?
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email          String?
+  paymentOrderId String?
+  paymentOrder   PaymentOrder? @relation(fields: [paymentOrderId], references: [id], onDelete: Restrict)
+  bookingId      String?
+  booking        Booking?      @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  usedAt         DateTime      @default(now())
+
+  @@unique([couponId, paymentOrderId])
+  @@unique([couponId, bookingId])
+  @@index([couponId, userId])
+  @@index([couponId, email])
+  @@map("coupon_redemptions")
+}
+
+// ============================================================================
+// 5. CONVERSATIONS, LEASED NOTIFICATION QUEUE, AUDIT LOG, MEDIA & BACKUPS
+// ============================================================================
+
+model ConversationThread {
+  id              String                @id @default(uuid())
+  bookingId       String?               @unique
+  booking         Booking?              @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  studentId       String
+  student         User                  @relation("StudentThreads", fields: [studentId], references: [id], onDelete: Restrict)
+  mentorProfileId String
+  mentorProfile   MentorProfile         @relation("MentorProfileThreads", fields: [mentorProfileId], references: [id], onDelete: Restrict)
+  subject         String?
+  status          String                @default("open")
+  lastMessageAt   DateTime              @default(now())
+
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  messages        ConversationMessage[]
+
+  @@index([studentId, lastMessageAt])
+  @@index([mentorProfileId, lastMessageAt])
+  @@map("conversation_threads")
+}
+
+model ConversationMessage {
+  id        String             @id @default(uuid())
+  threadId  String
+  thread    ConversationThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User               @relation(fields: [senderId], references: [id], onDelete: Restrict)
+  body      String             @db.Text
+  readAt    DateTime?
+
+  createdAt DateTime           @default(now())
+
+  @@index([threadId, createdAt])
+  @@map("conversation_messages")
+}
+
+model Notification {
+  id         String                 @id @default(uuid())
+  userId     String
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   String                 // "booking", "payment", "reminder", "summary", "system"
+  title      String
+  body       String                 @db.Text
+  actionUrl  String?
+  readAt     DateTime?
+
+  createdAt  DateTime               @default(now())
+
+  deliveries NotificationDelivery[]
+
+  @@index([userId, readAt, createdAt])
+  @@map("notifications")
+}
+
+model NotificationDelivery {
+  id                String       @id @default(uuid())
+  notificationId    String
+  notification      Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  channel           String       // "EMAIL", "WHATSAPP", "IN_APP"
+  recipient         String
+  provider          String       @default("resend")
+  providerMessageId String?
+  status            String       @default("PENDING") // "PENDING", "SENT", "FAILED"
+  attemptNumber     Int          @default(1)
+  errorMessage      String?
+  deliveredAt       DateTime?
+
+  createdAt         DateTime     @default(now())
+
+  @@index([notificationId, channel])
+  @@map("notification_deliveries")
+}
+
+model NotificationJob {
+  id               String    @id @default(uuid())
+  idempotencyKey   String    @unique
+  jobType          String    // "EMAIL_OTP", "BOOKING_CONFIRMED", "REMINDER_24H", "AI_SUMMARY"
+  recipient        String
+  payload          Json
+  status           JobStatus @default(PENDING)
+
+  // Worker Lease & Dead-Letter Handling
+  lockedByWorkerId String?
+  lockedAt         DateTime?
+  leaseExpiresAt   DateTime?
+  attempts         Int       @default(0)
+  maxAttempts      Int       @default(3)
+  nextRunAt        DateTime  @default(now())
+  lastError        String?
+  deadLetteredAt   DateTime?
+  deadLetterReason String?
+  completedAt      DateTime?
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([status, nextRunAt, leaseExpiresAt])
+  @@map("notification_jobs")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  actorId     String?
+  actorRole   String   // "student", "mentor", "admin", "system", "webhook"
+  action      String   // "BOOKING_CONFIRMED", "PAYMENT_VERIFIED", "REFUND_ISSUED", "DPDP_ERASURE"
+  entityType  String
+  entityId    String?
+  beforeState Json?
+  afterState  Json?
+  ipHash      String?
+  userAgent   String?
+  metadata    Json?
+
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}
+
+model MediaAsset {
+  id             String          @id @default(uuid())
+  uploadedById   String?
+  uploadedBy     User?           @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  bucket         String          @default("unfoldinn-assets")
+  objectKey      String          @unique
+  visibility     AssetVisibility @default(PRIVATE)
+  mimeType       String
+  sizeBytes      Int
+  checksumSha256 String?
+  purpose        String          @default("resource") // "avatar", "resource", "session_attachment"
+
+  createdAt      DateTime        @default(now())
+
+  @@index([uploadedById, purpose])
+  @@map("media_assets")
+}
+
+model BackupRun {
+  id                String       @id @default(uuid())
+  backupKey         String       @unique
+  storageProvider   String       @default("cloudflare_r2")
+  format            String       @default("pg_dump_custom_aes256")
+  keyVersion        String       @default("v1")
+  sizeBytes         Int          @default(0)
+  sha256Checksum    String?
+  manifestHmac      String?
+  status            BackupStatus @default(STARTED)
+  restoreTested     Boolean      @default(false)
+  restoreTestedAt   DateTime?
+  mongoMirrorSynced Boolean      @default(false)
+  tableCounts       Json         @default("{}")
+  durationMs        Int          @default(0)
+  errorMessage      String?
+  completedAt       DateTime?
+
+  createdAt         DateTime     @default(now())
+
+  @@index([status, createdAt])
+  @@map("backup_runs")
+}
+
+// ============================================================================
+// 6. CMS CONTENT, ENQUIRIES, SETTINGS, EMAIL LOGS & GOOGLE INTEGRATIONS
+// ============================================================================
+
+model Resource {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  category    String
+  excerpt     String   @db.VarChar(300)
+  content     String   @db.Text
+  readingTime Int?
+  readTime    Int?
+  author      String   @default("Deepak Sogani")
+  isPublished Boolean  @default(false)
+  tags        String[] @default([])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, category])
+  @@map("resources")
+}
+
+model Opportunity {
+  id                String    @id @default(uuid())
+  name              String
+  category          String
+  bestFor           String?
+  eligibility       String?   @db.Text
+  whatItOffers      String    @db.Text
+  locationMode      String?
+  location          String?
+  deadline          DateTime?
+  costFunding       String?
+  costOrFunding     String?
+  funding           String?
+  officialSource    String?
+  whyUseful         String?   @db.Text
+  suggestedNextStep String?   @db.Text
+  lastVerified      DateTime  @default(now())
+  isActive          Boolean   @default(true)
+  isFeatured        Boolean   @default(false)
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([isActive, category])
+  @@map("opportunities")
+}
+
+model Testimonial {
+  id         String   @id @default(uuid())
+  name       String
+  role       String?
+  quote      String   @db.VarChar(1000)
+  isApproved Boolean  @default(false)
+  isFeatured Boolean  @default(false)
+  order      Int      @default(0)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isApproved, order])
+  @@map("testimonials")
+}
+
+model Newsletter {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("newsletters")
+}
+
+model Contact {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String   @db.VarChar(2000)
+  type      String   @default("general")
+  status    String   @default("new")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@map("contacts")
+}
+
+model InstitutionalEnquiry {
+  id               String   @id @default(uuid())
+  institutionName  String
+  institutionType  String?
+  contactPerson    String
+  designation      String?
+  email            String
+  phone            String
+  city             String?
+  state            String?
+  studentStrength  String?
+  enquiryNature    String   @db.VarChar(2000)
+  interestedIn     String[] @default([])
+  preferredContact String   @default("email")
+  status           String   @default("new")
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@map("institutional_enquiries")
+}
+
+model SupportTicket {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  phone       String?
+  category    String   @default("bug_report")
+  pageUrl     String?
+  subject     String
+  description String   @db.VarChar(3000)
+  deviceInfo  String?
+  priority    String   @default("medium")
+  status      String   @default("open")
+  adminNotes  String?  @db.Text
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, priority])
+  @@map("support_tickets")
+}
+
+model Setting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json
+  description String?
+  updatedBy   String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("settings")
+}
+
+model GoogleIntegration {
+  id                         String    @id @default(uuid())
+  key                        String    @unique @default("primary_mentor_calendar")
+  status                     String    @default("disconnected")
+  connectedEmail             String    @default("")
+  connectedName              String    @default("")
+  calendarId                 String    @default("primary")
+  scopes                     String[]  @default([])
+  keyVersion                 String    @default("v1")
+  refreshTokenEncrypted      String?   @db.Text
+  accessTokenEncrypted       String?   @db.Text
+  tokenExpiryDate            DateTime?
+  pendingOAuthStateHash      String?
+  pendingOAuthStateExpiresAt DateTime?
+  pendingOAuthRedirectUri    String?
+  connectedByAdminId         String?
+  connectedByAdmin           Admin?    @relation(fields: [connectedByAdminId], references: [id], onDelete: SetNull)
+  connectedAt                DateTime?
+  lastUsedAt                 DateTime?
+  lastError                  String?
+
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+
+  @@map("google_integrations")
+}
+
+model EmailLog {
+  id                 String   @id @default(uuid())
+  idempotencyKey     String   @unique
+  workflow           String
+  recipient          String
+  from               String?
+  replyTo            String?
+  subject            String
+  provider           String   @default("resend")
+  providerMessageId  String?
+  status             String
+  fallbackSenderUsed Boolean  @default(false)
+  attempts           Int      @default(1)
+  errorMessage       String?
+  metadata           Json     @default("{}")
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([workflow])
+  @@index([recipient])
+  @@index([status])
+  @@map("email_logs")
+}

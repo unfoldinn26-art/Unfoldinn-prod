@@ -46,7 +46,7 @@ const technicalSections = [
     items: [
       'Frontend Hosting on Vercel Global Edge Network',
       'Dedicated Cloud Backend API Server',
-      'Managed Cloud NoSQL Database Cluster',
+      'Neon Serverless PostgreSQL 18 (ACID Primary Ledger) & Redis Cloud In-Memory Store',
       'GitHub Automated CI/CD Production & Preview Pipelines',
       'Isolated Production & Preview Environments',
       'Zero-Downtime Automated SSL/TLS Certificates',
@@ -94,17 +94,17 @@ const technicalSections = [
   },
   {
     number: '06',
-    title: 'Database & High-Concurrency Engineering (CAP: CP + AP)',
+    title: 'Elephant & Goldfish Database & High-Concurrency Engineering',
     tag: 'Distributed Consistency',
     items: [
-      'MongoDB Cloud Cluster with Primary Reads & Majority-Journaled Writes',
-      'Atomic Time-Slot Reservation Engine (Zero Double-Bookings Under Parallel Load)',
-      'Auto-Expiring Pending Checkout Slot Holds & Inter-Session Buffer Enforcement',
+      'Neon PostgreSQL 18 + Prisma ORM (The Elephant: ACID Relational Ledger & Decimal(12,2) Financial Precision)',
+      'Redis Cloud In-Memory Layer (The Goldfish: Sub-ms Tokenized Slot Holds, Hashed OTPs & Hot Cache)',
+      'Native PostgreSQL btree_gist Exclusion Constraints Preventing Overlapping Session Windows',
+      'Lua Compare-and-Delete (CAD) Lock Release & 5-Attempt Atomic OTP Self-Destruct Scripts',
       'Cryptographic Idempotency Keys & Request Fingerprint Deduplication',
       'Atomic Multi-Tab Complimentary Session Claim Protection',
-      'Atomic Subscription Credit & Coupon Redemption State Machines',
-      'Compound Unique, Sparse Partial & Hardware TTL Auto-Expiry Indexes',
-      'Parallel Bulk Query Optimization & Stale-While-Revalidate Edge Caching',
+      'Append-Only Subscription Credit & Coupon Redemption Ledgers with Database CHECK Constraints',
+      'Standalone AES-256-GCM Encrypted pg_dump Disaster-Recovery Vault with Automated Restore Verification',
     ],
   },
   {
@@ -219,10 +219,10 @@ const technicalSections = [
     title: 'Observability, Monitoring & Technology Ecosystem',
     tag: 'Operations',
     items: [
-      'Live API & Database Readiness Health Endpoints',
-      'Cloudflare, Vercel, Render & MongoDB Atlas Telemetry',
+      'Live API, Neon PostgreSQL & Redis Cloud Readiness Health Endpoints',
+      'Cloudflare, Vercel, Render, Neon PostgreSQL & Redis Cloud Telemetry',
       'Cashfree Payments, Resend & Google Cloud Platform Integrations',
-      'Automated TTL Expired-Record Cleanup & Backup Management',
+      'Automated Nightly AES-256-GCM Encrypted Disaster-Recovery Backups & 30-Day Retention',
     ],
   },
 ];

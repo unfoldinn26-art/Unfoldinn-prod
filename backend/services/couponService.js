@@ -2,36 +2,54 @@ const Setting = require('../models/Setting');
 const Coupon = require('../models/Coupon');
 const Booking = require('../models/Booking');
 const SubscriptionPlan = require('../models/SubscriptionPlan');
+const { prisma } = require('../config/prisma');
+const { RedisKeys, getCache, setCache } = require('../config/redis');
 
 /**
- * Read payment, introductory complimentary session, and fee settings from MongoDB
+ * Read payment, introductory complimentary session, and fee settings from Redis Cache -> Neon PostgreSQL -> MongoDB
  */
-async function getPaymentSettings() {
-  const docs = await Setting.find({
-    key: {
-      $in: [
-        'paymentsEnabled',
-        'sessionFee',
-        'firstSessionFreeEnabled',
-        'limitOneFreeSessionPerUser',
-        'feeNotice'
-      ]
+async function getPaymentSettings({ bypassCache = false } = {}) {
+  if (!bypassCache) {
+    const cached = await getCache(RedisKeys.settingsCache()).catch(() => null);
+    if (cached && typeof cached === 'object') {
+      return cached;
     }
-  }).lean();
+  }
+
+  const keys = [
+    'paymentsEnabled',
+    'sessionFee',
+    'firstSessionFreeEnabled',
+    'limitOneFreeSessionPerUser',
+    'feeNotice'
+  ];
 
   const map = {};
-  for (const doc of docs) {
+
+  // Read from Neon PostgreSQL first, then merge any updates from MongoDB runtime store
+  const [pgDocs, mongoDocs] = await Promise.all([
+    prisma.setting.findMany({ where: { key: { in: keys } } }).catch(() => []),
+    Setting.find({ key: { $in: keys } }).lean().catch(() => [])
+  ]);
+
+  for (const doc of pgDocs) {
+    map[doc.key] = doc.value;
+  }
+  for (const doc of mongoDocs) {
     map[doc.key] = doc.value;
   }
 
   const rawFee = map.sessionFee !== undefined && Number(map.sessionFee) >= 0 ? Number(map.sessionFee) : 500;
-  return {
+  const result = {
     paymentsEnabled: map.paymentsEnabled !== undefined ? Boolean(map.paymentsEnabled) : false,
     sessionFee: rawFee > 0 ? rawFee : 500,
     firstSessionFreeEnabled: map.firstSessionFreeEnabled !== undefined ? Boolean(map.firstSessionFreeEnabled) : true,
     limitOneFreeSessionPerUser: map.limitOneFreeSessionPerUser !== undefined ? Boolean(map.limitOneFreeSessionPerUser) : true,
     feeNotice: typeof map.feeNotice === 'string' ? map.feeNotice : ''
   };
+
+  await setCache(RedisKeys.settingsCache(), result, 600).catch(() => null);
+  return result;
 }
 
 /**
@@ -212,7 +230,16 @@ async function recordCouponRedemption({ couponCode, user, orderId = null, bookin
     { new: true }
   );
 
-  if (updated) return updated;
+  if (updated) {
+    // Also increment usedCount in Neon PostgreSQL if coupon exists there
+    await prisma.coupon
+      .updateMany({
+        where: { code: normalizedCode },
+        data: { usedCount: { increment: 1 } }
+      })
+      .catch(() => null);
+    return updated;
+  }
   return Coupon.findOne({ code: normalizedCode });
 }
 

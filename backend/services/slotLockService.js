@@ -1,5 +1,13 @@
 const Booking = require('../models/Booking');
 const SlotLock = require('../models/SlotLock');
+const { prisma } = require('../config/prisma');
+const {
+  RedisKeys,
+  acquireRedisSlotHold,
+  releaseRedisSlotHold,
+  delCache
+} = require('../config/redis');
+const { getDefaultMentorProfile } = require('./mentorService');
 
 const PENDING_HOLD_MINUTES = 15;
 
@@ -216,13 +224,15 @@ async function findConflictingBooking({ startDate, endDate, datePart, slotKey, e
 }
 
 /**
- * Atomically validate and reserve a mentoring time slot.
- * Prevents both overlapping windows AND millisecond-level race conditions between 2 concurrent users.
+ * Atomically validate and reserve a mentoring time slot using the Goldfish + Elephant 2-layer architecture:
+ * Layer 1 (Goldfish - Redis Cloud): Fast SET NX EX 900 tokenized hold with Lua Compare-and-Delete (CAD).
+ * Layer 2 (Elephant - Neon PostgreSQL + MongoDB): Authoritative @@unique([mentorProfileId, slotKey]) + btree_gist overlap exclusion.
  */
 async function acquireAtomicSlotLock({
   preferredDate,
   preferredTime,
   duration = 45,
+  mentorProfileId = null,
   userId = null,
   bookingId = null,
   userSubscriptionId = null,
@@ -246,6 +256,12 @@ async function acquireAtomicSlotLock({
     err.statusCode = 400;
     throw err;
   }
+
+  // Resolve authoritative MentorProfile from Neon PostgreSQL
+  const mentorProfile = mentorProfileId
+    ? { id: mentorProfileId }
+    : await getDefaultMentorProfile().catch(() => null);
+  const resolvedMentorId = mentorProfile?.id || 'default-mentor';
 
   // 1. Check for any overlapping booking or active lock
   const conflictResult = await findConflictingBooking({
@@ -272,20 +288,70 @@ async function acquireAtomicSlotLock({
     expiresAt: { $lte: now }
   });
 
+  if (mentorProfile?.id) {
+    await prisma.slotLock
+      .deleteMany({
+        where: {
+          mentorProfileId: mentorProfile.id,
+          slotKey: slotWindow.slotKey,
+          status: 'pending_payment',
+          expiresAt: { lte: now }
+        }
+      })
+      .catch(() => null);
+  }
+
   // If rescheduling an existing booking, remove its previous lock first
   if (excludeBookingId || bookingId) {
     const targetId = excludeBookingId || bookingId;
     await SlotLock.deleteMany({ bookingId: targetId });
   }
 
+  // 3. Layer 1 (Goldfish): Acquire fast tokenized Redis slot hold (15-min TTL)
+  const redisHold = await acquireRedisSlotHold(
+    resolvedMentorId,
+    slotWindow.slotKey,
+    PENDING_HOLD_MINUTES * 60
+  );
+
   const expiresAt =
     status === 'pending_payment'
       ? new Date(now.getTime() + PENDING_HOLD_MINUTES * 60 * 1000)
       : null;
 
-  // 3. Atomic MongoDB Unique Index Insert on `slotKey`
-  // If 2 users click "Book" at the exact same millisecond, MongoDB's unique index on `slotKey`
-  // guarantees ONLY ONE succeeds and the second throws E11000!
+  // 4. Layer 2 (Elephant + Mirror): Atomic insert into Neon PostgreSQL (with btree_gist overlap exclusion) & MongoDB
+  let pgLock = null;
+  if (mentorProfile?.id) {
+    try {
+      pgLock = await prisma.slotLock.create({
+        data: {
+          mentorProfileId: mentorProfile.id,
+          slotKey: slotWindow.slotKey,
+          datePart: slotWindow.datePart,
+          startAt: slotWindow.startDate,
+          endAt: slotWindow.endDate,
+          status,
+          expiresAt
+        }
+      });
+    } catch (pgErr) {
+      // Release Redis hold via CAD if PostgreSQL unique/exclusion constraint rejected the slot
+      await releaseRedisSlotHold(resolvedMentorId, slotWindow.slotKey, redisHold.lockToken).catch(() => null);
+      if (
+        pgErr.code === 'P2002' ||
+        String(pgErr.message || '').includes('slot_locks_no_mentor_time_overlap') ||
+        String(pgErr.message || '').includes('exclusion constraint')
+      ) {
+        const err = new Error(
+          `This time slot (${preferredTime} on ${slotWindow.datePart}) was just booked by another student a moment ago. Please choose another available time slot.`
+        );
+        err.statusCode = 409;
+        err.code = 'SLOT_RACE_CONFLICT';
+        throw err;
+      }
+    }
+  }
+
   try {
     const lockDoc = await SlotLock.create({
       slotKey: slotWindow.slotKey,
@@ -299,11 +365,26 @@ async function acquireAtomicSlotLock({
       expiresAt
     });
 
+    lockDoc.lockToken = redisHold.lockToken;
+    lockDoc.pgLockId = pgLock?.id || null;
+    lockDoc.mentorProfileId = resolvedMentorId;
+
+    await delCache(RedisKeys.slotsCache(resolvedMentorId, slotWindow.datePart)).catch(() => null);
+
     return {
       lock: lockDoc,
-      slotWindow
+      slotWindow,
+      lockToken: redisHold.lockToken,
+      pgLockId: pgLock?.id || null,
+      mentorProfileId: resolvedMentorId
     };
   } catch (dbErr) {
+    // Roll back Neon PostgreSQL & Redis hold if secondary lock failed on race condition
+    if (pgLock?.id) {
+      await prisma.slotLock.delete({ where: { id: pgLock.id } }).catch(() => null);
+    }
+    await releaseRedisSlotHold(resolvedMentorId, slotWindow.slotKey, redisHold.lockToken).catch(() => null);
+
     if (dbErr && dbErr.code === 11000) {
       const err = new Error(
         `This time slot (${preferredTime} on ${slotWindow.datePart}) was just booked by another student a moment ago. Please choose another available time slot.`
@@ -355,15 +436,57 @@ async function bindAndConfirmSlotLock({ lockId, bookingId, userSubscriptionId = 
 
 /**
  * Release a slot lock when a booking is cancelled or payment fails
+ * Uses Lua Compare-and-Delete (CAD) on Redis Cloud so an expired holder never deletes a newer holder's lock.
  */
-async function releaseSlotLock({ lockId = null, bookingId = null, userSubscriptionId = null }) {
+async function releaseSlotLock({
+  lockId = null,
+  bookingId = null,
+  userSubscriptionId = null,
+  mentorProfileId = null,
+  slotKey = null,
+  lockToken = null
+}) {
   const orConditions = [];
   if (lockId) orConditions.push({ _id: lockId });
   if (bookingId) orConditions.push({ bookingId });
   if (userSubscriptionId) orConditions.push({ userSubscriptionId });
-  if (orConditions.length === 0) return;
 
-  await SlotLock.deleteMany({ $or: orConditions }).catch(() => null);
+  let existingLocks = [];
+  if (orConditions.length > 0) {
+    existingLocks = await SlotLock.find({ $or: orConditions }).lean().catch(() => []);
+    await SlotLock.deleteMany({ $or: orConditions }).catch(() => null);
+  }
+
+  const mentorProfile = mentorProfileId
+    ? { id: mentorProfileId }
+    : await getDefaultMentorProfile().catch(() => null);
+  const resolvedMentorId = mentorProfile?.id || 'default-mentor';
+
+  const targetSlotKeys = new Set();
+  if (slotKey) targetSlotKeys.add(slotKey);
+  for (const l of existingLocks) {
+    if (l.slotKey) targetSlotKeys.add(l.slotKey);
+  }
+
+  for (const sk of targetSlotKeys) {
+    if (mentorProfile?.id) {
+      const pgLocks = await prisma.slotLock
+        .findMany({
+          where: { mentorProfileId: mentorProfile.id, slotKey: sk }
+        })
+        .catch(() => []);
+      for (const pl of pgLocks) {
+        const tokenToRelease = lockToken || pl.lockToken;
+        if (tokenToRelease) {
+          await releaseRedisSlotHold(resolvedMentorId, sk, tokenToRelease).catch(() => null);
+        }
+        await prisma.slotLock.delete({ where: { id: pl.id } }).catch(() => null);
+        await delCache(RedisKeys.slotsCache(resolvedMentorId, pl.datePart)).catch(() => null);
+      }
+    } else if (lockToken) {
+      await releaseRedisSlotHold(resolvedMentorId, sk, lockToken).catch(() => null);
+    }
+  }
 }
 
 /**

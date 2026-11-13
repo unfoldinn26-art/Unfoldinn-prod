@@ -78,3 +78,6 @@ ui_backup_*/
 # MongoDB Backend Backups
 mongodb_backup/
 mongodb_backup_*/
+
+# Local Encrypted PG Dump Vault
+backups_encrypted/
