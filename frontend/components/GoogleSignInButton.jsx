@@ -15,6 +15,18 @@ export default function GoogleSignInButton({
   const [gsiReady, setGsiReady] = useState(false);
   const { isDark } = useTheme();
 
+  // Keep latest callbacks in refs so parent keystroke re-renders never destroy & re-mount the Google iframe
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+  }, [onSuccess]);
+
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
+
   useEffect(() => {
     if (!GOOGLE_CLIENT_ID || typeof window === 'undefined') return;
 
@@ -26,9 +38,9 @@ export default function GoogleSignInButton({
           callback: async (response) => {
             if (response?.credential) {
               try {
-                await onSuccess({ credential: response.credential });
+                await onSuccessRef.current?.({ credential: response.credential });
               } catch (err) {
-                onError?.(err.message || 'Google login failed');
+                onErrorRef.current?.(err.message || 'Google login failed');
               }
             }
           }
@@ -67,7 +79,7 @@ export default function GoogleSignInButton({
     script.defer = true;
     script.onload = initGsi;
     document.head.appendChild(script);
-  }, [onSuccess, onError, isDark]);
+  }, [isDark]);
 
   if (GOOGLE_CLIENT_ID) {
     return (
