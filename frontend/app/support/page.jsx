@@ -105,16 +105,16 @@ export default function SupportPage() {
 
       {/* Disambiguation Banner */}
       <section className="page-x pt-6 sm:pt-8">
-        <div className="rounded-2xl border border-line bg-paper-2 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="rounded-[20px] border border-[#e5dfef] bg-[#f5f0ff] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-sun animate-pulse shrink-0" />
-            <p className="text-xs sm:text-sm text-ink-2">
-              <strong className="text-ink">Looking for mentoring or institutional consulting?</strong> This form is specifically for website bugs and technical issues.
+            <span className="w-2.5 h-2.5 rounded-full bg-[#e39a5d] animate-pulse shrink-0" />
+            <p className="text-xs sm:text-sm text-[#4c465d]">
+              <strong className="text-[#29253a]">Looking for mentoring or institutional consulting?</strong> This form is specifically for website bugs and technical issues.
             </p>
           </div>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-coral hover:underline shrink-0 py-1"
+            className="inline-flex items-center gap-1.5 text-xs font-wix-text font-semibold text-[#b56727] hover:underline shrink-0 py-1"
           >
             Go to Mentoring &amp; Consulting Contact →
           </Link>
@@ -126,11 +126,11 @@ export default function SupportPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16">
           {/* Left Column: Form */}
           <div className="lg:col-span-8">
-            <div className="rounded-[1.5rem] sm:rounded-[1.75rem] border border-line bg-paper p-5 sm:p-8 md:p-12 shadow-sm">
-              <h2 className="font-serif text-[1.5rem] sm:text-[1.875rem] text-ink font-normal mb-2">
+            <div className="rounded-[28px] border border-[#e5dfef] bg-white p-6 sm:p-8 md:p-12 shadow-[0_14px_40px_rgba(41,37,58,0.05)]">
+              <h2 className="font-wix-display text-[1.5rem] sm:text-[1.875rem] text-[#29253a] font-semibold tracking-[-0.02em] mb-2">
                 Submit an Issue Ticket
               </h2>
-              <p className="text-muted text-xs sm:text-[0.9375rem] mb-6 sm:mb-8">
+              <p className="text-[#686579] text-xs sm:text-[0.9375rem] mb-6 sm:mb-8">
                 Please provide specific details so we can reproduce and resolve the problem rapidly.
               </p>
 

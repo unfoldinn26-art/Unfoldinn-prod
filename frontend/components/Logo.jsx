@@ -1,101 +1,102 @@
 'use client';
 
 /**
- * Hand-crafted Artisanal Logo for Unfoldinn — Draft 4: The Zen Ensō & Morning Sun.
- * Features an organic, hand-drawn calligraphic Ensō brush circle embracing a warm watercolor
- * saffron sunrise in the center, with a discreet terracotta seal stamp.
- * Symbolizes clarity, deep listening, wisdom, and life-giving new beginnings.
+ * Unfoldinn Brand Logo supporting all 3 official Figma lockups:
+ * 1. layout="mark"       -> Icon mark + peach dot (emails, avatars, badges)
+ * 2. layout="horizontal" -> Icon mark + dot + Unfoldinn wordmark (Navbar, Footer)
+ * 3. layout="stacked"    -> Large icon mark above, dot + Unfoldinn at bottom-left
  */
 export default function Logo({
   size = 'md',
+  layout = 'horizontal',
   showText = true,
   showTagline = false,
+  variant = 'light',
   className = '',
 }) {
+  const effectiveLayout = showText === false ? 'mark' : layout;
+
   const iconSizes = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10',
-    lg: 'w-14 h-14',
-    xl: 'w-20 h-20',
+    sm: 'w-11 h-9',
+    md: 'w-14 h-11',
+    lg: 'w-20 h-16',
+    xl: 'w-28 h-22',
   };
 
   const textSizes = {
-    sm: 'text-[1.125rem]',
-    md: 'text-[1.3125rem]',
-    lg: 'text-[1.75rem]',
-    xl: 'text-[2.25rem]',
+    sm: 'text-[1.45rem] leading-none',
+    md: 'text-[1.875rem] leading-none',
+    lg: 'text-[2.25rem] leading-none',
+    xl: 'text-[2.75rem] leading-none',
   };
 
+  const markSrc =
+    variant === 'dark'
+      ? '/logo/unfoldinn-mark-dark.svg'
+      : '/logo/unfoldinn-mark-light.svg';
+
+  const foldinnColor =
+    variant === 'dark' ? 'text-[#e5dfef]' : 'text-[#29253a] dark:text-[#e5dfef]';
+
+  if (effectiveLayout === 'stacked') {
+    return (
+      <div className={`inline-flex flex-col items-start select-none ${className}`}>
+        <div className="relative ml-2 w-28 h-22 sm:w-36 sm:h-28">
+          <img
+            src={markSrc}
+            alt="Unfoldinn"
+            width={144}
+            height={112}
+            className="h-full w-full object-contain"
+          />
+        </div>
+        <div className="mt-1 flex items-center gap-2">
+          <span
+            aria-hidden="true"
+            className="h-3 w-3 shrink-0 rounded-full bg-[#f6b47d]"
+          />
+          <span className="font-shantell text-[1.625rem] font-medium leading-none tracking-[-0.02em]">
+            <span className="text-[#e39a5d]">Un</span>
+            <span className={foldinnColor}>foldinn</span>
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`inline-flex items-center gap-3 select-none ${className}`}>
-      {/* Hand-crafted calligraphic Ensō & Saffron Dawn Mark */}
-      <div className={`relative shrink-0 ${iconSizes[size] || iconSizes.md} flex items-center justify-center`}>
-        <svg
-          viewBox="0 0 54 54"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full overflow-visible"
+    <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
+      <div className={`relative shrink-0 ${iconSizes[size] || iconSizes.md}`}>
+        <img
+          src={markSrc}
+          alt={effectiveLayout === 'mark' ? 'Unfoldinn' : ''}
+          width={58}
+          height={45}
+          aria-hidden={effectiveLayout !== 'mark'}
+          className="h-full w-full object-contain"
+        />
+        <span
           aria-hidden="true"
-        >
-          <defs>
-            {/* Soft watercolor sunrise radial gradient */}
-            <radialGradient id="ensoSunGlow" cx="50%" cy="58%" r="48%" fx="50%" fy="55%">
-              <stop offset="0%" stopColor="#F4D9A0" stopOpacity="0.9" />
-              <stop offset="45%" stopColor="#E69F55" stopOpacity="0.75" />
-              <stop offset="75%" stopColor="#C8792C" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#C8792C" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-
-          {/* Glowing Saffron Watercolor Sun in Center */}
-          <circle cx="27" cy="29" r="14" fill="url(#ensoSunGlow)" />
-
-          {/* Hand-drawn organic watercolor sunrise texture splashes */}
-          <path
-            d="M20 28C22 25 32 24 35 28C33 32 23 33 20 28Z"
-            fill="#C8792C"
-            fillOpacity="0.3"
-          />
-
-          {/* The Calligraphic Sumi-e Ensō Brush Circle (Natural Open Stroke) */}
-          {/* Main brush body: Thick bottom-left foundation tapering gracefully to top-right */}
-          <path
-            d="M17.5 40.5C12 36.5 8.5 31.5 8.5 25.5C8.5 15.5 16.5 7.5 26.5 7.5C36 7.5 43.5 14.5 44.5 23.5C45.2 29.5 42 35.5 37 39.5"
-            className="stroke-[#5B4632] dark:stroke-[#F3EBDD]"
-            strokeWidth="3.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Secondary organic bristle stroke reinforcing hand-crafted ink texture */}
-          <path
-            d="M15 39C10.5 35 7.5 30 7.8 24.5C8.2 16 15.5 8.5 25.5 8.2C34.5 8 42 14.5 43.2 23"
-            className="stroke-[#5B4632] dark:stroke-[#F3EBDD]"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            strokeOpacity="0.7"
-          />
-          {/* Ink press foundation at bottom-left */}
-          <path
-            d="M13 37.5C14.5 40 18 42.5 22 43.5C26 44.5 29 44 31 43.5"
-            className="stroke-[#5B4632] dark:stroke-[#F3EBDD]"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-          />
-
-          {/* Artisanal Terracotta Seal / Stamp (Hanko seal mark) */}
-          <rect x="37" y="36" width="7.5" height="7.5" rx="1.5" fill="#C8792C" />
-          <path d="M39.5 38.5H42M40.75 38.5V41.5M39.5 41.5H42" stroke="#FAF6EE" strokeWidth="0.8" strokeLinecap="round" />
-        </svg>
+          className="absolute -bottom-0.5 -left-0.5 h-1.5 w-1.5 rounded-full bg-[#f6b47d]"
+        />
       </div>
 
-      {/* Brand Typography */}
-      {showText && (
+      {effectiveLayout !== 'mark' && (
         <div className="flex flex-col">
-          <span className={`font-serif tracking-[-0.015em] text-ink dark:text-white leading-none ${textSizes[size] || textSizes.md}`}>
-            Unfoldinn
+          <span
+            className={`font-shantell font-medium tracking-[-0.02em] ${
+              textSizes[size] || textSizes.md
+            }`}
+          >
+            <span className="text-[#e39a5d]">Un</span>
+            <span className={foldinnColor}>foldinn</span>
           </span>
           {showTagline && (
-            <span className="font-mono text-[0.625rem] tracking-[0.12em] uppercase text-muted dark:text-[#9E9080] mt-1">
+            <span
+              className={`mt-1.5 font-wix-text text-[0.75rem] leading-[1.4] ${
+                variant === 'dark' ? 'text-[#9b95ad]' : 'text-[#686579] dark:text-[#b4aec4]'
+              }`}
+            >
               Young Minds. New Perspectives. Wider Possibilities.
             </span>
           )}

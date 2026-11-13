@@ -2,20 +2,20 @@
 
 // Unfoldinn Brand Identity Palette: Mocha Brown, Champagne Gold, Burnt Amber
 // Derived and calibrated using UI Skills standards (better-colors, colorize, create-design-md).
-const mocha = '#5B4632';         // Official Swatch: MOCHA BROWN
-const champagne = '#F4D9A0';     // Official Swatch: CHAMPAGNE GOLD
-const burntAmber = '#C8792C';    // Official Swatch: BURNT AMBER
+const mocha = '#29253A';         // Official Swatch: MOCHA BROWN
+const champagne = '#FFE79A';     // Official Swatch: CHAMPAGNE GOLD
+const burntAmber = '#E39A5D';    // Official Swatch: BURNT AMBER
 
 // Semantic tokens calibrated for WCAG AAA/AA readability
-const paper = '#FAF6EE';         // Luminous champagne paper canvas
-const paper2 = '#F3EBDD';        // Warm champagne secondary surface / bands
-const paper3 = '#E8DEC9';        // Pressed fills / subtle accents
-const ink = '#23180F';           // Deep espresso mocha ink (15:1 contrast against paper)
-const ink2 = '#443324';          // Rich mocha secondary heading & body text
-const muted = '#786653';         // Mocha-toned metadata text
+const paper = '#FAF8FF';         // Luminous champagne paper canvas
+const paper2 = '#F5F0FF';        // Warm champagne secondary surface / bands
+const paper3 = '#EEE6FF';        // Pressed fills / subtle accents
+const ink = '#29253A';           // Deep espresso mocha ink (15:1 contrast against paper)
+const ink2 = '#4C465D';          // Rich mocha secondary heading & body text
+const muted = '#686579';         // Mocha-toned metadata text
 const signal = burntAmber;       // Burnt Amber primary accent
-const signalSoft = '#FAF0E1';    // Soft amber tint for badge washes
-const signalDeep = '#9B5113';    // Deep burnt amber (AAA contrast for links and badges)
+const signalSoft = '#FCEFEE';    // Soft amber tint for badge washes
+const signalDeep = '#B56727';    // Deep burnt amber (AAA contrast for links and badges)
 
 module.exports = {
   darkMode: 'class',
@@ -31,7 +31,7 @@ module.exports = {
         paper: { DEFAULT: paper, 2: paper2, 3: paper3 },
         ink: { DEFAULT: ink, 2: ink2 },
         muted,
-        line: 'rgba(91, 70, 50, 0.13)',
+        line: 'rgba(41, 37, 58, 0.12)',
         signal: { DEFAULT: signal, soft: signalSoft, deep: signalDeep },
 
         // Exact brand tri-color primitives
@@ -97,6 +97,9 @@ module.exports = {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         serif: ['var(--font-serif)', 'ui-serif', 'Georgia', 'serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        'wix-display': ['var(--font-wix-display)', 'var(--font-sans)', 'sans-serif'],
+        'wix-text': ['var(--font-wix-text)', 'var(--font-sans)', 'sans-serif'],
+        shantell: ['var(--font-shantell)', 'cursive', 'sans-serif'],
       },
       transitionTimingFunction: {
         editorial: 'cubic-bezier(0.32, 0.72, 0, 1)',

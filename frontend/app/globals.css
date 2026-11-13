@@ -18,14 +18,14 @@
   }
 
   body {
-    @apply bg-paper text-ink font-sans antialiased;
+    @apply bg-paper text-ink font-wix-text antialiased;
     font-feature-settings: 'ss01', 'cv11';
     overflow-x: clip;
     width: 100%;
   }
 
   h1, h2, h3, h4 {
-    @apply font-serif text-ink font-normal;
+    @apply font-wix-display text-ink font-medium;
     text-wrap: balance;
     letter-spacing: -0.02em;
   }
@@ -172,7 +172,7 @@
 }
 
 /* ========================================================================= */
-/* UNSLOP DARK MODE — EXECUTIVE MIDNIGHT & WARM AMBER EDITORIAL PALETTE     */
+/* UNSLOP DARK MODE â€” EXECUTIVE MIDNIGHT & WARM AMBER EDITORIAL PALETTE     */
 /* ========================================================================= */
 
 html.dark {

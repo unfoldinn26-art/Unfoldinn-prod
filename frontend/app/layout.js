@@ -1,4 +1,4 @@
-import { Instrument_Serif, Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
+import { Instrument_Serif, Hanken_Grotesk, JetBrains_Mono, Wix_Madefor_Display, Wix_Madefor_Text, Shantell_Sans } from 'next/font/google';
 import './globals.css';
 import LayoutShell from '../components/LayoutShell';
 
@@ -19,6 +19,27 @@ const sans = Hanken_Grotesk({
 const mono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
+  display: 'swap',
+});
+
+const wixDisplay = Wix_Madefor_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-wix-display',
+  display: 'swap',
+});
+
+const wixText = Wix_Madefor_Text({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-wix-text',
+  display: 'swap',
+});
+
+const shantell = Shantell_Sans({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-shantell',
   display: 'swap',
 });
 
@@ -239,11 +260,11 @@ const jsonLd = {
       name: 'Unfoldinn',
       alternateName: ['Unfoldinn Mentoring', 'Unfoldinn Youth Platform'],
       url: 'https://www.unfoldinn.com',
-      logo: 'https://www.unfoldinn.com/logo.jpg',
+      logo: 'https://www.unfoldinn.com/logo/unfoldinn-mark-light.svg',
       image: [
         'https://www.unfoldinn.com/assets/hero-composition.png',
         'https://www.unfoldinn.com/deepaksogani.jpeg',
-        'https://www.unfoldinn.com/logo.jpg',
+        'https://www.unfoldinn.com/logo/unfoldinn-mark-light.svg',
       ],
       slogan: 'Young Minds. New Perspectives. Wider Possibilities.',
       description:
@@ -341,7 +362,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${serif.variable} ${sans.variable} ${mono.variable} ${wixDisplay.variable} ${wixText.variable} ${shantell.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{

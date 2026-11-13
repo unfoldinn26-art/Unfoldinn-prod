@@ -1,10 +1,6 @@
-import React from 'react';
 import Link from 'next/link';
-import Button from '../../components/ui/Button';
-import Arrow from '../../components/ui/Arrow';
 import PageHero from '../../components/ui/PageHero';
 import SectionHead from '../../components/ui/SectionHead';
-import { Reveal, RevealGroup, RevealItem } from '../../components/ui/Reveal';
 
 export const metadata = {
   title: 'For Institutions | Schools, Colleges & Universities — Unfoldinn',
@@ -30,18 +26,22 @@ export const metadata = {
 
 const FORMATS = [
   {
+    num: '01',
     title: 'Individual Conversations',
     text: 'One-to-one conversations on choices, transitions, self-understanding, and finding direction beyond the classroom.',
   },
   {
+    num: '02',
     title: 'Small-Group Conversations',
     text: 'Interactive cohort sessions addressing shared questions around future paths, peer comparisons, and building confidence.',
   },
   {
+    num: '03',
     title: 'Parent Conversations',
     text: 'Constructive dialogues helping parents understand modern career landscapes and communicate supportively with their children.',
   },
   {
+    num: '04',
     title: 'Transition & Exposure Programmes',
     text: 'Focused sessions preparing students for upcoming transitions—school to university, campus to workplace, or stepping into adulthood.',
   },
@@ -49,94 +49,104 @@ const FORMATS = [
 
 export default function ForInstitutionsPage() {
   return (
-    <div className="w-full">
+    <div className="w-full bg-white text-[#29253a]">
       <PageHero
         breadcrumbs={[{ name: 'For Institutions', href: '/for-institutions' }]}
         meta={['For Schools, Colleges & Universities', 'Campus Collaboration', 'Student Support']}
-        title="An additional space for perspective alongside existing academic systems."
-        lede="Unfoldinn can work alongside existing student-support systems to create an additional space for conversations around choices, transitions, exposure, confidence and life beyond the classroom."
+        title="Life readiness belongs alongside academics."
+        lede="Unfoldinn works alongside existing academic and placement systems to create an additional space for thoughtful student conversations on choices, transitions, and confidence."
       >
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6">
-          <Button href="/contact">Talk to Us About Your Institution</Button>
-          <Button href="#formats" variant="link" arrow="down">See Engagement Formats</Button>
+        <div className="flex flex-wrap items-center gap-4">
+          <Link
+            href="/contact"
+            className="inline-flex h-12 items-center justify-center gap-2.5 rounded-[100px] bg-[#29253a] px-7 font-wix-text text-[14px] font-semibold text-white transition hover:bg-[#3a3451]"
+          >
+            <span>Explore a collaboration</span>
+            <img src="/icons/arrow-right-circle-institutions.svg" alt="" width={20} height={20} aria-hidden="true" />
+          </Link>
+          <a
+            href="#formats"
+            className="inline-flex h-12 items-center justify-center rounded-[100px] border border-[#e5dfef] bg-white/85 px-7 font-wix-text text-[14px] font-semibold text-[#29253a] transition hover:bg-white"
+          >
+            See Engagement Formats
+          </a>
         </div>
       </PageHero>
 
-      {/* The Core Role: Editorial Split */}
-      <section className="border-t border-line bg-paper-2">
-        <div className="page-x grid grid-cols-1 gap-8 sm:gap-12 py-16 sm:py-24 md:grid-cols-12 md:py-36">
-          <div className="md:col-span-5">
-            <div className="md:sticky md:top-32">
-              <SectionHead
-                meta="Our role"
-                title="Complementing what you already do"
-              />
-            </div>
+      {/* Our Role Split */}
+      <section className="mx-auto max-w-[1240px] px-6 py-16 sm:px-10">
+        <div className="grid grid-cols-1 gap-8 rounded-[28px] bg-[#f5f0ff] p-8 sm:p-12 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <SectionHead meta="Our role" title="Complementing what you already do" />
           </div>
-          <div className="md:col-span-7 md:col-start-6">
-            <RevealGroup className="space-y-5 sm:space-y-6">
-              <RevealItem as="p" className="lede">
-                Educational institutions carry the essential responsibility of academic learning, administration, and formal placement systems.
-              </RevealItem>
-              <RevealItem as="p" className="lede">
-                Unfoldinn does not seek to replace or replicate these functions. Instead, it provides a quiet, trusted sounding board where students can pause, reflect on their individual strengths and hesitations, and make sense of their options without fear of judgment.
-              </RevealItem>
-              <RevealItem as="blockquote" className="mt-6 sm:mt-8 border-l-2 border-signal pl-4 sm:pl-6 font-serif italic text-[1.125rem] sm:text-[1.25rem] text-ink leading-relaxed">
-                &ldquo;Institutional engagements can begin small, allowing both sides to understand the need and evaluate value before considering a longer association.&rdquo;
-              </RevealItem>
-            </RevealGroup>
+          <div className="space-y-4 font-wix-text text-[16px] leading-[1.7] text-[#4c465d] lg:col-span-7">
+            <p>
+              Educational institutions carry the essential responsibility of academic learning,
+              administration, and formal placement systems.
+            </p>
+            <p>
+              Yet many students still sit quietly with questions about who they are becoming, how
+              to handle setbacks, and how to make thoughtful decisions beyond grades and exams.
+            </p>
+            <p className="font-semibold text-[#29253a]">
+              Unfoldinn adds a calm, human-led layer of perspective without disrupting existing
+              campus workflows.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* The 4 Formats */}
-      <section id="formats" className="scroll-mt-24 border-t border-line">
-        <div className="page-x py-16 sm:py-24 md:py-36">
-          <SectionHead
-            meta="Engagement formats"
-            title="How we can work together"
-            lede="Four focused formats structured around practical student needs."
-          />
+      {/* Formats */}
+      <section id="formats" className="bg-[#29253a] py-20 text-white">
+        <div className="mx-auto max-w-[1240px] px-6 sm:px-10">
+          <p className="font-wix-text text-[11px] font-bold uppercase tracking-[0.12em] text-[#f6b47d]">
+            Engagement Formats
+          </p>
+          <h2 className="mt-3 font-wix-display text-[2.25rem] font-medium text-white sm:text-[3.25rem]">
+            Designed to fit your campus rhythm.
+          </h2>
 
-          <RevealGroup className="hairline-grid mt-10 sm:mt-16 grid-cols-1 sm:grid-cols-2">
-            {FORMATS.map((fmt, idx) => (
-              <RevealItem
-                key={idx}
-                className="group flex min-h-[14rem] sm:min-h-[16rem] flex-col justify-between p-6 sm:p-8 md:p-10 transition-colors duration-500 ease-editorial hover:bg-paper-2"
+          <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {FORMATS.map((f) => (
+              <div
+                key={f.num}
+                className="rounded-[24px] border border-white/10 bg-white/5 p-7"
               >
-                <span className="meta">{String(idx + 1).padStart(2, '0')}</span>
-                <div>
-                  <h3 className="font-serif text-[1.375rem] sm:text-[1.625rem] text-ink mb-2 sm:mb-3 leading-snug">
-                    {fmt.title}
-                  </h3>
-                  <p className="text-[0.875rem] sm:text-[1rem] text-muted leading-relaxed">
-                    {fmt.text}
-                  </p>
-                </div>
-              </RevealItem>
+                <span className="font-mono text-[12px] text-[#f6b47d]">{f.num}</span>
+                <h3 className="mt-3 font-wix-display text-[24px] font-medium text-white">
+                  {f.title}
+                </h3>
+                <p className="mt-2.5 font-wix-text text-[14px] leading-[1.65] text-[#c9c3d5]">
+                  {f.text}
+                </p>
+              </div>
             ))}
-          </RevealGroup>
+          </div>
         </div>
       </section>
 
-      {/* Starting Small & Contact CTA */}
-      <section className="border-t border-line bg-paper-2">
-        <div className="page-x py-16 sm:py-24 md:py-36">
-          <RevealGroup className="max-w-[56rem]">
-            <RevealItem as="p" className="meta mb-4 sm:mb-6">Discovery &amp; Evaluation</RevealItem>
-            <RevealItem as="h2" className="font-serif text-[clamp(2.25rem,5.5vw,5rem)] leading-[0.95] text-ink">
-              Start small. Understand first.
-            </RevealItem>
-            <RevealItem as="p" className="lede mt-5 sm:mt-6 text-[1rem] sm:text-[1.125rem]">
-              We believe every campus environment is unique. A brief initial conversation helps us understand your students&apos; context and explore whether Unfoldinn can add genuine value.
-            </RevealItem>
-            <RevealItem className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6">
-              <Button href="/contact">Talk to Us About Your Institution</Button>
-              <Link href="mailto:unfoldinn26@gmail.com" className="meta text-ink underline decoration-ink/20 hover:decoration-signal py-1 inline-block">
-                Write directly to unfoldinn26@gmail.com →
-              </Link>
-            </RevealItem>
-          </RevealGroup>
+      {/* Final CTA */}
+      <section
+        className="px-6 py-20 text-center sm:px-10"
+        style={{
+          backgroundImage:
+            'linear-gradient(165deg, rgb(238, 230, 255) 0%, rgb(248, 213, 194) 100%)',
+        }}
+      >
+        <div className="mx-auto max-w-[760px]">
+          <p className="font-wix-text text-[11px] font-bold uppercase tracking-[1.36px] text-[#765c9c]">
+            Campus Partnerships
+          </p>
+          <h2 className="mt-3 font-wix-display text-[2.25rem] font-normal text-[#29253a] sm:text-[3rem]">
+            Bring thoughtful mentoring conversations to your students.
+          </h2>
+          <Link
+            href="/contact"
+            className="mt-8 inline-flex h-12 items-center justify-center gap-2.5 rounded-[100px] bg-[#29253a] px-7 font-wix-text text-[14px] font-semibold text-white transition hover:bg-[#3a3451]"
+          >
+            <span>Talk to Us About Your Institution</span>
+            <img src="/icons/arrow-right-circle-cta.svg" alt="" width={20} height={20} aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </div>

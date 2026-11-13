@@ -2,9 +2,8 @@ import { Reveal, RevealGroup, RevealItem } from './Reveal';
 import Breadcrumbs from './Breadcrumbs';
 
 /**
- * Shared interior-page hero: optional breadcrumbs, mono meta row, large serif H1, lede, hairline rule.
- * `meta` is an array of short strings (e.g. ['For students', 'Ages 16 to 25']).
- * `breadcrumbs` is an optional array of { name: string, href?: string }.
+ * Shared interior-page hero styled to match the Figma Unfoldinn theme:
+ * Lavender-to-peach rounded container, Wix Madefor Display heading, and plum-charcoal ink.
  */
 export default function PageHero({
   breadcrumbs,
@@ -15,33 +14,46 @@ export default function PageHero({
   className = '',
 }) {
   return (
-    <section className={`page-x pt-20 sm:pt-28 md:pt-36 pb-10 sm:pb-14 md:pb-20 ${className}`}>
-      {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
-      <RevealGroup>
-        {meta.length > 0 && (
-          <RevealItem className="mb-5 sm:mb-8 flex flex-wrap items-center gap-x-3 sm:gap-x-6 gap-y-1.5 sm:gap-y-2">
-            {meta.map((m, i) => (
-              <span key={i} className="meta flex items-center gap-3 sm:gap-6 text-[0.625rem] sm:text-[0.6875rem]">
-                {i > 0 && <span aria-hidden="true" className="h-px w-3 sm:w-6 bg-line select-none" />}
-                {m}
-              </span>
-            ))}
+    <section className={`px-3 pt-24 pb-8 sm:px-6 md:px-10 md:pt-28 ${className}`}>
+      <div
+        className="mx-auto max-w-[1240px] rounded-[28px] px-6 py-10 sm:px-10 md:px-14 md:py-14"
+        style={{
+          backgroundImage:
+            'linear-gradient(153deg, rgb(238, 230, 255) 0%, rgb(245, 233, 242) 62%, rgb(248, 209, 173) 100%)',
+        }}
+      >
+        {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+        <RevealGroup>
+          {meta.length > 0 && (
+            <RevealItem className="mb-4 sm:mb-6 flex flex-wrap items-center gap-x-3 sm:gap-x-5 gap-y-1.5">
+              {meta.map((m, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-3 font-wix-text text-[11px] font-bold uppercase tracking-[0.12em] text-[#765c9c]"
+                >
+                  {i > 0 && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#e39a5d]" />}
+                  {m}
+                </span>
+              ))}
+            </RevealItem>
+          )}
+          <RevealItem
+            as="h1"
+            className="max-w-[72rem] font-wix-display text-[clamp(2.1rem,5vw,4.25rem)] font-medium leading-[1.06] tracking-[-0.03em] text-[#29253a] break-words"
+          >
+            {title}
           </RevealItem>
-        )}
-        <RevealItem
-          as="h1"
-          className="max-w-[78rem] font-serif text-[clamp(2.1rem,5.5vw,5.5rem)] leading-[1.06] sm:leading-[1] md:leading-[0.95] tracking-[-0.02em] text-ink break-words"
-        >
-          {title}
-        </RevealItem>
-        {lede && (
-          <RevealItem as="p" className="lede mt-5 sm:mt-8 md:mt-10 text-[0.9375rem] sm:text-[1.125rem] md:text-[1.1875rem]">
-            {lede}
-          </RevealItem>
-        )}
-        {children && <RevealItem className="mt-6 sm:mt-10">{children}</RevealItem>}
-      </RevealGroup>
-      <Reveal className="mt-10 sm:mt-16 md:mt-24 h-px w-full bg-line" />
+          {lede && (
+            <RevealItem
+              as="p"
+              className="mt-5 max-w-[60ch] font-wix-text text-[1rem] leading-[1.65] text-[#4c465d] sm:text-[1.0625rem]"
+            >
+              {lede}
+            </RevealItem>
+          )}
+          {children && <RevealItem className="mt-6 sm:mt-8">{children}</RevealItem>}
+        </RevealGroup>
+      </div>
     </section>
   );
 }

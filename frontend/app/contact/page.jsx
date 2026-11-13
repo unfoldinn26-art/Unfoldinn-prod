@@ -111,65 +111,65 @@ export default function Contact() {
         lede="Whether you are a student exploring next steps, a parent looking to support your child, or an institution evaluating our student development layer, we are here to talk."
       />
 
-      {/* S2: Contact Channels (Hairline Grid) */}
-      <section className="page-x py-8 sm:py-12 md:py-20">
-        <div className="hairline-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="p-6 sm:p-8 flex flex-col justify-between min-h-[12rem] sm:min-h-[14rem]">
-            <span className="meta">Email</span>
+      {/* S2: Contact Channels */}
+      <section className="page-x py-8 sm:py-12 md:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="rounded-[24px] border border-[#e5dfef] bg-white p-6 sm:p-7 flex flex-col justify-between min-h-[11rem] hover:border-[#b7a5d7] transition-colors">
+            <span className="text-[12px] font-wix-text font-semibold uppercase tracking-[0.06em] text-[#765c9c]">Email</span>
             <div>
-              <a href="mailto:unfoldinn26@gmail.com" className="font-serif text-[1.125rem] sm:text-[1.25rem] text-ink hover:text-signal transition-colors block leading-snug break-all py-1">
+              <a href="mailto:unfoldinn26@gmail.com" className="font-wix-display text-[1.125rem] sm:text-[1.25rem] font-semibold text-[#29253a] hover:text-[#b56727] transition-colors block leading-snug break-all py-1">
                 unfoldinn26@gmail.com
               </a>
-              <Link href="/support" className="text-xs text-coral mt-2 block hover:underline font-mono py-0.5">
+              <Link href="/support" className="text-xs text-[#b56727] mt-2 block hover:underline font-wix-text font-medium py-0.5">
                 Website Issues &amp; Support →
               </Link>
             </div>
           </div>
 
-          <div className="p-6 sm:p-8 flex flex-col justify-between min-h-[12rem] sm:min-h-[14rem]">
-            <span className="meta">WhatsApp</span>
+          <div className="rounded-[24px] border border-[#e5dfef] bg-[#f5f0ff] p-6 sm:p-7 flex flex-col justify-between min-h-[11rem] hover:border-[#b7a5d7] transition-colors">
+            <span className="text-[12px] font-wix-text font-semibold uppercase tracking-[0.06em] text-[#765c9c]">WhatsApp</span>
             <div>
-              <a href="https://wa.me/917737220724" target="_blank" rel="noopener noreferrer" className="font-serif text-[1.125rem] sm:text-[1.25rem] text-ink hover:text-signal transition-colors block py-1">
+              <a href="https://wa.me/917737220724" target="_blank" rel="noopener noreferrer" className="font-wix-display text-[1.125rem] sm:text-[1.25rem] font-semibold text-[#29253a] hover:text-[#b56727] transition-colors block py-1">
                 +91 77372 20724 ↗
               </a>
-              <p className="text-xs text-muted mt-2">Direct messaging</p>
+              <p className="text-xs text-[#686579] mt-2">Direct messaging</p>
             </div>
           </div>
 
-          <div className="p-6 sm:p-8 flex flex-col justify-between min-h-[12rem] sm:min-h-[14rem]">
-            <span className="meta">Phone</span>
+          <div className="rounded-[24px] border border-[#e5dfef] bg-white p-6 sm:p-7 flex flex-col justify-between min-h-[11rem] hover:border-[#b7a5d7] transition-colors">
+            <span className="text-[12px] font-wix-text font-semibold uppercase tracking-[0.06em] text-[#765c9c]">Phone</span>
             <div>
-              <a href="tel:+917737220724" className="font-serif text-[1.125rem] sm:text-[1.25rem] text-ink hover:text-signal transition-colors block font-mono text-base py-1">
+              <a href="tel:+917737220724" className="font-wix-display text-[1.125rem] sm:text-[1.25rem] font-semibold text-[#29253a] hover:text-[#b56727] transition-colors block py-1">
                 +91 77372 20724
               </a>
-              <p className="text-xs text-muted mt-2">Mon–Sat, 10 AM – 6 PM IST</p>
+              <p className="text-xs text-[#686579] mt-2">Mon–Sat, 10 AM – 6 PM IST</p>
             </div>
           </div>
 
-          <div className="p-6 sm:p-8 flex flex-col justify-between min-h-[12rem] sm:min-h-[14rem]">
-            <span className="meta">LinkedIn</span>
+          <div className="rounded-[24px] border border-[#e5dfef] bg-[#f5f0ff] p-6 sm:p-7 flex flex-col justify-between min-h-[11rem] hover:border-[#b7a5d7] transition-colors">
+            <span className="text-[12px] font-wix-text font-semibold uppercase tracking-[0.06em] text-[#765c9c]">LinkedIn</span>
             <div>
-              <a href="https://www.linkedin.com/in/deepak-sogani/" target="_blank" rel="noopener noreferrer" className="font-serif text-[1.125rem] sm:text-[1.25rem] text-ink hover:text-signal transition-colors block py-1">
+              <a href="https://www.linkedin.com/in/deepak-sogani/" target="_blank" rel="noopener noreferrer" className="font-wix-display text-[1.125rem] sm:text-[1.25rem] font-semibold text-[#29253a] hover:text-[#b56727] transition-colors block py-1">
                 Deepak Sogani ↗
               </a>
-              <p className="text-xs text-muted mt-2">Professional reflections &amp; alumni voices</p>
+              <p className="text-xs text-[#686579] mt-2">Professional reflections &amp; alumni voices</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* S3: Form Area */}
-      <section className="border-t border-line bg-paper-2">
-        <div className="page-x py-14 sm:py-20 md:py-32 max-w-4xl">
+      <section className="border-t border-[#e5dfef] bg-[#f5f0ff]">
+        <div className="page-x py-14 sm:py-20 md:py-24 max-w-4xl">
           {/* Tab Switcher */}
           <div className="flex flex-wrap items-center gap-2 mb-6 sm:mb-8">
             <button
               type="button"
               onClick={() => { setActiveTab('general'); setCaptchaToken(''); generalCaptchaRef.current?.reset(); }}
-              className={`rounded-full px-5 py-2.5 min-h-[44px] text-xs font-mono uppercase tracking-wider transition-colors duration-300 inline-flex items-center justify-center ${
+              className={`rounded-full px-5 py-2.5 min-h-[44px] text-xs font-wix-text font-semibold uppercase tracking-[0.05em] transition-colors duration-300 inline-flex items-center justify-center ${
                 activeTab === 'general'
-                  ? 'bg-ink text-paper'
-                  : 'border border-line bg-paper text-ink hover:border-ink'
+                  ? 'bg-[#29253a] text-white'
+                  : 'border border-[#e5dfef] bg-white text-[#29253a] hover:border-[#29253a]'
               }`}
             >
               General Message
@@ -177,10 +177,10 @@ export default function Contact() {
             <button
               type="button"
               onClick={() => { setActiveTab('institutional'); setCaptchaToken(''); instCaptchaRef.current?.reset(); }}
-              className={`rounded-full px-5 py-2.5 min-h-[44px] text-xs font-mono uppercase tracking-wider transition-colors duration-300 inline-flex items-center justify-center ${
+              className={`rounded-full px-5 py-2.5 min-h-[44px] text-xs font-wix-text font-semibold uppercase tracking-[0.05em] transition-colors duration-300 inline-flex items-center justify-center ${
                 activeTab === 'institutional'
-                  ? 'bg-ink text-paper'
-                  : 'border border-line bg-paper text-ink hover:border-ink'
+                  ? 'bg-[#29253a] text-white'
+                  : 'border border-[#e5dfef] bg-white text-[#29253a] hover:border-[#29253a]'
               }`}
             >
               Institutional Partnership
@@ -188,7 +188,7 @@ export default function Contact() {
           </div>
 
           {/* Form Card */}
-          <div className="rounded-[1.5rem] sm:rounded-[1.75rem] border border-line bg-paper p-5 sm:p-8 md:p-14">
+          <div className="rounded-[28px] border border-[#e5dfef] bg-white p-6 sm:p-8 md:p-12 shadow-[0_14px_40px_rgba(41,37,58,0.05)]">
             {status.message && (
               <div className={`mb-6 sm:mb-8 p-4 rounded-xl text-sm ${
                 status.type === 'success' 
