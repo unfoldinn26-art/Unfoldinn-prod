@@ -131,6 +131,7 @@ app.use('/api/newsletter', require('./routes/newsletter'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/support', require('./routes/support'));
 app.use('/api/payment', require('./routes/payment'));
+app.use('/api/platform', require('./routes/platform'));
 
 // Health Check Route
 app.get('/', (req, res) => {

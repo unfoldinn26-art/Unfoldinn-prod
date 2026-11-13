@@ -293,3 +293,55 @@ export async function submitSupportTicket(data) {
     body: JSON.stringify(data)
   });
 }
+
+// ============================================================================
+// PLATFORM FEATURES: MESSAGES, NOTIFICATIONS, REVIEWS & MENTOR AVAILABILITY
+// ============================================================================
+export async function getMyMessageThreads() {
+  return fetchAPI('/platform/messages/threads');
+}
+
+export async function startMessageThread({ subject, message }) {
+  return fetchAPI('/platform/messages/threads', {
+    method: 'POST',
+    body: JSON.stringify({ subject, message })
+  });
+}
+
+export async function sendMessageInThread(threadId, body) {
+  return fetchAPI(`/platform/messages/threads/${threadId}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({ body })
+  });
+}
+
+export async function getMyNotifications() {
+  return fetchAPI('/platform/notifications');
+}
+
+export async function markNotificationRead(id) {
+  return fetchAPI(`/platform/notifications/${id}/read`, { method: 'PATCH' });
+}
+
+export async function markAllNotificationsRead() {
+  return fetchAPI('/platform/notifications/read-all', { method: 'POST' });
+}
+
+export async function getPublicReviews() {
+  return fetchAPI('/platform/reviews');
+}
+
+export async function getMyReviews() {
+  return fetchAPI('/platform/reviews/mine');
+}
+
+export async function submitSessionReview({ bookingId, rating, comment, isPublic = true }) {
+  return fetchAPI('/platform/reviews', {
+    method: 'POST',
+    body: JSON.stringify({ bookingId, rating, comment, isPublic })
+  });
+}
+
+export async function getMentorAvailabilityPublic() {
+  return fetchAPI('/platform/mentor/availability');
+}

@@ -16,7 +16,10 @@ import {
   Edit3,
   ShieldCheck,
   Layers,
-  Video
+  Video,
+  MessageSquare,
+  Bell,
+  Star
 } from 'lucide-react';
 import { useUserAuth } from '../../context/UserAuthContext';
 import {
@@ -26,9 +29,17 @@ import {
   createPaymentOrder,
   generateIdempotencyKey,
   exportMyDpdpData,
-  eraseMyDpdpAccount
+  eraseMyDpdpAccount,
+  getMyMessageThreads,
+  getMyNotifications,
+  getMyReviews
 } from '../../lib/api';
 import { openCashfreeCheckout } from '../../lib/cashfreeClient';
+import {
+  MenteeMessagesPanel,
+  MenteeNotificationsPanel,
+  MenteeReviewPanel
+} from '../../components/dashboard/MenteePlatformPanels';
 
 export default function MenteeDashboardPage() {
   const router = useRouter();
@@ -48,6 +59,10 @@ export default function MenteeDashboardPage() {
   const [subscriptions, setSubscriptions] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [plans, setPlans] = useState([]);
+  const [messageThreads, setMessageThreads] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [myReviews, setMyReviews] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
   // Reflection / 7-Day Next Step update state
@@ -115,14 +130,21 @@ export default function MenteeDashboardPage() {
   const loadDashboardData = async () => {
     setLoadingData(true);
     try {
-      const [myData, plansRes] = await Promise.all([
+      const [myData, plansRes, threadsRes, notifRes, reviewsRes] = await Promise.all([
         getMySessionsAndSubscriptions(),
-        getSubscriptionPlans()
+        getSubscriptionPlans(),
+        getMyMessageThreads().catch(() => ({ data: [] })),
+        getMyNotifications().catch(() => ({ data: [], unreadCount: 0 })),
+        getMyReviews().catch(() => ({ data: [] }))
       ]);
       setSessions(myData.sessions || []);
       setSubscriptions(myData.subscriptions || []);
       setTransactions(myData.transactions || []);
       setPlans((plansRes.data || []).filter((p) => p.code !== 'SINGLE_SESSION'));
+      setMessageThreads(threadsRes.data || []);
+      setNotifications(notifRes.data || []);
+      setUnreadNotifications(notifRes.unreadCount || 0);
+      setMyReviews(reviewsRes.data || []);
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
     } finally {
@@ -374,9 +396,16 @@ export default function MenteeDashboardPage() {
         {/* Navigation Tabs */}
         <div className="flex items-center gap-2 border-b border-stone/50 mb-8 overflow-x-auto">
           {[
-            { id: 'sessions', label: `My Sessions History (${sessions.length})`, icon: Calendar },
-            { id: 'plans', label: 'Monthly Subscription & Multi-Packs', icon: Layers },
-            { id: 'receipts', label: `Subscriptions & Payment Receipts (${transactions.length})`, icon: CreditCard }
+            { id: 'sessions', label: `My Sessions (${sessions.length})`, icon: Calendar },
+            { id: 'messages', label: `Messages (${messageThreads.length})`, icon: MessageSquare },
+            {
+              id: 'notifications',
+              label: `Notifications${unreadNotifications > 0 ? ` (${unreadNotifications})` : ''}`,
+              icon: Bell
+            },
+            { id: 'reviews', label: 'Session Review', icon: Star },
+            { id: 'plans', label: 'Plans & Packs', icon: Layers },
+            { id: 'receipts', label: `Receipts (${transactions.length})`, icon: CreditCard }
           ].map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -879,6 +908,21 @@ export default function MenteeDashboardPage() {
               )}
             </div>
           </div>
+        )}
+
+        {/* TAB 4: DIRECT MENTOR MESSAGES */}
+        {activeTab === 'messages' && (
+          <MenteeMessagesPanel threads={messageThreads} onRefresh={loadDashboardData} />
+        )}
+
+        {/* TAB 5: IN-APP NOTIFICATIONS */}
+        {activeTab === 'notifications' && (
+          <MenteeNotificationsPanel notifications={notifications} onRefresh={loadDashboardData} />
+        )}
+
+        {/* TAB 6: SESSION REVIEW */}
+        {activeTab === 'reviews' && (
+          <MenteeReviewPanel myReviews={myReviews} onRefresh={loadDashboardData} />
         )}
 
         {/* DPDP Act 2023 Self-Service Data Principal Rights (Sections 6(4), 11 & 12) */}

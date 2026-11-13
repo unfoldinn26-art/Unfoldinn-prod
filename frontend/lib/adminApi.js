@@ -170,3 +170,41 @@ export const updateBookingSessionSummary = (bookingId, payload = {}) =>
     body: JSON.stringify(payload)
   });
 
+// Platform Operations: Messaging, Reviews, Mentor Availability, Refunds, Audit Logs & DR Backups
+export const getAdminThreads = () => adminFetch('/platform/admin/threads');
+export const replyToAdminThread = (threadId, body) =>
+  adminFetch(`/platform/admin/threads/${threadId}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({ body })
+  });
+
+export const getAdminReviews = () => adminFetch('/platform/admin/reviews');
+export const moderateAdminReview = (id, data) =>
+  adminFetch(`/platform/admin/reviews/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data)
+  });
+
+export const getMentorAvailabilityAdmin = () => adminFetch('/platform/mentor/availability');
+export const updateMentorAvailabilityAdmin = (data) =>
+  adminFetch('/platform/admin/mentor/availability', {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+export const addMentorTimeOffAdmin = (data) =>
+  adminFetch('/platform/admin/mentor/time-off', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+export const deleteMentorTimeOffAdmin = (id) =>
+  adminFetch(`/platform/admin/mentor/time-off/${id}`, { method: 'DELETE' });
+
+export const getAdminSystemStatus = () => adminFetch('/platform/admin/system-status');
+export const triggerAdminDrBackup = () =>
+  adminFetch('/platform/admin/backups/run', { method: 'POST' });
+export const createAdminRefund = (data) =>
+  adminFetch('/platform/admin/refunds', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+

@@ -14,6 +14,7 @@ import {
   MessageSquareQuote,
   Users,
   Settings,
+  ShieldCheck,
   LogOut,
   ExternalLink,
   X
@@ -49,6 +50,7 @@ const NAV_GROUPS = [
   {
     title: 'SYSTEM',
     items: [
+      { href: '/admin/platform', label: 'Mentor, DR & Audit', icon: ShieldCheck },
       { href: '/admin/settings', label: 'Settings', icon: Settings },
     ]
   }
