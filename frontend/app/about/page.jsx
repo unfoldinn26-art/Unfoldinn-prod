@@ -91,7 +91,7 @@ export default function AboutPage() {
           <div className="relative mx-auto w-full max-w-[390px] lg:col-span-5">
             <div className="overflow-hidden rounded-t-[200px] rounded-b-[26px] bg-[#eee6ff]">
               <img
-                src="/images/founder/deepak-sogani.png"
+                src="/images/founder/deepak-sogani.webp"
                 alt="Deepak Sogani smiling"
                 className="h-[480px] w-full object-cover"
               />

@@ -455,6 +455,7 @@ function LoginContent() {
                           type="password"
                           required
                           minLength={6}
+                          autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="••••••••"

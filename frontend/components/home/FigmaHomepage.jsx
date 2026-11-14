@@ -104,42 +104,42 @@ const STUDENT_CARDS = [
   {
     name: 'Jia Soni',
     meta: 'BBA 2022-2025 Batch',
-    img: '/images/students/jia-soni.png',
+    img: '/images/students/jia-soni.webp',
     quote:
       'You built our character and prepared us for reality--not just exams.',
   },
   {
     name: 'Jaya Sodhani',
     meta: 'B.Des 2021-2025 Batch',
-    img: '/images/students/jaya-sodhani.png',
+    img: '/images/students/jaya-sodhani.webp',
     quote:
       'Conversations that helped me trust my own perspective when everything felt loud.',
   },
   {
     name: 'Aaditya Kakkar',
     meta: 'UX Designer at GoDaddy Inc',
-    img: '/images/students/aaditya-kakkar.png',
+    img: '/images/students/aaditya-kakkar.webp',
     quote:
       'Learned how to think independently about craft, career, and life decisions.',
   },
   {
     name: 'Bismanpreet Singh',
     meta: 'B.Tech Batch 2019-2023',
-    img: '/images/students/bismanpreet-singh.png',
+    img: '/images/students/bismanpreet-singh.webp',
     quote:
       'You saw potential in me before I did and gave me the confidence to lead.',
   },
   {
     name: 'Rashi Gothwal',
     meta: 'BBA 2020-2023 Batch',
-    img: '/images/students/rashi-gothwal.png',
+    img: '/images/students/rashi-gothwal.webp',
     quote:
       'A calm space to ask real questions without being handed generic templates.',
   },
   {
     name: 'Vaibhav Khandelwal',
     meta: 'Founder at SONICORE',
-    img: '/images/students/vaibhav-khandelwal.png',
+    img: '/images/students/vaibhav-khandelwal.webp',
     quote:
       'Guidance that respects your curiosity and helps you own the next step.',
   },
@@ -276,28 +276,28 @@ export default function FigmaHomepage() {
                 <div className="relative grid grid-cols-12 gap-3.5">
                   <div className="col-span-7 aspect-square overflow-hidden rounded-[20px] bg-white shadow-md">
                     <img
-                      src="/images/hero/hero-collage-1.png"
+                      src="/images/hero/hero-collage-1.webp"
                       alt="Mentoring conversation with students"
                       className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="col-span-5 aspect-[3/4] overflow-hidden rounded-[20px] bg-white shadow-md">
                     <img
-                      src="/images/hero/hero-collage-2.png"
+                      src="/images/hero/hero-collage-2.webp"
                       alt="Reflective student session"
                       className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="col-span-5 aspect-square overflow-hidden rounded-[20px] bg-white shadow-md">
                     <img
-                      src="/images/hero/hero-collage-3.png"
+                      src="/images/hero/hero-collage-3.webp"
                       alt="Students collaborating together"
                       className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="col-span-7 aspect-[16/10] overflow-hidden rounded-[20px] bg-white shadow-md">
                     <img
-                      src="/images/hero/hero-collage-4.png"
+                      src="/images/hero/hero-collage-4.webp"
                       alt="One-on-one conversation"
                       className="h-full w-full object-cover"
                     />
@@ -370,7 +370,7 @@ export default function FigmaHomepage() {
 
             <div className="overflow-hidden rounded-[24px] bg-[#f5f0ff]">
               <img
-                src="/images/approach/approach-1.png"
+                src="/images/approach/approach-1.webp"
                 alt="Group discussion session"
                 className="h-full min-h-[220px] w-full object-cover"
               />
@@ -378,7 +378,7 @@ export default function FigmaHomepage() {
 
             <div className="overflow-hidden rounded-[24px] bg-[#fcf8ee]">
               <img
-                src="/images/approach/approach-2.png"
+                src="/images/approach/approach-2.webp"
                 alt="Mentoring dialogue"
                 className="h-full min-h-[220px] w-full object-cover"
               />
@@ -398,7 +398,7 @@ export default function FigmaHomepage() {
               </div>
               <div className="mt-4 h-24 overflow-hidden rounded-xl">
                 <img
-                  src="/images/approach/approach-3.png"
+                  src="/images/approach/approach-3.webp"
                   alt="Personal 1:1 session"
                   className="h-full w-full object-cover"
                 />
@@ -429,7 +429,7 @@ export default function FigmaHomepage() {
           <div className="mt-12 grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
             <div className="overflow-hidden rounded-[16px] border border-[#f5f5f5] bg-[#f5f5f5] shadow-sm lg:col-span-5">
               <img
-                src="/images/uncertain/uncertain-left.png"
+                src="/images/uncertain/uncertain-left.webp"
                 alt="Looking out over the city"
                 className="h-[320px] w-full object-cover grayscale"
               />
@@ -458,7 +458,7 @@ export default function FigmaHomepage() {
 
             <div className="overflow-hidden rounded-[16px] border border-[#f5f5f5] bg-[#f5f5f5] shadow-sm lg:col-span-3">
               <img
-                src="/images/uncertain/uncertain-right.png"
+                src="/images/uncertain/uncertain-right.webp"
                 alt="Reviewing options together"
                 className="h-[200px] w-full object-cover grayscale"
               />
@@ -525,14 +525,14 @@ export default function FigmaHomepage() {
               <div className="space-y-3.5">
                 <div className="overflow-hidden rounded-2xl">
                   <img
-                    src="/images/clarity/clarity-1.png"
+                    src="/images/clarity/clarity-1.webp"
                     alt="Group mentoring"
                     className="h-36 w-full object-cover"
                   />
                 </div>
                 <div className="overflow-hidden rounded-2xl">
                   <img
-                    src="/images/clarity/clarity-2.png"
+                    src="/images/clarity/clarity-2.webp"
                     alt="Exploring new paths"
                     className="h-44 w-full object-cover"
                   />
@@ -547,14 +547,14 @@ export default function FigmaHomepage() {
               <div className="space-y-3.5 pt-6">
                 <div className="overflow-hidden rounded-2xl">
                   <img
-                    src="/images/clarity/clarity-3.png"
+                    src="/images/clarity/clarity-3.webp"
                     alt="Student reflection"
                     className="h-36 w-full object-cover"
                   />
                 </div>
                 <div className="overflow-hidden rounded-2xl">
                   <img
-                    src="/images/clarity/clarity-4.png"
+                    src="/images/clarity/clarity-4.webp"
                     alt="University campus transition"
                     className="h-44 w-full object-cover"
                   />
@@ -645,7 +645,7 @@ export default function FigmaHomepage() {
             <div className="relative mx-auto w-full max-w-[390px] lg:col-span-5">
               <div className="overflow-hidden rounded-t-[200px] rounded-b-[26px] bg-[#eee6ff]">
                 <img
-                  src="/images/founder/deepak-sogani.png"
+                  src="/images/founder/deepak-sogani.webp"
                   alt="Deepak Sogani smiling"
                   className="h-[480px] w-full object-cover"
                 />
@@ -872,10 +872,10 @@ export default function FigmaHomepage() {
             <div className="flex items-center gap-3">
               <div className="flex -space-x-2">
                 {[
-                  '/images/students/avatar-1.png',
-                  '/images/students/avatar-2.png',
-                  '/images/students/avatar-3.png',
-                  '/images/students/avatar-4.png',
+                  '/images/students/avatar-1.webp',
+                  '/images/students/avatar-2.webp',
+                  '/images/students/avatar-3.webp',
+                  '/images/students/avatar-4.webp',
                 ].map((src) => (
                   <img
                     key={src}
@@ -895,7 +895,7 @@ export default function FigmaHomepage() {
             {/* Featured Group Photo */}
             <div className="relative overflow-hidden rounded-[24px] bg-[#f5f0ff] lg:col-span-5">
               <img
-                src="/images/students/group-featured.png"
+                src="/images/students/group-featured.webp"
                 alt="Deepak Sogani with students"
                 className="h-full min-h-[340px] w-full object-cover"
               />
@@ -947,7 +947,7 @@ export default function FigmaHomepage() {
         {/* 11. FREQUENTLY ASKED QUESTIONS */}
         <section className="relative overflow-hidden bg-[#29253a] py-20 text-white">
           <img
-            src="/images/faq/faq-backdrop.png"
+            src="/images/faq/faq-backdrop.webp"
             alt=""
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25"

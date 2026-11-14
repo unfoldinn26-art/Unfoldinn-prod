@@ -180,8 +180,8 @@ html.dark {
 }
 
 html.dark body {
-  background-color: #0A0908;
-  color: #FAF7F0;
+  background-color: #14111e;
+  color: #faf8ff;
 }
 
 /* Default headings inherit or use crisp light text */
@@ -189,77 +189,126 @@ html.dark h1,
 html.dark h2,
 html.dark h3,
 html.dark h4 {
-  color: inherit;
+  color: #faf8ff;
 }
 
-/* Base text tokens (without !important so specific dark: classes can override) */
-html.dark .text-ink {
-  color: #FAF7F0;
+/* Base text tokens */
+html.dark .text-ink,
+html.dark .text-\[\#29253a\] {
+  color: #faf8ff;
 }
 
-html.dark .text-ink-2 {
-  color: #D6CEBF;
+html.dark .text-ink-2,
+html.dark .text-\[\#4c465d\] {
+  color: #ddd6eb;
 }
 
-html.dark .text-muted {
-  color: #9E9080;
+html.dark .text-muted,
+html.dark .text-\[\#686579\] {
+  color: #b4acc6;
 }
 
-/* Background surfaces */
-html.dark .bg-paper {
-  background-color: #0A0908;
+html.dark .text-\[\#765c9c\] {
+  color: #c7b1ea;
 }
 
-html.dark .bg-paper-2 {
-  background-color: #14110E;
+html.dark .text-\[\#b56727\] {
+  color: #f6b47d;
 }
 
-html.dark .bg-paper-3 {
-  background-color: #1E1915;
-}
-
+/* Background surfaces (Figma Plum Dark Palette) */
+html.dark .bg-paper,
 html.dark .bg-white {
-  background-color: #14110E;
+  background-color: #14111e;
+}
+
+html.dark .bg-paper-2,
+html.dark .bg-\[\#faf8ff\],
+html.dark .bg-\[\#f5f0ff\] {
+  background-color: #1d192b;
+}
+
+html.dark .bg-paper-3,
+html.dark .bg-\[\#eee6ff\] {
+  background-color: #262138;
+}
+
+html.dark .bg-\[\#29253a\] {
+  background-color: #1d192b;
+}
+
+html.dark .hover\:bg-\[\#f5f0ff\]:hover {
+  background-color: #262138;
+}
+
+/* Dark mode for lavender-to-peach Hero & CTA gradient cards */
+html.dark [style*="238, 230, 255"] {
+  background-image: linear-gradient(153deg, #251f38 0%, #2b233c 62%, #3d2c2e 100%) !important;
+}
+
+/* Preserve dark ink inside bright champagne (#ffe79a) badges/circles */
+html.dark .bg-\[\#ffe79a\],
+html.dark .bg-\[\#ffe79a\] h1,
+html.dark .bg-\[\#ffe79a\] h2,
+html.dark .bg-\[\#ffe79a\] h3,
+html.dark .bg-\[\#ffe79a\] p,
+html.dark .bg-\[\#ffe79a\] span,
+html.dark .bg-\[\#ffe79a\] .text-\[\#29253a\],
+html.dark .bg-\[\#ffe79a\] .text-\[\#29253a\]\/80 {
+  color: #29253a !important;
+}
+
+/* Dark mode primary pill buttons */
+html.dark a.bg-\[\#29253a\],
+html.dark button.bg-\[\#29253a\] {
+  background-color: #765c9c;
+  color: #ffffff;
+}
+
+html.dark a.bg-\[\#29253a\]:hover,
+html.dark button.bg-\[\#29253a\]:hover {
+  background-color: #8b6eb5;
 }
 
 html.dark .card-editorial {
-  background-color: #14110E;
-  border-color: rgba(200, 121, 44, 0.16);
+  background-color: #1d192b;
+  border-color: #342d49;
 }
 
 /* Dividers & borders */
-html.dark .border-line {
-  border-color: rgba(200, 121, 44, 0.15);
+html.dark .border-line,
+html.dark .border-\[\#e5dfef\] {
+  border-color: #342d49;
 }
 
 html.dark .bg-line {
-  background-color: rgba(200, 121, 44, 0.15);
+  background-color: #342d49;
 }
 
 /* Floating Navbar in Dark Mode */
 html.dark .bg-paper\/90,
 html.dark .bg-paper\/85,
 html.dark .bg-paper\/75 {
-  background-color: rgba(13, 11, 9, 0.95);
+  background-color: rgba(20, 17, 30, 0.94);
 }
 
 /* Editorial Buttons */
 html.dark .btn-editorial {
-  background-color: #FAF7F0;
-  color: #0A0908;
+  background-color: #f6b47d;
+  color: #29253a;
 }
 html.dark .btn-editorial:hover {
-  background-color: #FFFFFF;
+  background-color: #ffe79a;
 }
 
 html.dark .btn-editorial-outline {
-  background-color: rgba(200, 121, 44, 0.08);
-  color: #FAF7F0;
-  border-color: rgba(200, 121, 44, 0.25);
+  background-color: rgba(246, 180, 125, 0.1);
+  color: #faf8ff;
+  border-color: #342d49;
 }
 html.dark .btn-editorial-outline:hover {
-  background-color: rgba(200, 121, 44, 0.15);
-  border-color: rgba(200, 121, 44, 0.35);
+  background-color: rgba(246, 180, 125, 0.18);
+  border-color: #f6b47d;
 }
 
 /* Form fields & inputs */
@@ -270,26 +319,26 @@ html.dark input[type='tel'],
 html.dark input[type='password'],
 html.dark textarea,
 html.dark select {
-  background-color: #14110E;
-  color: #FAF7F0;
-  border-color: rgba(200, 121, 44, 0.22);
+  background-color: #1d192b;
+  color: #faf8ff;
+  border-color: #342d49;
 }
 
 html.dark .field:focus,
 html.dark input:focus,
 html.dark textarea:focus,
 html.dark select:focus {
-  border-color: #D97724;
+  border-color: #f6b47d;
 }
 
 /* Hairline Grid */
 html.dark .hairline-grid {
-  border-color: rgba(200, 121, 44, 0.15);
-  background-color: rgba(200, 121, 44, 0.15);
+  border-color: #342d49;
+  background-color: #342d49;
 }
 
 html.dark .hairline-grid > * {
-  background-color: #0A0908;
+  background-color: #14111e;
 }
 
 /* Fixed film grain in dark mode */
@@ -300,16 +349,16 @@ html.dark .grain::before {
 
 /* Scrollbars in dark mode */
 html.dark ::-webkit-scrollbar-track {
-  background: #0A0908;
+  background: #14111e;
 }
 
 html.dark ::-webkit-scrollbar-thumb {
-  background: #28201A;
-  border: 3px solid #0A0908;
+  background: #342d49;
+  border: 3px solid #14111e;
 }
 
 html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #3D322A;
+  background: #4b4268;
 }
 
 /* Mobile responsive utilities */

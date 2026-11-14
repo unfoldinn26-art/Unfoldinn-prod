@@ -886,6 +886,7 @@ export default function BookPage() {
                             type="password"
                             required
                             minLength={6}
+                            autoComplete={authMode === 'register' ? 'new-password' : 'current-password'}
                             value={authPassword}
                             onChange={(e) => setAuthPassword(e.target.value)}
                             placeholder="••••••••"

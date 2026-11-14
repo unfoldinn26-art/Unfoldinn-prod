@@ -143,6 +143,7 @@ export default function SettingsPage() {
               <input 
                 type="password" 
                 required 
+                autoComplete="current-password"
                 value={passwords.currentPassword} 
                 onChange={e => setPasswords({...passwords, currentPassword: e.target.value})} 
                 className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#D97724]/20 focus:border-[#D97724] transition-all" 
@@ -154,6 +155,7 @@ export default function SettingsPage() {
               <input 
                 type="password" 
                 required 
+                autoComplete="new-password"
                 value={passwords.newPassword} 
                 onChange={e => setPasswords({...passwords, newPassword: e.target.value})} 
                 className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#D97724]/20 focus:border-[#D97724] transition-all" 
